@@ -1,0 +1,3 @@
+[submodule "evecentralprovider"]
+	path = evecentralprovider
+	url = https://github.com/vargur88/evecentralprovider.git
