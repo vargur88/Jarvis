@@ -11,6 +11,25 @@ namespace Entity
 		public static EntityService Instance { get; } = new EntityService();
 		private EntityService(){}
 
+		public async Task<List<Region>> RequestRegionsAsync()
+		{
+			using (var ctx = new EntitiesConnection())
+			{
+				// except Unknown systems by filtering id
+				var list = await ctx.eve_map_regions
+					.Where(t => t.region_id < 11000000)
+					.OrderBy(t => t.region_name)
+					.Select(t => new Region()
+					{
+						Name = t.region_name,
+						RegionId = t.region_id
+					})
+					.ToListAsync();
+
+				return list;
+			}
+		}
+
 		public async Task<List<ObjectsChain>> RequestChainAsync(int roolLevel = 0)
 		{
 			var rootList = await DoRequestChain(roolLevel);

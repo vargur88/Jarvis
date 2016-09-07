@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTypes\ObjectsChain.cs" />
+    <Compile Include="DataTypes\Region.cs" />
     <Compile Include="EntityService.cs" />
     <Compile Include="EveEntityModel.Context.cs">
       <AutoGen>True</AutoGen>

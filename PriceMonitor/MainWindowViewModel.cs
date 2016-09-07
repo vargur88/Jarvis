@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Entity;
 using EveCentralProvider;
+using Helpers;
 
 namespace PriceMonitor
 {
@@ -15,9 +16,11 @@ namespace PriceMonitor
 		{
 			Task.Run(() =>
 			{
-				MenuItems = EntityService.Instance.RequestChainAsync().Result;
+				RegionList = EntityService.Instance.RequestRegionsAsync().Result;
+				FirstRegion = RegionList.First();
+				SecondRegion = RegionList.First(t => t.Name.Contains("Forge"));
 
-				var output = Services.Instance.MarketStat(new List<int>() {34}, new List<int>() { 10000014 });
+				MenuItems = EntityService.Instance.RequestChainAsync().Result;
 			});
 		}
 
@@ -25,6 +28,39 @@ namespace PriceMonitor
 		protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private IList<Region> _regionList;
+		public IList<Region> RegionList
+		{
+			get { return _regionList; }
+			set
+			{
+				_regionList = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private Region _firstRegion;
+		public Region FirstRegion
+		{
+			get { return _firstRegion; }
+			set
+			{
+				_firstRegion = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private Region _secondRegion;
+		public Region SecondRegion
+		{
+			get { return _secondRegion; }
+			set
+			{
+				_secondRegion = value;
+				NotifyPropertyChanged();
+			}
 		}
 
 		private IList<ObjectsChain> _menuItems;
@@ -36,6 +72,37 @@ namespace PriceMonitor
 				_menuItems = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		private ObjectsChain _selectedChain;
+		public ObjectsChain SelectedChain
+		{
+			get { return _selectedChain; }
+			set
+			{
+				_selectedChain = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private RelayCommand _checkPriceCmd;
+		public RelayCommand CheckPriceCmd
+		{
+			get
+			{
+				return _checkPriceCmd ?? (_checkPriceCmd = new RelayCommand(p => SelectedChain != null, p => CheckPrice(SelectedChain, FirstRegion, SecondRegion)));
+			}
+		}
+
+		private void CheckPrice(ObjectsChain chainToCheck, Region first, Region second)
+		{
+			Task.Run(async () =>
+			{
+				var forgePrice = await Services.Instance.MarketStatAsync(new List<int>() { chainToCheck.Object.TypeId }, new List<int>() { first.RegionId }, 1);
+				var localPrice = await Services.Instance.MarketStatAsync(new List<int>() { chainToCheck.Object.TypeId }, new List<int>() { second.RegionId }, 1);
+
+
+			});
 		}
 	}
 }

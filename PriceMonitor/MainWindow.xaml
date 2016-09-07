@@ -12,11 +12,17 @@
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="3*"/>
 				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
 
-				<TreeView Grid.Column="0"
+				<TreeView Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
 					ItemsSource="{Binding Path=MenuItems}"
+					SelectedItemChanged="TreeView_OnSelectedItemChanged"
 					ScrollViewer.VerticalScrollBarVisibility="Visible">
 					<TreeView.ItemTemplate>
 						<HierarchicalDataTemplate DataType="{x:Type dataTypes:ObjectsChain}" ItemsSource="{Binding SubObjects}">
@@ -26,6 +32,23 @@
 						</HierarchicalDataTemplate>
 					</TreeView.ItemTemplate>
 				</TreeView>
+
+				<Grid Row="0" Column="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Label Content="First Region: " Grid.Column="0"/>
+					<ComboBox Grid.Column="1" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=FirstRegion}" DisplayMemberPath="Name"/>
+					<Label Content="Second Region: " Grid.Column="2"/>
+					<ComboBox Grid.Column="3" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SecondRegion}" DisplayMemberPath="Name"/>
+				</Grid>
+
+				<Button Content="Check it!" Grid.Row="2" Grid.Column="1" Width="80" Height="40" HorizontalAlignment="Right"
+					Command="{Binding Path=CheckPriceCmd}">
+				</Button>
 			</Grid>
 		</Border>
 	</Grid>
