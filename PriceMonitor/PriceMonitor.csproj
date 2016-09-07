@@ -101,6 +101,10 @@
       <Project>{CD4685DA-E8F3-43AE-A617-2668A2BDC51D}</Project>
       <Name>Entity</Name>
     </ProjectReference>
+    <ProjectReference Include="..\evecentralprovider\EveCentralProvider\EveCentralProvider.csproj">
+      <Project>{3190CEC1-2922-4FB9-8D1E-D92B96628201}</Project>
+      <Name>EveCentralProvider</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

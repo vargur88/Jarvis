@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entity", "Entity\Entity.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceMonitor", "PriceMonitor\PriceMonitor.csproj", "{DA37BCD8-F072-448E-B24A-B23624010205}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EveCentralProvider", "evecentralprovider\EveCentralProvider\EveCentralProvider.csproj", "{3190CEC1-2922-4FB9-8D1E-D92B96628201}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DA37BCD8-F072-448E-B24A-B23624010205}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA37BCD8-F072-448E-B24A-B23624010205}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA37BCD8-F072-448E-B24A-B23624010205}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3190CEC1-2922-4FB9-8D1E-D92B96628201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3190CEC1-2922-4FB9-8D1E-D92B96628201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3190CEC1-2922-4FB9-8D1E-D92B96628201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3190CEC1-2922-4FB9-8D1E-D92B96628201}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

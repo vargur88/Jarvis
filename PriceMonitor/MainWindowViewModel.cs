@@ -1,9 +1,11 @@
 ﻿using Entity.DataTypes;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Entity;
+using EveCentralProvider;
 
 namespace PriceMonitor
 {
@@ -14,6 +16,8 @@ namespace PriceMonitor
 			Task.Run(() =>
 			{
 				MenuItems = EntityService.Instance.RequestChainAsync().Result;
+
+				var output = Services.Instance.MarketStat(new List<int>() {34}, new List<int>() { 10000014 });
 			});
 		}
 
