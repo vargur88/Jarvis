@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="testModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="testModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="eve_inv_marketgroups">
           <Key>
             <PropertyRef Name="marketgroup_id" />
@@ -75,14 +75,30 @@
           <Property Name="dotlan_y" Type="int" />
           <Property Name="has_station" Type="bool" />
         </EntityType>
+        <EntityType Name="eve_sta_stations">
+          <Key>
+            <PropertyRef Name="station_id" />
+          </Key>
+          <Property Name="station_id" Type="int" Nullable="false" />
+          <Property Name="solarsystem_id" Type="int" Nullable="false" />
+          <Property Name="solarsystem_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="region_id" Type="int" Nullable="false" />
+          <Property Name="region_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="station_type_id" Type="int" Nullable="false" />
+          <Property Name="station_name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="corporation_id" Type="int" Nullable="false" />
+          <Property Name="corporation_name" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="created" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="updated" Type="datetime" Precision="0" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="testModelStoreContainer">
           <EntitySet Name="eve_inv_marketgroups" EntityType="Self.eve_inv_marketgroups" Schema="test" store:Type="Tables" />
           <EntitySet Name="eve_inv_types" EntityType="Self.eve_inv_types" Schema="test" store:Type="Tables" />
           <EntitySet Name="eve_map_regions" EntityType="Self.eve_map_regions" Schema="test" store:Type="Tables" />
           <EntitySet Name="eve_map_solarsystems" EntityType="Self.eve_map_solarsystems" Schema="test" store:Type="Tables" />
+          <EntitySet Name="eve_sta_stations" EntityType="Self.eve_sta_stations" Schema="test" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="testModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -161,7 +177,24 @@
           <EntitySet Name="eve_inv_types" EntityType="Self.eve_inv_types" />
           <EntitySet Name="eve_map_regions" EntityType="Self.eve_map_regions" />
           <EntitySet Name="eve_map_solarsystems" EntityType="Self.eve_map_solarsystems" />
+          <EntitySet Name="eve_sta_stations" EntityType="testModel.eve_sta_stations" />
         </EntityContainer>
+        <EntityType Name="eve_sta_stations">
+          <Key>
+            <PropertyRef Name="station_id" />
+          </Key>
+          <Property Name="station_id" Type="Int32" Nullable="false" />
+          <Property Name="solarsystem_id" Type="Int32" Nullable="false" />
+          <Property Name="solarsystem_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="region_id" Type="Int32" Nullable="false" />
+          <Property Name="region_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="station_type_id" Type="Int32" Nullable="false" />
+          <Property Name="station_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="corporation_id" Type="Int32" Nullable="false" />
+          <Property Name="corporation_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="updated" Type="DateTime" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -239,6 +272,23 @@
                 <ScalarProperty Name="dotlan_x" ColumnName="dotlan_x" />
                 <ScalarProperty Name="dotlan_y" ColumnName="dotlan_y" />
                 <ScalarProperty Name="has_station" ColumnName="has_station" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="eve_sta_stations">
+            <EntityTypeMapping TypeName="testModel.eve_sta_stations">
+              <MappingFragment StoreEntitySet="eve_sta_stations">
+                <ScalarProperty Name="updated" ColumnName="updated" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="corporation_name" ColumnName="corporation_name" />
+                <ScalarProperty Name="corporation_id" ColumnName="corporation_id" />
+                <ScalarProperty Name="station_name" ColumnName="station_name" />
+                <ScalarProperty Name="station_type_id" ColumnName="station_type_id" />
+                <ScalarProperty Name="region_name" ColumnName="region_name" />
+                <ScalarProperty Name="region_id" ColumnName="region_id" />
+                <ScalarProperty Name="solarsystem_name" ColumnName="solarsystem_name" />
+                <ScalarProperty Name="solarsystem_id" ColumnName="solarsystem_id" />
+                <ScalarProperty Name="station_id" ColumnName="station_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

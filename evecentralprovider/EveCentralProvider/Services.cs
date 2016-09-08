@@ -151,6 +151,16 @@ namespace EveCentralProvider
 			}
 
 			XmlSerializer xml = new XmlSerializer(typeof(EveCentralApiQuickLookResult));
+
+			/*using (var st = File.Open("D:\\dump", FileMode.Create, FileAccess.ReadWrite))
+			{
+				stream.CopyTo(st);
+				st.Position = 0;
+
+				var results = (EveCentralApiQuickLookResult)xml.Deserialize(st);
+				return results.quicklook;
+			}*/
+
 			var results = (EveCentralApiQuickLookResult)xml.Deserialize(stream);
 			return results.quicklook;
 		}

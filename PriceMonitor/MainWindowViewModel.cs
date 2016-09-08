@@ -1,64 +1,44 @@
-﻿using Entity.DataTypes;
+﻿using System;
+using Entity.DataTypes;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Entity;
 using EveCentralProvider;
 using Helpers;
+using PriceMonitor.DataTypes;
+using PriceMonitor.UI.UiViewModels;
+using System.Windows;
 
 namespace PriceMonitor
 {
-	public class MainWindowViewModel : INotifyPropertyChanged
+	public class MainWindowViewModel : BaseViewModel
 	{
 		public MainWindowViewModel()
 		{
 			Task.Run(() =>
 			{
-				RegionList = EntityService.Instance.RequestRegionsAsync().Result;
-				FirstRegion = RegionList.First();
-				SecondRegion = RegionList.First(t => t.Name.Contains("Forge"));
+				var regionList = EntityService.Instance.RequestRegionsAsync().Result;
 
-				MenuItems = EntityService.Instance.RequestChainAsync().Result;
+				Application.Current.Dispatcher.Invoke(() =>
+				{
+					Charts.Add(new ChartViewModel(regionList));
+					Charts.Add(new ChartViewModel(regionList));
+				});
+
+				//MenuItems = EntityService.Instance.RequestChainAsync().Result;
 			});
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-		protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		}
+		private ObservableCollection<ChartViewModel> _charts = new ObservableCollection<ChartViewModel>();
 
-		private IList<Region> _regionList;
-		public IList<Region> RegionList
+		public ObservableCollection<ChartViewModel> Charts
 		{
-			get { return _regionList; }
+			get { return _charts; }
 			set
 			{
-				_regionList = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private Region _firstRegion;
-		public Region FirstRegion
-		{
-			get { return _firstRegion; }
-			set
-			{
-				_firstRegion = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private Region _secondRegion;
-		public Region SecondRegion
-		{
-			get { return _secondRegion; }
-			set
-			{
-				_secondRegion = value;
+				_charts = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -90,18 +70,30 @@ namespace PriceMonitor
 		{
 			get
 			{
-				return _checkPriceCmd ?? (_checkPriceCmd = new RelayCommand(p => SelectedChain != null, p => CheckPrice(SelectedChain, FirstRegion, SecondRegion)));
+				return _checkPriceCmd ?? (_checkPriceCmd = new RelayCommand(/*p => SelectedChain != null,*/ p => CheckPrice(SelectedChain, null, null)));
 			}
 		}
 
 		private void CheckPrice(ObjectsChain chainToCheck, Region first, Region second)
-		{
-			Task.Run(async () =>
+		{/*
+			if (chainToCheck.Object.TypeId == 0)
 			{
-				var forgePrice = await Services.Instance.MarketStatAsync(new List<int>() { chainToCheck.Object.TypeId }, new List<int>() { first.RegionId }, 1);
-				var localPrice = await Services.Instance.MarketStatAsync(new List<int>() { chainToCheck.Object.TypeId }, new List<int>() { second.RegionId }, 1);
+				return;
+			}*/
 
-
+			Task.Run( () =>
+			{
+				try
+				{
+					Application.Current.Dispatcher.Invoke(() =>
+					{
+						//Charts.Clear();
+						//Charts.Add(new ChartViewModel(chart));
+					});
+				}
+				catch (Exception e)
+				{
+				}
 			});
 		}
 	}

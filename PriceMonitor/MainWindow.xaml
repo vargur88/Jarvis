@@ -3,8 +3,9 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="clr-namespace:PriceMonitor"
 		xmlns:dataTypes="clr-namespace:Entity.DataTypes;assembly=Entity"
+		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
+		xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 		mc:Ignorable="d"
 		Title="Util" Height="600" Width="800">
 	<Grid>
@@ -15,12 +16,11 @@
 					<ColumnDefinition Width="3*"/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
 					<RowDefinition/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<TreeView Grid.Column="0" Grid.Row="0" Grid.RowSpan="3"
+				<TreeView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
 					ItemsSource="{Binding Path=MenuItems}"
 					SelectedItemChanged="TreeView_OnSelectedItemChanged"
 					ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -33,20 +33,20 @@
 					</TreeView.ItemTemplate>
 				</TreeView>
 
-				<Grid Row="0" Column="1">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Label Content="First Region: " Grid.Column="0"/>
-					<ComboBox Grid.Column="1" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=FirstRegion}" DisplayMemberPath="Name"/>
-					<Label Content="Second Region: " Grid.Column="2"/>
-					<ComboBox Grid.Column="3" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SecondRegion}" DisplayMemberPath="Name"/>
-				</Grid>
+				<ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Charts}" HorizontalAlignment="Left" VerticalAlignment="Top">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel Orientation="Horizontal"/>
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.Resources>
+						<DataTemplate DataType="{x:Type uiViewModels:ChartViewModel}">
+							<uiViews:ChartView />
+						</DataTemplate>
+					</ItemsControl.Resources>
+				</ItemsControl>
 
-				<Button Content="Check it!" Grid.Row="2" Grid.Column="1" Width="80" Height="40" HorizontalAlignment="Right"
+				<Button Content="Get it!" Grid.Row="1" Grid.Column="1" Width="80" Height="40" HorizontalAlignment="Right"
 					Command="{Binding Path=CheckPriceCmd}">
 				</Button>
 			</Grid>

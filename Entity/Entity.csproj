@@ -92,6 +92,9 @@
     <Compile Include="eve_map_solarsystems.cs">
       <DependentUpon>EveEntityModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="eve_sta_stations.cs">
+      <DependentUpon>EveEntityModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

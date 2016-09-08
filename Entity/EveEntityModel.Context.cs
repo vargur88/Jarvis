@@ -7,13 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
 namespace Entity
 {
-	using System;
-	using System.Linq;
-	using System.Data.Entity;
-	using System.Data.Entity.Infrastructure;
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
 
 	[DbConfigurationType(typeof(MySql.Data.Entity.MySqlEFConfiguration))]
 	public partial class EntitiesConnection : DbContext
@@ -32,5 +30,6 @@ namespace Entity
         public DbSet<eve_inv_types> eve_inv_types { get; set; }
         public DbSet<eve_map_regions> eve_map_regions { get; set; }
         public DbSet<eve_map_solarsystems> eve_map_solarsystems { get; set; }
+        public DbSet<eve_sta_stations> eve_sta_stations { get; set; }
     }
 }

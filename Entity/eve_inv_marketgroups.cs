@@ -9,13 +9,10 @@
 
 namespace Entity
 {
-	using System;
-	using System.Linq;
-	using System.Data.Entity;
-	using System.Collections.Generic;
-	using System.Threading.Tasks;
-
-	public partial class eve_inv_marketgroups
+    using System;
+    using System.Collections.Generic;
+    
+    public partial class eve_inv_marketgroups
     {
         public int marketgroup_id { get; set; }
         public Nullable<int> parentgroup_id { get; set; }
@@ -28,5 +25,5 @@ namespace Entity
         public int parent_id_4 { get; set; }
         public int parent_id_5 { get; set; }
         public string parent_text { get; set; }
-	}
+    }
 }

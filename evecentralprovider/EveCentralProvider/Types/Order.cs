@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace EveCentralProvider.Types
@@ -16,7 +13,7 @@ namespace EveCentralProvider.Types
 		public int Region { get; set; }
 
 		[XmlElement("station")]
-		public int Station { get; set; }
+		public long Station { get; set; }
 
 		[XmlElement("station_name")]
 		public string StationName { get; set; }

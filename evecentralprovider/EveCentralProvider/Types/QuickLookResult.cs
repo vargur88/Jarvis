@@ -1,8 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace EveCentralProvider.Types
@@ -30,6 +28,11 @@ namespace EveCentralProvider.Types
 
 		[XmlArray("regions"), XmlArrayItem("region")]
 		public List<string> Regions { get; set; }
+
+		public IEnumerator GetEnumerator()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[XmlRoot("evec_api")]
