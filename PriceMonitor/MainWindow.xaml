@@ -7,7 +7,8 @@
 		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 		xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 		mc:Ignorable="d"
-		Title="Util" Height="600" Width="800">
+		WindowState="Maximized"
+		Title="Util">
 	<Grid>
 		<Border Margin="10">
 			<Grid>
@@ -33,21 +34,39 @@
 					</TreeView.ItemTemplate>
 				</TreeView>
 
-				<ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Charts}" HorizontalAlignment="Left" VerticalAlignment="Top">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<StackPanel Orientation="Horizontal"/>
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-					<ItemsControl.Resources>
-						<DataTemplate DataType="{x:Type uiViewModels:ChartViewModel}">
-							<uiViews:ChartView />
-						</DataTemplate>
-					</ItemsControl.Resources>
-				</ItemsControl>
+				<TabControl Grid.Row="0" Grid.Column="1" TabStripPlacement="Bottom" SelectedIndex="0">
+					<TabItem Header="Manual compare">
+						<ItemsControl ItemsSource="{Binding Charts}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<StackPanel Orientation="Horizontal"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.Resources>
+								<DataTemplate DataType="{x:Type uiViewModels:ChartViewModel}">
+									<uiViews:ChartView />
+								</DataTemplate>
+							</ItemsControl.Resources>
+						</ItemsControl>
+					</TabItem>
+					<TabItem Header="Reports">
+						<ItemsControl ItemsSource="{Binding Reports}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<UniformGrid Columns="3" Rows="3"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.Resources>
+								<DataTemplate DataType="{x:Type uiViewModels:BasicReportViewModel}">
+									<uiViews:BasicReportView />
+								</DataTemplate>
+							</ItemsControl.Resources>
+						</ItemsControl>
+					</TabItem>
+				</TabControl>
 
-				<Button Content="Get it!" Grid.Row="1" Grid.Column="1" Width="80" Height="40" HorizontalAlignment="Right"
-					Command="{Binding Path=CheckPriceCmd}">
+				<Button Content="Generate report" Grid.Row="1" Grid.Column="1" Width="100" Height="40" HorizontalAlignment="Right"
+					Command="{Binding Path=GenerateReportCmd}">
 				</Button>
 			</Grid>
 		</Border>

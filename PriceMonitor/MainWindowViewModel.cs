@@ -5,11 +5,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Entity;
-using EveCentralProvider;
 using Helpers;
-using PriceMonitor.DataTypes;
 using PriceMonitor.UI.UiViewModels;
 using System.Windows;
+using EveCentralProvider;
+using EveCentralProvider.Types;
 
 namespace PriceMonitor
 {
@@ -25,20 +25,40 @@ namespace PriceMonitor
 				{
 					Charts.Add(new ChartViewModel(regionList));
 					Charts.Add(new ChartViewModel(regionList));
+
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
+					Reports.Add(new BasicReportViewModel());
 				});
 
-				//MenuItems = EntityService.Instance.RequestChainAsync().Result;
+				MenuItems = EntityService.Instance.RequestChainAsync().Result;
 			});
 		}
 
 		private ObservableCollection<ChartViewModel> _charts = new ObservableCollection<ChartViewModel>();
-
 		public ObservableCollection<ChartViewModel> Charts
 		{
 			get { return _charts; }
 			set
 			{
 				_charts = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private ObservableCollection<BasicReportViewModel> _reports = new ObservableCollection<BasicReportViewModel>();
+		public ObservableCollection<BasicReportViewModel> Reports
+		{
+			get { return _reports; }
+			set
+			{
+				_reports = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -61,40 +81,80 @@ namespace PriceMonitor
 			set
 			{
 				_selectedChain = value;
+
+				if (_selectedChain.Object.TypeId != 0)
+				{
+					foreach (var chart in Charts)
+					{
+						chart.TargetGameObject = _selectedChain.Object;
+					}
+				}
+
 				NotifyPropertyChanged();
 			}
 		}
 
-		private RelayCommand _checkPriceCmd;
-		public RelayCommand CheckPriceCmd
+		private RelayCommand _generateReportCmd;
+		public RelayCommand GenerateReportCmd
 		{
 			get
 			{
-				return _checkPriceCmd ?? (_checkPriceCmd = new RelayCommand(/*p => SelectedChain != null,*/ p => CheckPrice(SelectedChain, null, null)));
+				return _generateReportCmd ?? (_generateReportCmd = new RelayCommand(p => (SelectedChain != null && _selectedChain.Object.TypeId == 0), p => GenerateReport(SelectedChain)));
 			}
 		}
 
-		private void CheckPrice(ObjectsChain chainToCheck, Region first, Region second)
-		{/*
-			if (chainToCheck.Object.TypeId == 0)
-			{
-				return;
-			}*/
+		private void GenerateReport(ObjectsChain chainToCheck)
+		{
+			int count = 0;
 
-			Task.Run( () =>
+			var firstStation = Charts.First().SelectedStation;
+			var secondStation = Charts.Last().SelectedStation;
+
+			foreach (var obj in chainToCheck.SubObjects)
 			{
-				try
+				if (count == 5)
 				{
-					Application.Current.Dispatcher.Invoke(() =>
+					break;
+				}
+
+				if (obj.Object.TypeId == 0)
+				{
+					continue;
+				}
+
+				QuickLookResult firstStationOrders;
+				QuickLookResult secondStationOrders;
+				Task.Run(async () =>
+				{
+					firstStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() { firstStation.RegionId }, 1, firstStation.SystemId);
+					secondStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() { secondStation.RegionId }, 1, secondStation.SystemId);
+
+					// TODO have to be included in final report
+					if (firstStationOrders.SellOrders.Count == 0 || secondStationOrders.SellOrders.Count == 0)
 					{
-						//Charts.Clear();
-						//Charts.Add(new ChartViewModel(chart));
-					});
-				}
-				catch (Exception e)
-				{
-				}
-			});
+						return;
+					}
+
+					var sortedFirst = firstStationOrders.SellOrders.OrderBy(t => t.Price).ToList();
+					var sortedSecond = secondStationOrders.SellOrders.OrderBy(t => t.Price).ToList();
+
+					var whereToBuy = sortedFirst.First().Price < sortedSecond.First().Price ? sortedFirst : sortedSecond;
+
+					var prices = new List<float> {whereToBuy.First().Price};
+					float firstBuyPrice = prices.First();
+					long buyVolume = whereToBuy.First().VolumeRemaining;
+
+					foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice*0.05))
+					{
+						prices.Add(order.Price);
+						buyVolume += order.VolumeRemaining;
+					}
+
+					long averagePrice = prices.Sum(price => (long) price) / prices.Count;
+
+					++count;
+				}).Wait();
+			}
 		}
 	}
 }

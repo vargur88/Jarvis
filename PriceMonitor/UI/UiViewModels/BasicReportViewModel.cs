@@ -13,26 +13,11 @@ using Helpers;
 
 namespace PriceMonitor.UI.UiViewModels
 {
-	public class ChartViewModel : BaseViewModel
+	public class BasicReportViewModel : BaseViewModel
 	{
-		public ChartViewModel(List<Region> regionList)
+		public BasicReportViewModel()
 		{
-			RegionList = regionList;
-
-			Task.Run(() =>
-			{
-				SelectedRegion = RegionList.Single(t => t.RegionId == 10000002); // The Forge
-
-				SystemList = EntityService.Instance.RequestSystemsByRegionAsync(SelectedRegion.RegionId).Result;
-				SelectedSystem = SystemList.Single(t => t.SystemId == 30000142); // Jita
-
-				StationList = EntityService.Instance.RequestStationsBySystemAsync(SelectedSystem.SystemId).Result;
-				SelectedStation = StationList.Single(t => t.StationId == 60003760); //Jita IV - Moon 4 - Caldari Navy Assembly Plant
-			});
 		}
-
-		// Regions properties
-		public List<Region> RegionList { get; set; }
 
 		private Region _selectedRegion;
 		public Region SelectedRegion

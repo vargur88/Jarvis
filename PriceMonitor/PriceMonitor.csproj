@@ -57,7 +57,11 @@
     </ApplicationDefinition>
     <Compile Include="DataTypes\StationOrderInfo.cs" />
     <Compile Include="UI\BaseViewModel.cs" />
+    <Compile Include="UI\UiViewModels\BasicReportViewModel.cs" />
     <Compile Include="UI\UiViewModels\ChartViewModel.cs" />
+    <Compile Include="UI\UiViews\BasicReportView.xaml.cs">
+      <DependentUpon>BasicReportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\UiViews\ChartView.xaml.cs">
       <DependentUpon>ChartView.xaml</DependentUpon>
     </Compile>
@@ -74,6 +78,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\UiViews\BasicReportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\UiViews\ChartView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

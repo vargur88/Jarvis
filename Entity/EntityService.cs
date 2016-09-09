@@ -41,7 +41,8 @@ namespace Entity
 					{
 						Name = t.station_name,
 						RegionId = t.region_id,
-						StationId = t.station_id
+						StationId = t.station_id,
+						SystemId = t.solarsystem_id
 					})
 					.ToListAsync();
 
