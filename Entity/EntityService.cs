@@ -9,7 +9,7 @@ namespace Entity
 	public sealed class EntityService
 	{
 		public static EntityService Instance { get; } = new EntityService();
-		private EntityService(){}
+		private EntityService() { }
 
 		public async Task<List<SolarSystem>> RequestSystemsByRegionAsync(int regionId)
 		{
@@ -88,24 +88,19 @@ namespace Entity
 			}
 		}
 
-		public async Task<List<ObjectsChain>> RequestChainAsync(int roolLevel = 0)
+		public IEnumerable<ObjectsNode> RequestObjectNodes(int level = 0)
 		{
-			var rootList = await DoRequestChain(roolLevel);
-
-			foreach (var item in rootList)
-			{
-				item.SubObjects = await DoRequestChain(item.Object.MarketGroupId);
-			}
-
-			return rootList;
+			return DoRequestChain(level);
 		}
 
-		private async Task<List<ObjectsChain>> DoRequestChain(int level)
+		private IEnumerable<ObjectsNode> DoRequestChain(int level)
 		{
+			List<ObjectsNode> list;
+
 			using (var ctx = new EntitiesConnection())
 			{
-				var list = await ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
-					.Select(t => new ObjectsChain()
+				list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
+					.Select(t => new ObjectsNode()
 					{
 						Object = new GameObject()
 						{
@@ -113,24 +108,83 @@ namespace Entity
 							MarketGroupId = t.marketgroup_id
 						}
 					})
-					.ToListAsync();
+					.ToList();
 
-				foreach (var item in list)
+				if (!list.Any())
 				{
-					item.SubObjects = await DoRequestChain(item.Object.MarketGroupId);
-				}
+					list = ctx.eve_inv_types.Where(t => t.marketgroup_id == level)
+						.Select(t => new GameObject()
+						{
+							Name = t.name,
+							MarketGroupId = (int)t.marketgroup_id,
+							TypeId = t.type_id
+						})
+						.Select(t => new ObjectsNode()
+						{
+							Object = t
+						})
+						.ToList();
 
-				if (list.Count != 0)
+					foreach (var item in list)
+					{
+						yield return item;
+					}
+				}
+				else
 				{
-					return list;
+					foreach (var item in list)
+					{
+						item.SubObjects = DoRequestChain(item.Object.MarketGroupId);
+						yield return item;
+					}
 				}
-
-				var objects = await RequestObjectsAsync(level);
-				list = objects.Select(gameObject => new ObjectsChain() {Object = gameObject}).ToList();
-
-				return list;
 			}
 		}
+
+		public IEnumerable<ObjectsNode> RequestFullChain(ObjectsNode node)
+		{
+			yield return node;
+
+			foreach (var obj in node.SubObjects)
+			{
+				foreach (var subObj in RequestFullChain(obj))
+				{
+					yield return subObj;
+				}
+			}
+		}
+
+		/* private List<ObjectsNode> DoRequestChain(int level)
+		 {
+			 using (var ctx = new EntitiesConnection())
+			 {
+				 var list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
+					 .Select(t => new ObjectsNode()
+					 {
+						 Object = new GameObject()
+						 {
+							 Name = t.marketgroup_name,
+							 MarketGroupId = t.marketgroup_id
+						 }
+					 })
+					 .ToList();
+
+				 foreach (var item in list)
+				 {
+					 item.SubObjects = DoRequestChain(item.Object.MarketGroupId);
+				 }
+
+				 if (list.Count != 0)
+				 {
+					 yield return list;
+				 }
+
+				 var objects = RequestObjectsAsync(level).Result;
+				 list = objects.Select(gameObject => new ObjectsNode() {Object = gameObject}).ToList();
+
+				 yield return list;
+			 }
+		 }*/
 
 		public async Task<List<GameObject>> RequestObjectsAsync(int marketGroudpId)
 		{
@@ -140,7 +194,7 @@ namespace Entity
 					.Select(t => new GameObject()
 					{
 						Name = t.name,
-						MarketGroupId = (int) t.marketgroup_id,
+						MarketGroupId = (int)t.marketgroup_id,
 						TypeId = t.type_id
 					})
 					.ToListAsync();

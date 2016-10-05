@@ -21,7 +21,7 @@ namespace PriceMonitor
 
 			if (e.NewValue != null)
 			{
-				viewModel.SelectedChain = (ObjectsChain)e.NewValue;
+				viewModel.SelectedNode = (ObjectsNode)e.NewValue;
 			}
 		}
 	}

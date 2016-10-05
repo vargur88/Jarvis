@@ -19,9 +19,12 @@ namespace Entity.DataTypes
 		}
 	}
 
-	public class ObjectsChain
+	public class ObjectsNode
 	{
 		public GameObject Object { get; set; }
-		public IList<ObjectsChain> SubObjects { get; set; }
-	}
+		public IEnumerable<ObjectsNode> SubObjects { get; set; }
+
+        /*public IEnumerable<ObjectsNode> SubObjects => subObjects;
+	    private readonly List<ObjectsNode> subObjects = new List<ObjectsNode>();*/
+    }
 }

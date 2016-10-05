@@ -2,6 +2,7 @@
 using Entity.DataTypes;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Entity;
@@ -19,10 +20,16 @@ namespace PriceMonitor
 		{
 			Task.Run(() =>
 			{
-				var regionList = EntityService.Instance.RequestRegionsAsync().Result;
+				//var regionList = EntityService.Instance.RequestRegionsAsync().Result;
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
+					foreach (var obj in EntityService.Instance.RequestObjectNodes())
+					{
+						MenuItems.Add(obj);
+					}
+
+					/*
 					Charts.Add(new ChartViewModel(regionList));
 					Charts.Add(new ChartViewModel(regionList));
 
@@ -35,10 +42,20 @@ namespace PriceMonitor
 					Reports.Add(new BasicReportViewModel());
 					Reports.Add(new BasicReportViewModel());
 					Reports.Add(new BasicReportViewModel());
+                    */
 				});
-
-				MenuItems = EntityService.Instance.RequestChainAsync().Result;
 			});
+		}
+
+		private int menuCount;
+		public int MenuCount
+		{
+			get { return menuCount; }
+			set
+			{
+				menuCount = value;
+				NotifyPropertyChanged();
+			}
 		}
 
 		private ObservableCollection<ChartViewModel> _charts = new ObservableCollection<ChartViewModel>();
@@ -63,8 +80,8 @@ namespace PriceMonitor
 			}
 		}
 
-		private IList<ObjectsChain> _menuItems;
-		public IList<ObjectsChain> MenuItems
+		private ObservableCollection<ObjectsNode> _menuItems = new ObservableCollection<ObjectsNode>();
+		public ObservableCollection<ObjectsNode> MenuItems
 		{
 			get { return _menuItems; }
 			set
@@ -74,19 +91,19 @@ namespace PriceMonitor
 			}
 		}
 
-		private ObjectsChain _selectedChain;
-		public ObjectsChain SelectedChain
+		private ObjectsNode _selectedNode;
+		public ObjectsNode SelectedNode
 		{
-			get { return _selectedChain; }
+			get { return _selectedNode; }
 			set
 			{
-				_selectedChain = value;
+				_selectedNode = value;
 
-				if (_selectedChain.Object.TypeId != 0)
+				if (_selectedNode.Object.TypeId != 0)
 				{
 					foreach (var chart in Charts)
 					{
-						chart.TargetGameObject = _selectedChain.Object;
+						chart.TargetGameObject = _selectedNode.Object;
 					}
 				}
 
@@ -99,18 +116,18 @@ namespace PriceMonitor
 		{
 			get
 			{
-				return _generateReportCmd ?? (_generateReportCmd = new RelayCommand(p => (SelectedChain != null && _selectedChain.Object.TypeId == 0), p => GenerateReport(SelectedChain)));
+				return _generateReportCmd ?? (_generateReportCmd = new RelayCommand(p => (SelectedNode != null && _selectedNode.Object.TypeId == 0), p => GenerateReport(SelectedNode)));
 			}
 		}
 
-		private void GenerateReport(ObjectsChain chainToCheck)
+		private void GenerateReport(ObjectsNode nodeToCheck)
 		{
 			int count = 0;
 
 			var firstStation = Charts.First().SelectedStation;
 			var secondStation = Charts.Last().SelectedStation;
 
-			foreach (var obj in chainToCheck.SubObjects)
+			foreach (var obj in nodeToCheck.SubObjects)
 			{
 				if (count == 5)
 				{
@@ -140,17 +157,17 @@ namespace PriceMonitor
 
 					var whereToBuy = sortedFirst.First().Price < sortedSecond.First().Price ? sortedFirst : sortedSecond;
 
-					var prices = new List<float> {whereToBuy.First().Price};
+					var prices = new List<float> { whereToBuy.First().Price };
 					float firstBuyPrice = prices.First();
 					long buyVolume = whereToBuy.First().VolumeRemaining;
 
-					foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice*0.05))
+					foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice * 0.05))
 					{
 						prices.Add(order.Price);
 						buyVolume += order.VolumeRemaining;
 					}
 
-					long averagePrice = prices.Sum(price => (long) price) / prices.Count;
+					long averagePrice = prices.Sum(price => (long)price) / prices.Count;
 
 					++count;
 				}).Wait();

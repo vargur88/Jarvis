@@ -26,7 +26,7 @@
 					SelectedItemChanged="TreeView_OnSelectedItemChanged"
 					ScrollViewer.VerticalScrollBarVisibility="Visible">
 					<TreeView.ItemTemplate>
-						<HierarchicalDataTemplate DataType="{x:Type dataTypes:ObjectsChain}" ItemsSource="{Binding SubObjects}">
+						<HierarchicalDataTemplate DataType="{x:Type dataTypes:ObjectsNode}" ItemsSource="{Binding SubObjects}">
 							<WrapPanel>
 								<TextBlock Text="{Binding Object.Name}" />
 							</WrapPanel>
@@ -65,7 +65,9 @@
 					</TabItem>
 				</TabControl>
 
-				<Button Content="Generate report" Grid.Row="1" Grid.Column="1" Width="100" Height="40" HorizontalAlignment="Right"
+                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding MenuCount}"/>
+
+                    <Button Content="Generate report" Grid.Row="1" Grid.Column="1" Width="100" Height="40" HorizontalAlignment="Right"
 					Command="{Binding Path=GenerateReportCmd}">
 				</Button>
 			</Grid>
