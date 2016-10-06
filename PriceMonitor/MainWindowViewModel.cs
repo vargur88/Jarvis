@@ -20,18 +20,17 @@ namespace PriceMonitor
 		{
 			Task.Run(() =>
 			{
-				//var regionList = EntityService.Instance.RequestRegionsAsync().Result;
+				var regionList = EntityService.Instance.RequestRegionsAsync();
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
-					foreach (var obj in EntityService.Instance.RequestObjectNodes())
+					foreach (var item in EntityService.Instance.RequestObjectNodes())
 					{
-						MenuItems.Add(obj);
+						MenuItems.Add(item);
 					}
 
-					/*
-					Charts.Add(new ChartViewModel(regionList));
-					Charts.Add(new ChartViewModel(regionList));
+					Charts.Add(new ChartViewModel(regionList.Result));
+					Charts.Add(new ChartViewModel(regionList.Result));
 
 					Reports.Add(new BasicReportViewModel());
 					Reports.Add(new BasicReportViewModel());
@@ -42,7 +41,6 @@ namespace PriceMonitor
 					Reports.Add(new BasicReportViewModel());
 					Reports.Add(new BasicReportViewModel());
 					Reports.Add(new BasicReportViewModel());
-                    */
 				});
 			});
 		}

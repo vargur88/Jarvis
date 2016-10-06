@@ -95,17 +95,16 @@ namespace Entity
 
 		private IEnumerable<ObjectsNode> DoRequestChain(int level)
 		{
-			List<ObjectsNode> list;
-
 			using (var ctx = new EntitiesConnection())
 			{
-				list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
+				var list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
 					.Select(t => new ObjectsNode()
 					{
 						Object = new GameObject()
 						{
 							Name = t.marketgroup_name,
-							MarketGroupId = t.marketgroup_id
+							MarketGroupId = t.marketgroup_id,
+							TypeId = 0
 						}
 					})
 					.ToList();
@@ -113,15 +112,14 @@ namespace Entity
 				if (!list.Any())
 				{
 					list = ctx.eve_inv_types.Where(t => t.marketgroup_id == level)
-						.Select(t => new GameObject()
-						{
-							Name = t.name,
-							MarketGroupId = (int)t.marketgroup_id,
-							TypeId = t.type_id
-						})
 						.Select(t => new ObjectsNode()
 						{
-							Object = t
+							Object = new GameObject()
+							{
+								Name = t.name,
+								MarketGroupId = (int)t.marketgroup_id,
+								TypeId = t.type_id
+							}
 						})
 						.ToList();
 
