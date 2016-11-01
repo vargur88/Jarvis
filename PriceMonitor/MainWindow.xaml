@@ -3,77 +3,58 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:dataTypes="clr-namespace:Entity.DataTypes;assembly=Entity"
-		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
-		xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 		xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
 		mc:Ignorable="d"
 		WindowState="Maximized"
 		GlowBrush="{DynamicResource AccentColorBrush}"
 		Title="Util">
-    
-	<Grid>
-		<Border Margin="10">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="3*"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
 
-				<TreeView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
-					ItemsSource="{Binding Path=MenuItems}"
-					SelectedItemChanged="TreeView_OnSelectedItemChanged"
-					ScrollViewer.VerticalScrollBarVisibility="Visible">
-					<TreeView.ItemTemplate>
-						<HierarchicalDataTemplate DataType="{x:Type dataTypes:ObjectsNode}" ItemsSource="{Binding SubObjects}">
-							<WrapPanel>
-								<TextBlock Text="{Binding Object.Name}" />
-							</WrapPanel>
-						</HierarchicalDataTemplate>
-					</TreeView.ItemTemplate>
-				</TreeView>
+	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="0" TabStripPlacement="Left">
+		<!-- Watching tab -->
+		<controls:MetroTabItem x:Name="AnalysisTab">
+			<controls:MetroTabItem.Header>
+				<Border BorderThickness="0.2, 0, 0.2, 0.2" BorderBrush="Black">
+					<Grid Width="150" Height="75">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="2*"/>
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="1" Text="Watching" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+					</Grid>
+				</Border>
+			</controls:MetroTabItem.Header>
+			<UserControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<!--UserControl.Resources>
+					<DataTemplate DataType="{x:Type ui:AnalysisTabViewModel}">
+						<ui:AnalysisTabView/>
+					</DataTemplate>
+				</UserControl.Resources>
+				<ContentControl Content="{Binding AnalisisVM}"/-->
+			</UserControl>
+		</controls:MetroTabItem>
+		
+		<controls:MetroTabItem x:Name="ReportTab">
+			<controls:MetroTabItem.Header>
+				<Border BorderThickness="0.2, 0, 0.2, 0.2" BorderBrush="Black">
+					<Grid Width="150" Height="75">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="2*"/>
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="1" Text="Reports" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+					</Grid>
+				</Border>
+			</controls:MetroTabItem.Header>
+			<UserControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<!--UserControl.Resources>
+					<DataTemplate DataType="{x:Type ui:AnalysisTabViewModel}">
+						<ui:AnalysisTabView/>
+					</DataTemplate>
+				</UserControl.Resources>
+				<ContentControl Content="{Binding AnalisisVM}"/-->
+			</UserControl>
+		</controls:MetroTabItem>
+	</controls:MetroAnimatedTabControl>
 
-				<TabControl Grid.Row="0" Grid.Column="1" TabStripPlacement="Bottom" SelectedIndex="0">
-					<TabItem Header="Manual compare">
-						<ItemsControl ItemsSource="{Binding Charts}">
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<StackPanel Orientation="Horizontal"/>
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
-							<ItemsControl.Resources>
-								<DataTemplate DataType="{x:Type uiViewModels:ChartViewModel}">
-									<uiViews:ChartView />
-								</DataTemplate>
-							</ItemsControl.Resources>
-						</ItemsControl>
-					</TabItem>
-					<TabItem Header="Reports">
-						<ItemsControl ItemsSource="{Binding Reports}">
-							<ItemsControl.ItemsPanel>
-								<ItemsPanelTemplate>
-									<UniformGrid Columns="3" Rows="3"/>
-								</ItemsPanelTemplate>
-							</ItemsControl.ItemsPanel>
-							<ItemsControl.Resources>
-								<DataTemplate DataType="{x:Type uiViewModels:BasicReportViewModel}">
-									<uiViews:BasicReportView />
-								</DataTemplate>
-							</ItemsControl.Resources>
-						</ItemsControl>
-					</TabItem>
-				</TabControl>
-
-                <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{Binding MenuCount}"/>
-
-                    <Button Content="Generate report" Grid.Row="1" Grid.Column="1" Width="100" Height="40" HorizontalAlignment="Right"
-					Command="{Binding Path=GenerateReportCmd}">
-				</Button>
-			</Grid>
-		</Border>
-	</Grid>
+		
 </controls:MetroWindow>
