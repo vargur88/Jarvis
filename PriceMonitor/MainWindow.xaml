@@ -1,4 +1,4 @@
-﻿<Window x:Class="PriceMonitor.MainWindow"
+﻿<controls:MetroWindow x:Class="PriceMonitor.MainWindow"
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,9 +6,12 @@
 		xmlns:dataTypes="clr-namespace:Entity.DataTypes;assembly=Entity"
 		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 		xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
+		xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
 		mc:Ignorable="d"
 		WindowState="Maximized"
+		GlowBrush="{DynamicResource AccentColorBrush}"
 		Title="Util">
+    
 	<Grid>
 		<Border Margin="10">
 			<Grid>
@@ -73,4 +76,4 @@
 			</Grid>
 		</Border>
 	</Grid>
-</Window>
+</controls:MetroWindow>

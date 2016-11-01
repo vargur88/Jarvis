@@ -10,7 +10,7 @@ using Helpers;
 using PriceMonitor.UI.UiViewModels;
 using System.Windows;
 using EveCentralProvider;
-using EveCentralProvider.Types;
+using MahApps.Metro.Controls;
 
 namespace PriceMonitor
 {
@@ -127,39 +127,38 @@ namespace PriceMonitor
 			{
 				foreach (var obj in nodeToCheck.SubObjects.Where(obj => obj.Object.TypeId != 0))
 				{
-					var firstStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {firstStation.RegionId}, 1, firstStation.SystemId);
-					var secondStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() { secondStation.RegionId }, 1, secondStation.SystemId);
-
-
-					var k56 = firstStationOrders.SellOrders.OrderBy(k => k.Price);
-					var k576 = secondStationOrders.SellOrders.OrderBy(k => k.Price);
+					var firstStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {firstStation.RegionId}, 1, firstStation.SystemId)
+						.ContinueWith(t =>
+						{
+							return t.Result.SellOrders.OrderBy(k => k.Price);
+						});
 
 					/*var tst = await Services.Instance.MarketStatAsync(
 						new List<int>() {obj.Object.TypeId},
 						new List<int>() {firstStation.RegionId},
 						1,
 						firstStation.SystemId);*/
-					/*
-										var secondStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {secondStation.RegionId}, 1, secondStation.SystemId)
-											.ContinueWith(t =>
-											{
-												return t.Result.SellOrders.OrderBy(k => k.Price);
-											});
 
-										var whereToBuy = firstStationOrders.First().Price < secondStationOrders.First().Price ?
-											firstStationOrders : secondStationOrders;
+					var secondStationOrders = await Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {secondStation.RegionId}, 1, secondStation.SystemId)
+						.ContinueWith(t =>
+						{
+							return t.Result.SellOrders.OrderBy(k => k.Price);
+						});
 
-										var prices = new List<float> {whereToBuy.First().Price};
-										float firstBuyPrice = prices.First();
-										long buyVolume = whereToBuy.First().VolumeRemaining;
+					var whereToBuy = firstStationOrders.First().Price < secondStationOrders.First().Price ?
+						firstStationOrders : secondStationOrders;
 
-										foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice*0.05))
-										{
-											prices.Add(order.Price);
-											buyVolume += order.VolumeRemaining;
-										}
+					var prices = new List<float> {whereToBuy.First().Price};
+					float firstBuyPrice = prices.First();
+					long buyVolume = whereToBuy.First().VolumeRemaining;
 
-										long averagePrice = prices.Sum(price => (long) price)/prices.Count;*/
+					foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice*0.05))
+					{
+						prices.Add(order.Price);
+						buyVolume += order.VolumeRemaining;
+					}
+
+					long averagePrice = prices.Sum(price => (long) price)/prices.Count;
 				}
 			}).Wait();
 	}
