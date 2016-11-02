@@ -4,14 +4,16 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+		xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
+		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 		mc:Ignorable="d"
 		WindowState="Maximized"
 		GlowBrush="{DynamicResource AccentColorBrush}"
 		Title="Util">
 
-	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="0" TabStripPlacement="Left">
+	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="0" TabStripPlacement="Left" FlowDirection="RightToLeft">
 		<!-- Watching tab -->
-		<controls:MetroTabItem x:Name="AnalysisTab">
+		<controls:MetroTabItem x:Name="WatchingTab">
 			<controls:MetroTabItem.Header>
 				<Border BorderThickness="0.2, 0, 0.2, 0.2" BorderBrush="Black">
 					<Grid Width="150" Height="75">
@@ -24,12 +26,12 @@
 				</Border>
 			</controls:MetroTabItem.Header>
 			<UserControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<!--UserControl.Resources>
-					<DataTemplate DataType="{x:Type ui:AnalysisTabViewModel}">
-						<ui:AnalysisTabView/>
+				<UserControl.Resources>
+					<DataTemplate DataType="{x:Type uiViewModels:WatchingViewModel}">
+						<uiViews:WatchingView/>
 					</DataTemplate>
 				</UserControl.Resources>
-				<ContentControl Content="{Binding AnalisisVM}"/-->
+				<ContentControl Content="{Binding WatchingVM}"/>
 			</UserControl>
 		</controls:MetroTabItem>
 		
@@ -46,12 +48,12 @@
 				</Border>
 			</controls:MetroTabItem.Header>
 			<UserControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<!--UserControl.Resources>
-					<DataTemplate DataType="{x:Type ui:AnalysisTabViewModel}">
-						<ui:AnalysisTabView/>
+				<UserControl.Resources>
+					<DataTemplate DataType="{x:Type uiViewModels:WatchingViewModel}">
+						<uiViews:WatchingView/>
 					</DataTemplate>
 				</UserControl.Resources>
-				<ContentControl Content="{Binding AnalisisVM}"/-->
+				<ContentControl Content="{Binding WatchingVM}"/>
 			</UserControl>
 		</controls:MetroTabItem>
 	</controls:MetroAnimatedTabControl>

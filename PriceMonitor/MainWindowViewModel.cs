@@ -18,7 +18,9 @@ namespace PriceMonitor
 	{
 		public MainWindowViewModel()
 		{
-			Task.Run(() =>
+			WatchingVM = new WatchingViewModel();
+
+			/*Task.Run(() =>
 			{
 				var regionList = EntityService.Instance.RequestRegionsAsync();
 
@@ -42,8 +44,10 @@ namespace PriceMonitor
 					Reports.Add(new BasicReportViewModel());
 					Reports.Add(new BasicReportViewModel());
 				});
-			});
+			});*/
 		}
+
+		public WatchingViewModel WatchingVM { get; private set; }
 
 		private int menuCount;
 		public int MenuCount
