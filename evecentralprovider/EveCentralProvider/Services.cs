@@ -20,14 +20,22 @@ namespace EveCentralProvider
 	public sealed class Services : IServices
 	{
 		private readonly string ApiFormat = "http://api.eve-central.com/api/{0}?{1}";
+		private readonly string CrestApiFormat = "https://crest-tq.eveonline.com/market/{0}/history/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
 		private readonly string UserAgent = String.Format(".NET Eve Central Provider v{0}", FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+
+		private static JsonSerializerSettings _jsonSerializerSettings;
 
 		private static readonly Services _instance = new Services();
 		public static Services Instance { get { return _instance; } }
 
 		private Services()
 		{
-
+			_jsonSerializerSettings = new JsonSerializerSettings
+			{
+				PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+				TypeNameHandling = TypeNameHandling.Auto,
+				ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+			};
 		}
 
 		public List<TypeMarketStats> MarketStat(List<int> typeid, List<int> regionlimit, int minQ = 10001, int usesystem = 0, int hours = 24)
@@ -202,7 +210,22 @@ namespace EveCentralProvider
 			return results.quicklook;
 		}
 
+		private Uri BuildHistoryUrl(int typeid, int regionId)
+		{
+			Uri apiUrl = new Uri(String.Format(CrestApiFormat, regionId.ToString(), typeid.ToString()));
+			return apiUrl;
+		}
 
+		public async Task<TypeCrestHistory> HistoryAsync(int typeid, int regionId)
+		{
+			Uri apiUrl = BuildHistoryUrl(typeid, regionId);
+
+			var stream = await GetAsync(apiUrl);
+			StreamReader reader = new StreamReader(stream);
+			string json = reader.ReadToEnd();
+
+			return await Deserialize<TypeCrestHistory>(json);
+		}
 
 		public List<TypeHistory> History(int type, LocaleType locale, string idOrName, OrderType bid)
 		{
@@ -250,6 +273,7 @@ namespace EveCentralProvider
 			var stream = await GetAsync(apiUrl);
 			StreamReader reader = new StreamReader(stream);
 			string json = await reader.ReadToEndAsync();
+
 			return ParseHistoryJson(json);
 		}
 
@@ -420,5 +444,9 @@ namespace EveCentralProvider
 			return ms;
 		}
 
+		private static Task<T> Deserialize<T>(string content)
+		{
+			return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(content, _jsonSerializerSettings));
+		}
 	}
 }
