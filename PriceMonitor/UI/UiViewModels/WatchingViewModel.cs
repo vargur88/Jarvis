@@ -10,13 +10,10 @@ namespace PriceMonitor.UI.UiViewModels
 		public WatchingViewModel()
 		{
 			WatchingItems.Add(new ItemTradeHistoryViewModel());
-			WatchingItems.Add(new ItemTradeHistoryViewModel());
-			WatchingItems.Add(new ItemTradeHistoryViewModel());
-			WatchingItems.Add(new ItemTradeHistoryViewModel());
 
 			Task.Run(async () =>
 			{
-				var k = await Services.Instance.HistoryAsync(2865, 10000002);
+				//var k = await Services.Instance.HistoryAsync(2865, 10000002);
 			}).Wait();
 		}
 
