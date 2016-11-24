@@ -23,8 +23,5 @@ namespace Entity.DataTypes
 	{
 		public GameObject Object { get; set; }
 		public IEnumerable<ObjectsNode> SubObjects { get; set; }
-
-        /*public IEnumerable<ObjectsNode> SubObjects => subObjects;
-	    private readonly List<ObjectsNode> subObjects = new List<ObjectsNode>();*/
     }
 }

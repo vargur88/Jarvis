@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataTypes\HubMarketStat.cs" />
     <Compile Include="DataTypes\StationOrderInfo.cs" />
     <Compile Include="UI\BaseViewModel.cs" />
     <Compile Include="UI\UiViewModels\ItemTradeHistoryViewModel.cs" />

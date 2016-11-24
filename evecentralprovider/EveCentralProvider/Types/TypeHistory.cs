@@ -44,7 +44,7 @@ namespace EveCentralProvider.Types
 
 		public double AvgPrice { get; set; }
 
-		public int Volume { get; set; }
+		public long Volume { get; set; }
 
 		public DateTime Date { get; set; }
 	}
