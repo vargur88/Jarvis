@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using Entity.DataTypes;
 using EveCentralProvider;
 using EveCentralProvider.Types;
@@ -40,6 +41,34 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
+		public CollectionView TimeFilters { get; } = new CollectionView(new List<TimeFilter>()
+		{
+			new TimeFilter(TimeFilter.TimeFilterEnum.Day),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Week),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Month),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Quarter),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Year),
+			new TimeFilter(TimeFilter.TimeFilterEnum.AllTime),
+		});
+
+		private TimeFilter _selectedTimeFilter = new TimeFilter(TimeFilter.TimeFilterEnum.Month);
+		public TimeFilter SelectedTimeFilter
+		{
+			get { return _selectedTimeFilter; }
+			set
+			{
+				if (_selectedTimeFilter == value)
+				{
+					return;
+				}
+
+				_selectedTimeFilter = value;
+				NotifyPropertyChanged();
+
+				UpdateTimeAxis((int)SelectedTimeFilter.Value);
+			}
+		}
+
 		private PlotModel model;
 		public PlotModel Model
 		{
@@ -52,6 +81,35 @@ namespace PriceMonitor.UI.UiViewModels
 					NotifyPropertyChanged();
 				}
 			}
+		}
+
+		private void UpdateTimeAxis(int days)
+		{
+			if (Model != null)
+			{
+				Model.Axes[1].FilterMinValue = days == 0 ? 0 : DateTimeAxis.ToDouble(DateTime.Now - TimeSpan.FromDays(days));
+
+				Model.ResetAllAxes();
+				Model.InvalidatePlot(true);
+			}
+		}
+
+		private readonly Dictionary<string, OxyColor> _hubColors = new Dictionary<string, OxyColor>()
+		{
+			{"Jita", OxyColors.Blue},
+			{"Amarr", OxyColors.Red },
+			{"Hek", OxyColors.Gray }
+		};
+
+		private OxyColor ResolveColorFromHub(string hubName)
+		{
+			OxyColor color;
+			if (_hubColors.TryGetValue(hubName, out color))
+			{
+				return color;
+			}
+
+			return OxyColors.Automatic;
 		}
 
 		private void RequestHistory()
@@ -72,14 +130,14 @@ namespace PriceMonitor.UI.UiViewModels
 					var hubChart = new LineSeries
 					{
 						Title = hub.Name,
-						Color = OxyColors.Automatic     //todo diff color
+						Color = ResolveColorFromHub(hub.Name)
 					};
 					hubChart.Points.AddRange(dataPoints);
 
 					Application.Current.Dispatcher.Invoke(() =>
 					{
 						Model.Series.Add(hubChart);
-						Model.InvalidatePlot(true);
+						UpdateTimeAxis((int)SelectedTimeFilter.Value);
 					});
 				}
 			}).ContinueWith(async t =>
@@ -158,8 +216,28 @@ namespace PriceMonitor.UI.UiViewModels
 					TextColor = OxyColors.Aqua
 				}}
 			};
+		}
+	}
 
-			Model.Axes[1].FilterMinValue = DateTimeAxis.ToDouble(DateTime.Now - TimeSpan.FromDays(90));
+	public class TimeFilter
+	{
+		public TimeFilter(TimeFilterEnum value)
+		{
+			Value = value;
+			Name = Value.ToString();
+		}
+
+		public string Name { get; set; }
+		public TimeFilterEnum Value { get; set; }
+
+		public enum TimeFilterEnum
+		{
+			Day = 2,
+			Week = 7,
+			Month = 30,
+			Quarter = 120,
+			Year = 365,
+			AllTime = 0
 		}
 	}
 }
