@@ -12,9 +12,11 @@ namespace Entity
     using System;
     using System.Collections.Generic;
     
-    public partial class eve_map_regions
+    public partial class sys_config
     {
-        public int region_id { get; set; }
-        public string region_name { get; set; }
+        public string variable { get; set; }
+        public string value { get; set; }
+        public System.DateTime set_time { get; set; }
+        public string set_by { get; set; }
     }
 }

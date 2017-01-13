@@ -1,8 +1,6 @@
-﻿using System;
-using Entity.DataTypes;
+﻿using Entity.DataTypes;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Entity;
@@ -10,7 +8,6 @@ using Helpers;
 using PriceMonitor.UI.UiViewModels;
 using System.Windows;
 using EveCentralProvider;
-using MahApps.Metro.Controls;
 
 namespace PriceMonitor
 {
@@ -18,44 +15,33 @@ namespace PriceMonitor
 	{
 		public MainWindowViewModel()
 		{
-			WatchingVM = new WatchingViewModel();
+			//WatchingVM = new WatchingViewModel();
+			ReportsVM = new ReportsViewModel();
 
-			/*Task.Run(() =>
+			Task.Run(() =>
 			{
-				var regionList = EntityService.Instance.RequestRegionsAsync();
+				//var regionList = EntityService.Instance.RequestRegionsAsync();
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
-					foreach (var item in EntityService.Instance.RequestObjectNodes())
-					{
-						MenuItems.Add(item);
-					}
 
-					Charts.Add(new ChartViewModel(regionList.Result));
-					Charts.Add(new ChartViewModel(regionList.Result));
-
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
-					Reports.Add(new BasicReportViewModel());
+					//Charts.Add(new ChartViewModel(regionList.Result));
+					//Charts.Add(new ChartViewModel(regionList.Result));
 				});
-			});*/
+			});
 		}
 
 		public WatchingViewModel WatchingVM { get; private set; }
 
-		private int menuCount;
+		public ReportsViewModel ReportsVM { get; private set; }
+
+		private int _menuCount;
 		public int MenuCount
 		{
-			get { return menuCount; }
+			get { return _menuCount; }
 			set
 			{
-				menuCount = value;
+				_menuCount = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -67,28 +53,6 @@ namespace PriceMonitor
 			set
 			{
 				_charts = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private ObservableCollection<BasicReportViewModel> _reports = new ObservableCollection<BasicReportViewModel>();
-		public ObservableCollection<BasicReportViewModel> Reports
-		{
-			get { return _reports; }
-			set
-			{
-				_reports = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private ObservableCollection<ObjectsNode> _menuItems = new ObservableCollection<ObjectsNode>();
-		public ObservableCollection<ObjectsNode> MenuItems
-		{
-			get { return _menuItems; }
-			set
-			{
-				_menuItems = value;
 				NotifyPropertyChanged();
 			}
 		}

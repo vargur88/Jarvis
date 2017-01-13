@@ -44,9 +44,14 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="MySql.Data.Entity, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -65,48 +70,54 @@
     <Compile Include="DataTypes\ObjectsNode.cs" />
     <Compile Include="DataTypes\Region.cs" />
     <Compile Include="EntityService.cs" />
-    <Compile Include="EveEntityModel.Context.cs">
+    <Compile Include="EveModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EveEntityModel.Context.tt</DependentUpon>
+      <DependentUpon>EveModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="EveEntityModel.cs">
+    <Compile Include="EveModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EveEntityModel.tt</DependentUpon>
+      <DependentUpon>EveModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EveEntityModel.Designer.cs">
+    <Compile Include="EveModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EveEntityModel.edmx</DependentUpon>
+      <DependentUpon>EveModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="eve_inv_marketgroups.cs">
-      <DependentUpon>EveEntityModel.tt</DependentUpon>
+      <DependentUpon>EveModel.tt</DependentUpon>
     </Compile>
     <Compile Include="eve_inv_types.cs">
-      <DependentUpon>EveEntityModel.tt</DependentUpon>
+      <DependentUpon>EveModel.tt</DependentUpon>
     </Compile>
     <Compile Include="eve_map_regions.cs">
-      <DependentUpon>EveEntityModel.tt</DependentUpon>
+      <DependentUpon>EveModel.tt</DependentUpon>
     </Compile>
     <Compile Include="eve_map_solarsystems.cs">
-      <DependentUpon>EveEntityModel.tt</DependentUpon>
+      <DependentUpon>EveModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="eve_map_solarsystem_jumps.cs">
+      <DependentUpon>EveModel.tt</DependentUpon>
     </Compile>
     <Compile Include="eve_sta_stations.cs">
-      <DependentUpon>EveEntityModel.tt</DependentUpon>
+      <DependentUpon>EveModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sys_config.cs">
+      <DependentUpon>EveModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EntityDeploy Include="EveEntityModel.edmx">
+    <EntityDeploy Include="EveModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>EveEntityModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>EveModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="EveEntityModel.edmx.diagram">
-      <DependentUpon>EveEntityModel.edmx</DependentUpon>
+    <None Include="EveModel.edmx.diagram">
+      <DependentUpon>EveModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -114,18 +125,17 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EveEntityModel.Context.tt">
+    <Content Include="EveModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EveEntityModel.edmx</DependentUpon>
-      <LastGenOutput>EveEntityModel.Context.cs</LastGenOutput>
+      <DependentUpon>EveModel.edmx</DependentUpon>
+      <LastGenOutput>EveModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="EveEntityModel.tt">
+    <Content Include="EveModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>EveEntityModel.edmx</DependentUpon>
-      <LastGenOutput>EveEntityModel.cs</LastGenOutput>
+      <DependentUpon>EveModel.edmx</DependentUpon>
+      <LastGenOutput>EveModel.cs</LastGenOutput>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

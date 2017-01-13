@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\eve_etude\Jarvis\Entity\EveEntityModel.edmx'. 
+﻿// T4 code generation is enabled for model 'g:\sw\Jarvis\Entity\EveModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

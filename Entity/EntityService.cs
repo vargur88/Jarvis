@@ -13,7 +13,7 @@ namespace Entity
 
 		public async Task<List<SolarSystem>> RequestSystemsByRegionAsync(int regionId)
 		{
-			using (var ctx = new EntitiesConnection())
+			using (var ctx = new sysEntities())
 			{
 				var list = await ctx.eve_map_solarsystems
 					.Where(t => t.region_id == regionId)
@@ -32,7 +32,7 @@ namespace Entity
 
 		public async Task<List<Station>> RequestStationsBySystemAsync(int systemId)
 		{
-			using (var ctx = new EntitiesConnection())
+			using (var ctx = new sysEntities())
 			{
 				var list = await ctx.eve_sta_stations
 					.Where(t => t.solarsystem_id == systemId)
@@ -52,7 +52,7 @@ namespace Entity
 
 		public async Task<List<Station>> RequestStationsByRegionAsync(int regionId)
 		{
-			using (var ctx = new EntitiesConnection())
+			using (var ctx = new sysEntities())
 			{
 				var list = await ctx.eve_sta_stations
 					.Where(t => t.region_id == regionId)
@@ -71,7 +71,7 @@ namespace Entity
 
 		public async Task<List<Region>> RequestRegionsAsync()
 		{
-			using (var ctx = new EntitiesConnection())
+			using (var ctx = new sysEntities())
 			{
 				// except Unknown systems by filtering id
 				var list = await ctx.eve_map_regions
@@ -95,7 +95,7 @@ namespace Entity
 
 		private IEnumerable<ObjectsNode> DoRequestChain(int level)
 		{
-			using (var ctx = new EntitiesConnection())
+			using (var ctx = new sysEntities())
 			{
 				var list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
 					.Select(t => new ObjectsNode()
@@ -186,7 +186,7 @@ namespace Entity
 
 		public async Task<List<GameObject>> RequestObjectsAsync(int marketGroudpId)
 		{
-			using (var ctx = new EntitiesConnection())
+			using (var ctx = new sysEntities())
 			{
 				var list = await ctx.eve_inv_types.Where(t => t.marketgroup_id == marketGroudpId)
 					.Select(t => new GameObject()

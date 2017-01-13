@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="testModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="sysModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="eve_inv_marketgroups">
           <Key>
             <PropertyRef Name="marketgroup_id" />
@@ -57,6 +57,16 @@
           <Property Name="region_id" Type="int" Nullable="false" />
           <Property Name="region_name" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="eve_map_solarsystem_jumps">
+          <Key>
+            <PropertyRef Name="from_solarsystem_id" />
+            <PropertyRef Name="to_solarsystem_id" />
+          </Key>
+          <Property Name="from_solarsystem_id" Type="int" Nullable="false" />
+          <Property Name="to_solarsystem_id" Type="int" Nullable="false" />
+          <Property Name="from_region_id" Type="int" Nullable="false" />
+          <Property Name="to_region_id" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="eve_map_solarsystems">
           <Key>
             <PropertyRef Name="solarsystem_id" />
@@ -91,17 +101,29 @@
           <Property Name="created" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="updated" Type="datetime" Precision="0" Nullable="false" />
         </EntityType>
-        <EntityContainer Name="testModelStoreContainer">
-          <EntitySet Name="eve_inv_marketgroups" EntityType="Self.eve_inv_marketgroups" Schema="test" store:Type="Tables" />
-          <EntitySet Name="eve_inv_types" EntityType="Self.eve_inv_types" Schema="test" store:Type="Tables" />
-          <EntitySet Name="eve_map_regions" EntityType="Self.eve_map_regions" Schema="test" store:Type="Tables" />
-          <EntitySet Name="eve_map_solarsystems" EntityType="Self.eve_map_solarsystems" Schema="test" store:Type="Tables" />
-          <EntitySet Name="eve_sta_stations" EntityType="Self.eve_sta_stations" Schema="test" store:Type="Tables" />
+        <EntityType Name="sys_config">
+          <Key>
+            <PropertyRef Name="variable" />
+          </Key>
+          <Property Name="variable" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="value" Type="varchar" MaxLength="128" />
+          <Property Name="set_time" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="set_by" Type="varchar" MaxLength="128" />
+        </EntityType>
+        <EntityContainer Name="sysModelStoreContainer">
+          <EntitySet Name="eve_inv_marketgroups" EntityType="Self.eve_inv_marketgroups" Schema="sys" store:Type="Tables" />
+          <EntitySet Name="eve_inv_types" EntityType="Self.eve_inv_types" Schema="sys" store:Type="Tables" />
+          <EntitySet Name="eve_map_regions" EntityType="Self.eve_map_regions" Schema="sys" store:Type="Tables" />
+          <EntitySet Name="eve_map_solarsystem_jumps" EntityType="Self.eve_map_solarsystem_jumps" Schema="sys" store:Type="Tables" />
+          <EntitySet Name="eve_map_solarsystems" EntityType="Self.eve_map_solarsystems" Schema="sys" store:Type="Tables" />
+          <EntitySet Name="eve_sta_stations" EntityType="Self.eve_sta_stations" Schema="sys" store:Type="Tables" />
+          <EntitySet Name="sys_config" EntityType="Self.sys_config" Schema="sys" store:Type="Tables" />
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="testModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="sysModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="eve_inv_marketgroups">
           <Key>
             <PropertyRef Name="marketgroup_id" />
@@ -154,6 +176,16 @@
           <Property Name="region_id" Type="Int32" Nullable="false" />
           <Property Name="region_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="eve_map_solarsystem_jumps">
+          <Key>
+            <PropertyRef Name="from_solarsystem_id" />
+            <PropertyRef Name="to_solarsystem_id" />
+          </Key>
+          <Property Name="from_solarsystem_id" Type="Int32" Nullable="false" />
+          <Property Name="to_solarsystem_id" Type="Int32" Nullable="false" />
+          <Property Name="from_region_id" Type="Int32" Nullable="false" />
+          <Property Name="to_region_id" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="eve_map_solarsystems">
           <Key>
             <PropertyRef Name="solarsystem_id" />
@@ -172,37 +204,48 @@
           <Property Name="dotlan_y" Type="Int32" />
           <Property Name="has_station" Type="Boolean" />
         </EntityType>
-        <EntityContainer Name="EntitiesConnection" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="eve_inv_marketgroups" EntityType="Self.eve_inv_marketgroups" />
-          <EntitySet Name="eve_inv_types" EntityType="Self.eve_inv_types" />
-          <EntitySet Name="eve_map_regions" EntityType="Self.eve_map_regions" />
-          <EntitySet Name="eve_map_solarsystems" EntityType="Self.eve_map_solarsystems" />
-          <EntitySet Name="eve_sta_stations" EntityType="testModel.eve_sta_stations" />
-        </EntityContainer>
         <EntityType Name="eve_sta_stations">
           <Key>
             <PropertyRef Name="station_id" />
           </Key>
           <Property Name="station_id" Type="Int32" Nullable="false" />
           <Property Name="solarsystem_id" Type="Int32" Nullable="false" />
-          <Property Name="solarsystem_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="solarsystem_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="region_id" Type="Int32" Nullable="false" />
-          <Property Name="region_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="region_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="station_type_id" Type="Int32" Nullable="false" />
-          <Property Name="station_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="station_name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="corporation_id" Type="Int32" Nullable="false" />
-          <Property Name="corporation_name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="corporation_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="created" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="updated" Type="DateTime" Nullable="false" />
         </EntityType>
+        <EntityType Name="sys_config">
+          <Key>
+            <PropertyRef Name="variable" />
+          </Key>
+          <Property Name="variable" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="value" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="set_time" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="set_by" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="sysEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="eve_inv_marketgroups" EntityType="Self.eve_inv_marketgroups" />
+          <EntitySet Name="eve_inv_types" EntityType="Self.eve_inv_types" />
+          <EntitySet Name="eve_map_regions" EntityType="Self.eve_map_regions" />
+          <EntitySet Name="eve_map_solarsystem_jumps" EntityType="Self.eve_map_solarsystem_jumps" />
+          <EntitySet Name="eve_map_solarsystems" EntityType="Self.eve_map_solarsystems" />
+          <EntitySet Name="eve_sta_stations" EntityType="Self.eve_sta_stations" />
+          <EntitySet Name="sys_config" EntityType="Self.sys_config" />
+        </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="testModelStoreContainer" CdmEntityContainer="EntitiesConnection">
+        <EntityContainerMapping StorageEntityContainer="sysModelStoreContainer" CdmEntityContainer="sysEntities">
           <EntitySetMapping Name="eve_inv_marketgroups">
-            <EntityTypeMapping TypeName="testModel.eve_inv_marketgroups">
+            <EntityTypeMapping TypeName="sysModel.eve_inv_marketgroups">
               <MappingFragment StoreEntitySet="eve_inv_marketgroups">
                 <ScalarProperty Name="marketgroup_id" ColumnName="marketgroup_id" />
                 <ScalarProperty Name="parentgroup_id" ColumnName="parentgroup_id" />
@@ -219,7 +262,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="eve_inv_types">
-            <EntityTypeMapping TypeName="testModel.eve_inv_types">
+            <EntityTypeMapping TypeName="sysModel.eve_inv_types">
               <MappingFragment StoreEntitySet="eve_inv_types">
                 <ScalarProperty Name="type_id" ColumnName="type_id" />
                 <ScalarProperty Name="marketgroup_id" ColumnName="marketgroup_id" />
@@ -249,15 +292,25 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="eve_map_regions">
-            <EntityTypeMapping TypeName="testModel.eve_map_regions">
+            <EntityTypeMapping TypeName="sysModel.eve_map_regions">
               <MappingFragment StoreEntitySet="eve_map_regions">
                 <ScalarProperty Name="region_id" ColumnName="region_id" />
                 <ScalarProperty Name="region_name" ColumnName="region_name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="eve_map_solarsystem_jumps">
+            <EntityTypeMapping TypeName="sysModel.eve_map_solarsystem_jumps">
+              <MappingFragment StoreEntitySet="eve_map_solarsystem_jumps">
+                <ScalarProperty Name="from_solarsystem_id" ColumnName="from_solarsystem_id" />
+                <ScalarProperty Name="to_solarsystem_id" ColumnName="to_solarsystem_id" />
+                <ScalarProperty Name="from_region_id" ColumnName="from_region_id" />
+                <ScalarProperty Name="to_region_id" ColumnName="to_region_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="eve_map_solarsystems">
-            <EntityTypeMapping TypeName="testModel.eve_map_solarsystems">
+            <EntityTypeMapping TypeName="sysModel.eve_map_solarsystems">
               <MappingFragment StoreEntitySet="eve_map_solarsystems">
                 <ScalarProperty Name="solarsystem_id" ColumnName="solarsystem_id" />
                 <ScalarProperty Name="region_id" ColumnName="region_id" />
@@ -276,19 +329,29 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="eve_sta_stations">
-            <EntityTypeMapping TypeName="testModel.eve_sta_stations">
+            <EntityTypeMapping TypeName="sysModel.eve_sta_stations">
               <MappingFragment StoreEntitySet="eve_sta_stations">
-                <ScalarProperty Name="updated" ColumnName="updated" />
-                <ScalarProperty Name="created" ColumnName="created" />
-                <ScalarProperty Name="corporation_name" ColumnName="corporation_name" />
-                <ScalarProperty Name="corporation_id" ColumnName="corporation_id" />
-                <ScalarProperty Name="station_name" ColumnName="station_name" />
-                <ScalarProperty Name="station_type_id" ColumnName="station_type_id" />
-                <ScalarProperty Name="region_name" ColumnName="region_name" />
-                <ScalarProperty Name="region_id" ColumnName="region_id" />
-                <ScalarProperty Name="solarsystem_name" ColumnName="solarsystem_name" />
-                <ScalarProperty Name="solarsystem_id" ColumnName="solarsystem_id" />
                 <ScalarProperty Name="station_id" ColumnName="station_id" />
+                <ScalarProperty Name="solarsystem_id" ColumnName="solarsystem_id" />
+                <ScalarProperty Name="solarsystem_name" ColumnName="solarsystem_name" />
+                <ScalarProperty Name="region_id" ColumnName="region_id" />
+                <ScalarProperty Name="region_name" ColumnName="region_name" />
+                <ScalarProperty Name="station_type_id" ColumnName="station_type_id" />
+                <ScalarProperty Name="station_name" ColumnName="station_name" />
+                <ScalarProperty Name="corporation_id" ColumnName="corporation_id" />
+                <ScalarProperty Name="corporation_name" ColumnName="corporation_name" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="updated" ColumnName="updated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sys_config">
+            <EntityTypeMapping TypeName="sysModel.sys_config">
+              <MappingFragment StoreEntitySet="sys_config">
+                <ScalarProperty Name="variable" ColumnName="variable" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="set_time" ColumnName="set_time" />
+                <ScalarProperty Name="set_by" ColumnName="set_by" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -308,7 +371,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
     </Options>

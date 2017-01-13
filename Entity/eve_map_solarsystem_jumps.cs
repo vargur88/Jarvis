@@ -12,9 +12,11 @@ namespace Entity
     using System;
     using System.Collections.Generic;
     
-    public partial class eve_map_regions
+    public partial class eve_map_solarsystem_jumps
     {
-        public int region_id { get; set; }
-        public string region_name { get; set; }
+        public int from_solarsystem_id { get; set; }
+        public int to_solarsystem_id { get; set; }
+        public int from_region_id { get; set; }
+        public int to_region_id { get; set; }
     }
 }
