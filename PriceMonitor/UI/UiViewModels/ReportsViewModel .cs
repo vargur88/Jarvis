@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using Entity;
 using Entity.DataTypes;
+using Helpers;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -67,5 +69,31 @@ namespace PriceMonitor.UI.UiViewModels
 				NotifyPropertyChanged();
 			}
 		}
+
+		private ObjectsNode _selectedNode;
+		public ObjectsNode SelectedNode
+		{
+			get { return _selectedNode; }
+			set
+			{
+				_selectedNode = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private RelayCommand _generateReportCmd;
+		public RelayCommand GenerateReportCmd
+		{
+			get
+			{
+				return _generateReportCmd ?? (_generateReportCmd = 
+					new RelayCommand(
+						p => SelectedNode != null && SelectedNode.SubObjects == null, 
+						p => Foo()/*CheckPrice(SelectedChain, FirstRegion, SecondRegion)*/));
+			}
+		}
+
+		private void Foo()
+		{}
 	}
 }

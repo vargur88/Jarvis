@@ -22,7 +22,9 @@
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 			
-			<TreeView Grid.Row="0" ItemsSource="{Binding Path=MenuItems}" ScrollViewer.VerticalScrollBarVisibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+			<TreeView Grid.Row="0"  ScrollViewer.VerticalScrollBarVisibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+					  ItemsSource="{Binding Path=MenuItems}"
+					  SelectedItemChanged="TreeView_OnSelectedItemChanged">
 				<TreeView.ItemTemplate>
 					<HierarchicalDataTemplate DataType="{x:Type dataTypes:ObjectsNode}" ItemsSource="{Binding SubObjects}">
 						<WrapPanel>
@@ -72,7 +74,7 @@
 				<Label Grid.Column="0" Content="Second" HorizontalAlignment="Center"/>
 			</Grid>
 
-			<Button Grid.Row="3" Margin="2" Content="Generate"/>
+			<Button Grid.Row="3" Margin="2" Content="Generate" Command="{Binding Path=GenerateReportCmd}"/>
 		</Grid>
 
 		<ItemsControl Grid.Column="1" ItemsSource="{Binding BasicReportsItems}" HorizontalAlignment="Center" VerticalAlignment="Center">

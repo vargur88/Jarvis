@@ -7,7 +7,6 @@ using Entity.DataTypes;
 using System.Linq;
 using Entity;
 using EveCentralProvider;
-using System.Windows;
 using EveCentralProvider.Types;
 using Helpers;
 
