@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="PriceMonitor.UI.UiViews.ItemTinyTradeHistoryView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:oxy="http://oxyplot.org/wpf"
+			 mc:Ignorable="d">
+<Border BorderThickness="1" Background="White" BorderBrush="#CCCCCC" Width="200" Height="100">
+		<Grid Margin="1">
+			<oxy:PlotView Model="{Binding Model}" Background="#1A1A1A"/>
+		</Grid>
+</Border>
+</UserControl>

@@ -15,8 +15,9 @@ namespace PriceMonitor
 	{
 		public MainWindowViewModel()
 		{
-			//WatchingVM = new WatchingViewModel();
+			WatchingVM = new WatchingViewModel();
 			ReportsVM = new ReportsViewModel();
+			PlanetaryVM = new PlanetaryViewModel();
 
 			Task.Run(() =>
 			{
@@ -34,6 +35,8 @@ namespace PriceMonitor
 		public WatchingViewModel WatchingVM { get; private set; }
 
 		public ReportsViewModel ReportsVM { get; private set; }
+
+		public PlanetaryViewModel PlanetaryVM { get; private set; }
 
 		private int _menuCount;
 		public int MenuCount

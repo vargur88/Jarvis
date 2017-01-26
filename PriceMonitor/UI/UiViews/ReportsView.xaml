@@ -46,9 +46,9 @@
 						<RowDefinition/>
 						<RowDefinition/>
 					</Grid.RowDefinitions>
-					<ComboBox Grid.Row="0" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SelectedRegion, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="1" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SelectedRegion, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="2" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SelectedRegion, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
+					<ComboBox Grid.Row="0" ItemsSource="{Binding Path=RegionListFirst}" SelectedItem="{Binding Path=SelectedRegionFirst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
+					<ComboBox Grid.Row="1" ItemsSource="{Binding Path=SystemListFirst}" SelectedItem="{Binding Path=SelectedSystemFirst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
+					<ComboBox Grid.Row="2" ItemsSource="{Binding Path=StationListFirst}" SelectedItem="{Binding Path=SelectedStationFirst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
 				</Grid>
 				
 				<Label Grid.Column="0" Content="First" HorizontalAlignment="Center"/>
@@ -66,9 +66,9 @@
 						<RowDefinition/>
 						<RowDefinition/>
 					</Grid.RowDefinitions>
-					<ComboBox Grid.Row="0" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SelectedRegion, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="1" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SelectedRegion, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="2" ItemsSource="{Binding Path=RegionList}" SelectedItem="{Binding Path=SelectedRegion, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"/>
+					<ComboBox Grid.Row="0" ItemsSource="{Binding Path=RegionListSecond}" SelectedItem="{Binding Path=SelectedRegionSecond, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
+					<ComboBox Grid.Row="1" ItemsSource="{Binding Path=SystemListSecond}" SelectedItem="{Binding Path=SelectedSystemSecond, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
+					<ComboBox Grid.Row="2" ItemsSource="{Binding Path=StationListSecond}" SelectedItem="{Binding Path=SelectedStationSecond, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
 				</Grid>
 
 				<Label Grid.Column="0" Content="Second" HorizontalAlignment="Center"/>

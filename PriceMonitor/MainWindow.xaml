@@ -10,7 +10,7 @@
 		GlowBrush="{DynamicResource AccentColorBrush}"
 		Title="Util">
 
-	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="1" TabStripPlacement="Left">
+	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="2" TabStripPlacement="Left">
 		<!-- Watching tab -->
 		<controls:MetroTabItem x:Name="WatchingTab">
 			<controls:MetroTabItem.Header>
@@ -55,6 +55,29 @@
 				<ContentControl Content="{Binding ReportsVM}"/>
 			</UserControl>
 		</controls:MetroTabItem>
+
+		<controls:MetroTabItem x:Name="PlanetaryTab">
+			<controls:MetroTabItem.Header>
+				<Border BorderThickness="0.2, 0, 0.2, 0.2" BorderBrush="Black">
+					<Grid Width="150" Height="75">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="2*"/>
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="1" Text="Planetary" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+					</Grid>
+				</Border>
+			</controls:MetroTabItem.Header>
+			<UserControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<UserControl.Resources>
+					<DataTemplate DataType="{x:Type uiViewModels:PlanetaryViewModel}">
+						<uiViews:PlanetaryView/>
+					</DataTemplate>
+				</UserControl.Resources>
+				<ContentControl Content="{Binding PlanetaryVM}"/>
+			</UserControl>
+		</controls:MetroTabItem>
+
 	</controls:MetroAnimatedTabControl>
 
 </controls:MetroWindow>
