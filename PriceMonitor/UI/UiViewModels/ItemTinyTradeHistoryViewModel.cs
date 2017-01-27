@@ -25,7 +25,17 @@ namespace PriceMonitor.UI.UiViewModels
 			UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Quarter);
 		}
 
-		private GameObject GameObject { get; set; }
+		private GameObject _gameObject;
+		public GameObject GameObject
+		{
+			get { return _gameObject; }
+			set
+			{
+				_gameObject = value;
+				NotifyPropertyChanged();
+			}
+		}
+
 		private Station Hub { get; set; }
 
 		private DataTable _marketStatList;
@@ -77,7 +87,6 @@ namespace PriceMonitor.UI.UiViewModels
 
 				var hubChart = new LineSeries
 				{
-					Title = Hub.Name,
 					Color = OxyColors.Blue
 				};
 				hubChart.Points.AddRange(dataPoints);

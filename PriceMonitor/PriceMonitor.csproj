@@ -88,6 +88,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DataTypes\HubMarketStat.cs" />
+    <Compile Include="DataTypes\PINode.cs" />
     <Compile Include="DataTypes\StationOrderInfo.cs" />
     <Compile Include="UI\BaseViewModel.cs" />
     <Compile Include="UI\UiViewModels\ItemTinyTradeHistoryViewModel.cs" />
