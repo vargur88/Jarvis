@@ -84,147 +84,168 @@ namespace PriceMonitor.DataTypes
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.BiotechResearchReports),
 					ID = PIConst.BiotechResearchReportsID,
-					From = new List<int>() {PIConst.ConstructionBlocksID, PIConst.LivestockID, PIConst.NanitesID}
+					From = new List<int>() {PIConst.ConstructionBlocksID, PIConst.LivestockID, PIConst.NanitesID},
+					To = new List<int>() {PIConst.WetwareMainframeID}
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.CameraDrones),
 					ID = PIConst.CameraDronesID,
-					From = new List<int>() {PIConst.RocketFuelID, PIConst.SilicateGlassID}
+					From = new List<int>() {PIConst.RocketFuelID, PIConst.SilicateGlassID},
+					To = new List<int>() {PIConst.SelfHarmonizingPowerCoreID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.Condensates),
 					ID = PIConst.CondensatesID,
-					From = new List<int>() {PIConst.CoolantID, PIConst.OxidesID}
+					From = new List<int>() {PIConst.CoolantID, PIConst.OxidesID},
+					To = new List<int>() {PIConst.OrganicMortarApplicatorsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.CryoprotectantSolution),
 					ID = PIConst.CryoprotectantSolutionID,
-					From = new List<int>() {PIConst.FertilizerID, PIConst.TestCulturesID, PIConst.SyntheticOilID}
+					From = new List<int>() {PIConst.FertilizerID, PIConst.TestCulturesID, PIConst.SyntheticOilID},
+					To = new List<int>() {PIConst.WetwareMainframeID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.DataChips),
 					ID = PIConst.DataChipsID,
-					From = new List<int>() {PIConst.MicrofiberShieldingID, PIConst.SupertensilePlasticsID}
+					From = new List<int>() {PIConst.MicrofiberShieldingID, PIConst.SupertensilePlasticsID},
+					To = new List<int>() {PIConst.BroadcastNodeID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.GelMatrixBiopaste),
 					ID = PIConst.GelMatrixBiopasteID,
-					From = new List<int>() {PIConst.BiocellsID, PIConst.OxidesID, PIConst.SuperconductorsID}
+					From = new List<int>() {PIConst.BiocellsID, PIConst.OxidesID, PIConst.SuperconductorsID},
+					To = new List<int>() {PIConst.IntegrityResponseDronesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.GuidanceSystems),
 					ID = PIConst.GuidanceSystemsID,
-					From = new List<int>() {PIConst.TransmitterID, PIConst.WaterCooledCPUID}
+					From = new List<int>() {PIConst.TransmitterID, PIConst.WaterCooledCPUID},
+					To = new List<int>() {PIConst.RecursiveComputingModuleID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.HazmatDetectionSystems),
 					ID = PIConst.HazmatDetectionSystemsID,
-					From = new List<int>() {PIConst.PolytextilesID, PIConst.TransmitterID, PIConst.ViralAgentID}
+					From = new List<int>() {PIConst.PolytextilesID, PIConst.TransmitterID, PIConst.ViralAgentID},
+					To = new List<int>() {PIConst.IntegrityResponseDronesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.HermeticMembranes),
 					ID = PIConst.HermeticMembranesID,
-					From = new List<int>() {PIConst.GeneticallyEnhancedLivestockID, PIConst.PolyaramidsID}
+					From = new List<int>() {PIConst.GeneticallyEnhancedLivestockID, PIConst.PolyaramidsID},
+					To = new List<int>() {PIConst.SelfHarmonizingPowerCoreID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.HighTechTransmitters),
 					ID = PIConst.HighTechTransmittersID,
-					From = new List<int>() {PIConst.TransmitterID, PIConst.PolyaramidsID}
+					From = new List<int>() {PIConst.TransmitterID, PIConst.PolyaramidsID},
+					To = new List<int>() {PIConst.BroadcastNodeID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.IndustrialExplosives),
 					ID = PIConst.IndustrialExplosivesID,
-					From = new List<int>() {PIConst.FertilizerID, PIConst.PolytextilesID}
+					From = new List<int>() {PIConst.FertilizerID, PIConst.PolytextilesID},
+					To = new List<int>() {PIConst.NanoFactoryID}
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.Neocoms),
 					ID = PIConst.NeocomsID,
-					From = new List<int>() {PIConst.BiocellsID, PIConst.SilicateGlassID}
+					From = new List<int>() {PIConst.BiocellsID, PIConst.SilicateGlassID},
+					To = new List<int>() {PIConst.BroadcastNodeID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.NuclearReactors),
 					ID = PIConst.NuclearReactorsID,
-					From = new List<int>() {PIConst.EnrichedUraniumID, PIConst.MicrofiberShieldingID}
+					From = new List<int>() {PIConst.EnrichedUraniumID, PIConst.MicrofiberShieldingID},
+					To = new List<int>() {PIConst.SelfHarmonizingPowerCoreID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.PlanetaryVehicles),
 					ID = PIConst.PlanetaryVehiclesID,
-					From = new List<int>() {PIConst.MechanicalPartsID, PIConst.MiniatureElectronicsID, PIConst.SupertensilePlasticsID}
+					From = new List<int>() {PIConst.MechanicalPartsID, PIConst.MiniatureElectronicsID, PIConst.SupertensilePlasticsID},
+					To = new List<int>() {PIConst.IntegrityResponseDronesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.Robotics),
 					ID = PIConst.RoboticsID,
-					From = new List<int>() {PIConst.ConsumerElectronicsID, PIConst.MechanicalPartsID}
+					From = new List<int>() {PIConst.ConsumerElectronicsID, PIConst.MechanicalPartsID},
+					To = new List<int>() {PIConst.OrganicMortarApplicatorsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.SmartfabUnits),
 					ID = PIConst.SmartfabUnitsID,
-					From = new List<int>() {PIConst.ConstructionBlocksID, PIConst.MiniatureElectronicsID}
+					From = new List<int>() {PIConst.ConstructionBlocksID, PIConst.MiniatureElectronicsID},
+					To = new List<int>() {PIConst.SterileConduitsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.Supercomputers),
 					ID = PIConst.SupercomputersID,
-					From = new List<int>() {PIConst.ConsumerElectronicsID, PIConst.CoolantID, PIConst.WaterCooledCPUID}
+					From = new List<int>() {PIConst.ConsumerElectronicsID, PIConst.CoolantID, PIConst.WaterCooledCPUID},
+					To = new List<int>() {PIConst.WetwareMainframeID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.SyntheticSynapses),
 					ID = PIConst.SyntheticSynapsesID,
-					From = new List<int>() {PIConst.SupertensilePlasticsID, PIConst.TestCulturesID}
+					From = new List<int>() {PIConst.SupertensilePlasticsID, PIConst.TestCulturesID},
+					To = new List<int>() {PIConst.RecursiveComputingModuleID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.TranscranialMicrocontrollers),
 					ID = PIConst.TranscranialMicrocontrollersID,
-					From = new List<int>() {PIConst.BiocellsID, PIConst.NanitesID}
+					From = new List<int>() {PIConst.BiocellsID, PIConst.NanitesID},
+					To = new List<int>() {PIConst.RecursiveComputingModuleID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.UkomiSuperconductors),
 					ID = PIConst.UkomiSuperconductorsID,
-					From = new List<int>() {PIConst.SuperconductorsID, PIConst.SyntheticOilID}
+					From = new List<int>() {PIConst.SuperconductorsID, PIConst.SyntheticOilID},
+					To = new List<int>() {PIConst.NanoFactoryID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Specialized,
 					Name = nameof(PIConst.Vaccines),
 					ID = PIConst.VaccinesID,
-					From = new List<int>() {PIConst.LivestockID, PIConst.ViralAgentID}
+					From = new List<int>() {PIConst.LivestockID, PIConst.ViralAgentID},
+					To = new List<int>() {PIConst.SterileConduitsID }
 				},
 				//tier2
 				new PINode()
@@ -232,168 +253,310 @@ namespace PriceMonitor.DataTypes
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Biocells),
 					ID = PIConst.BiocellsID,
-					From = new List<int>() {PIConst.BiofuelsID, PIConst.PreciousMetalsID}
+					From = new List<int>() {PIConst.BiofuelsID, PIConst.PreciousMetalsID},
+					To = new List<int>() {PIConst.GelMatrixBiopasteID, PIConst.NeocomsID , PIConst.TranscranialMicrocontrollersID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.ConstructionBlocks),
 					ID = PIConst.ConstructionBlocksID,
-					From = new List<int>() {PIConst.ReactiveMetalsID, PIConst.ToxicMetalsID}
+					From = new List<int>() {PIConst.ReactiveMetalsID, PIConst.ToxicMetalsID},
+					To = new List<int>() {PIConst.BiotechResearchReportsID, PIConst.SmartfabUnitsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.ConsumerElectronics),
 					ID = PIConst.ConsumerElectronicsID,
-					From = new List<int>() {PIConst.ToxicMetalsID, PIConst.ChiralStructuresID}
+					From = new List<int>() {PIConst.ToxicMetalsID, PIConst.ChiralStructuresID},
+					To = new List<int>() {PIConst.RoboticsID, PIConst.SupercomputersID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Coolant),
 					ID = PIConst.CoolantID,
-					From = new List<int>() {PIConst.WaterID, PIConst.ElectrolytesID}
+					From = new List<int>() {PIConst.WaterID, PIConst.ElectrolytesID},
+					To = new List<int>() {PIConst.CondensatesID, PIConst.SupercomputersID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.EnrichedUranium),
 					ID = PIConst.EnrichedUraniumID,
-					From = new List<int>() {PIConst.ToxicMetalsID, PIConst.PreciousMetalsID}
+					From = new List<int>() {PIConst.ToxicMetalsID, PIConst.PreciousMetalsID},
+					To = new List<int>() {PIConst.NuclearReactorsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Fertilizer),
 					ID = PIConst.FertilizerID,
-					From = new List<int>() {PIConst.ProteinsID, PIConst.BacteriaID}
+					From = new List<int>() {PIConst.ProteinsID, PIConst.BacteriaID},
+					To = new List<int>() {PIConst.CryoprotectantSolutionID, PIConst.IndustrialExplosivesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.GeneticallyEnhancedLivestock),
 					ID = PIConst.GeneticallyEnhancedLivestockID,
-					From = new List<int>() {PIConst.ProteinsID, PIConst.BiomassID}
+					From = new List<int>() {PIConst.ProteinsID, PIConst.BiomassID},
+					To = new List<int>() {PIConst.HermeticMembranesID}
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Livestock),
 					ID = PIConst.LivestockID,
-					From = new List<int>() {PIConst.ProteinsID, PIConst.BiofuelsID}
+					From = new List<int>() {PIConst.ProteinsID, PIConst.BiofuelsID},
+					To = new List<int>() {PIConst.BiocellsID, PIConst.VaccinesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.MechanicalParts),
 					ID = PIConst.MechanicalPartsID,
-					From = new List<int>() {PIConst.ReactiveMetalsID, PIConst.PreciousMetalsID}
+					From = new List<int>() {PIConst.ReactiveMetalsID, PIConst.PreciousMetalsID},
+					To = new List<int>() {PIConst.PlanetaryVehiclesID, PIConst.RoboticsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.MicrofiberShielding),
 					ID = PIConst.MicrofiberShieldingID,
-					From = new List<int>() {PIConst.IndustrialFibersID, PIConst.SiliconID}
+					From = new List<int>() {PIConst.IndustrialFibersID, PIConst.SiliconID},
+					To = new List<int>() {PIConst.DataChipsID, PIConst.NuclearReactorsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.MiniatureElectronics),
 					ID = PIConst.MiniatureElectronicsID,
-					From = new List<int>() {PIConst.ChiralStructuresID, PIConst.SiliconID}
+					From = new List<int>() {PIConst.PlanetaryVehiclesID, PIConst.SmartfabUnitsID}
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Nanites),
 					ID = PIConst.NanitesID,
-					From = new List<int>() {PIConst.BacteriaID, PIConst.ReactiveMetalsID}
+					From = new List<int>() {PIConst.BacteriaID, PIConst.ReactiveMetalsID},
+					To = new List<int>() {PIConst.BiotechResearchReportsID, PIConst.TranscranialMicrocontrollersID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Oxides),
 					ID = PIConst.OxidesID,
-					From = new List<int>() {PIConst.OxidizingCompoundID, PIConst.OxygenID}
+					From = new List<int>() {PIConst.CondensatesID, PIConst.GelMatrixBiopasteID}
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Polyaramids),
 					ID = PIConst.PolyaramidsID,
-					From = new List<int>() {PIConst.OxidizingCompoundID, PIConst.IndustrialFibersID}
+					From = new List<int>() {PIConst.HermeticMembranesID , PIConst.HighTechTransmittersID}
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Polytextiles),
 					ID = PIConst.PolytextilesID,
-					From = new List<int>() {PIConst.BiofuelsID, PIConst.IndustrialFibersID}
+					From = new List<int>() {PIConst.BiofuelsID, PIConst.IndustrialFibersID},
+					To = new List<int>() {PIConst.HazmatDetectionSystemsID, PIConst.IndustrialExplosivesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.RocketFuel),
 					ID = PIConst.RocketFuelID,
-					From = new List<int>() {PIConst.ElectrolytesID, PIConst.PlasmoidsID}
+					From = new List<int>() {PIConst.ElectrolytesID, PIConst.PlasmoidsID},
+					To = new List<int>() {PIConst.CameraDronesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.SilicateGlass),
 					ID = PIConst.SilicateGlassID,
-					From = new List<int>() {PIConst.SiliconID, PIConst.OxidizingCompoundID }
+					From = new List<int>() {PIConst.SiliconID, PIConst.OxidizingCompoundID },
+					To = new List<int>() {PIConst.CameraDronesID, PIConst.NeocomsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Superconductors),
 					ID = PIConst.SuperconductorsID,
-					From = new List<int>() {PIConst.WaterID, PIConst.PlasmoidsID }
+					From = new List<int>() {PIConst.WaterID, PIConst.PlasmoidsID },
+					To = new List<int>() {PIConst.GelMatrixBiopasteID, PIConst.UkomiSuperconductorsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.SupertensilePlastics),
 					ID = PIConst.SupertensilePlasticsID,
-					From = new List<int>() {PIConst.OxygenID, PIConst.BiomassID }
+					From = new List<int>() {PIConst.OxygenID, PIConst.BiomassID },
+					To = new List<int>() {PIConst.DataChipsID, PIConst.PlanetaryVehiclesID, PIConst.SyntheticSynapsesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.SyntheticOil),
 					ID = PIConst.SyntheticOilID,
-					From = new List<int>() {PIConst.OxygenID, PIConst.ElectrolytesID }
+					From = new List<int>() {PIConst.OxygenID, PIConst.ElectrolytesID },
+					To = new List<int>() {PIConst.CryoprotectantSolutionID, PIConst.UkomiSuperconductorsID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.TestCultures),
 					ID = PIConst.TestCulturesID,
-					From = new List<int>() {PIConst.WaterID, PIConst.BacteriaID }
+					From = new List<int>() {PIConst.WaterID, PIConst.BacteriaID },
+					To = new List<int>() {PIConst.CryoprotectantSolutionID, PIConst.SyntheticSynapsesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Transmitter),
 					ID = PIConst.TransmitterID,
-					From = new List<int>() {PIConst.PlasmoidsID, PIConst.ChiralStructuresID }
+					From = new List<int>() {PIConst.PlasmoidsID, PIConst.ChiralStructuresID },
+					To = new List<int>() {PIConst.GuidanceSystemsID, PIConst.HazmatDetectionSystemsID, PIConst.HighTechTransmittersID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.ViralAgent),
 					ID = PIConst.ViralAgentID,
-					From = new List<int>() {PIConst.BacteriaID, PIConst.BiomassID }
+					From = new List<int>() {PIConst.BacteriaID, PIConst.BiomassID },
+					To = new List<int>() {PIConst.HazmatDetectionSystemsID, PIConst.VaccinesID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.WaterCooledCPU),
 					ID = PIConst.WaterCooledCPUID,
-					From = new List<int>() {PIConst.WaterID, PIConst.ReactiveMetalsID }
+					From = new List<int>() {PIConst.WaterID, PIConst.ReactiveMetalsID },
+					To = new List<int>() {PIConst.GuidanceSystemsID, PIConst.SupercomputersID}
+				},
+				//tier1
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Water),
+					ID = PIConst.WaterID,
+					From = new List<int>() {PIConst.AqueousLiquidsID},
+					To = new List<int>() {PIConst.CoolantID, PIConst.SuperconductorsID, PIConst.TestCulturesID, PIConst.WaterCooledCPUID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.IndustrialFibers),
+					ID = PIConst.IndustrialFibersID,
+					From = new List<int>() {PIConst.AutotrophsID},
+					To = new List<int>() {PIConst.MicrofiberShieldingID, PIConst.PolyaramidsID, PIConst.PolytextilesID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.ReactiveMetals),
+					ID = PIConst.ReactiveMetalsID,
+					From = new List<int>() {PIConst.BaseMetalsID},
+					To = new List<int>() {PIConst.ConstructionBlocksID, PIConst.MechanicalPartsID, PIConst.NanitesID, PIConst.WaterCooledCPUID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Biofuels),
+					ID = PIConst.BiofuelsID,
+					From = new List<int>() {PIConst.CarbonCompoundsID},
+					To = new List<int>() {PIConst.BiocellsID, PIConst.LivestockID, PIConst.PolytextilesID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Proteins),
+					ID = PIConst.ProteinsID,
+					From = new List<int>() {PIConst.ComplexOrganismsID},
+					To = new List<int>() {PIConst.FertilizerID, PIConst.LivestockID, PIConst.GeneticallyEnhancedLivestockID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Silicon),
+					ID = PIConst.SiliconID,
+					From = new List<int>() {PIConst.FelsicMagmaID},
+					To = new List<int>() {PIConst.MicrofiberShieldingID, PIConst.MiniatureElectronicsID, PIConst.SilicateGlassID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.ToxicMetals),
+					ID = PIConst.ToxicMetalsID,
+					From = new List<int>() {PIConst.HeavyMetalsID},
+					To = new List<int>() {PIConst.ConstructionBlocksID, PIConst.ConsumerElectronicsID, PIConst.EnrichedUraniumID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Electrolytes),
+					ID = PIConst.ElectrolytesID,
+					From = new List<int>() {PIConst.IonicSolutionsID},
+					To = new List<int>() {PIConst.CoolantID, PIConst.RocketFuelID, PIConst.SyntheticOilID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Bacteria),
+					ID = PIConst.BacteriaID,
+					From = new List<int>() {PIConst.MicroOrganismsID},
+					To = new List<int>() {PIConst.FertilizerID, PIConst.NanitesID, PIConst.TestCulturesID, PIConst.ViralAgentID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Oxygen),
+					ID = PIConst.OxygenID,
+					From = new List<int>() {PIConst.NobleGasID},
+					To = new List<int>() {PIConst.OxidesID, PIConst.SupertensilePlasticsID, PIConst.SyntheticOilID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.PreciousMetals),
+					ID = PIConst.PreciousMetalsID,
+					From = new List<int>() {PIConst.NobleMetalsID},
+					To = new List<int>() {PIConst.BiocellsID, PIConst.EnrichedUraniumID, PIConst.MechanicalPartsID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.ChiralStructures),
+					ID = PIConst.ChiralStructuresID,
+					From = new List<int>() {PIConst.NonCsCrystalsID},
+					To = new List<int>() {PIConst.ConsumerElectronicsID, PIConst.MiniatureElectronicsID, PIConst.TransmitterID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Biomass),
+					ID = PIConst.BiomassID,
+					From = new List<int>() {PIConst.PlankticColoniesID},
+					To = new List<int>() {PIConst.GeneticallyEnhancedLivestockID, PIConst.SupertensilePlasticsID, PIConst.ViralAgentID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.OxidizingCompound),
+					ID = PIConst.OxidizingCompoundID,
+					From = new List<int>() {PIConst.ReactiveGasID},
+					To = new List<int>() {PIConst.OxidesID, PIConst.PolyaramidsID, PIConst.SilicateGlassID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Basic,
+					Name = nameof(PIConst.Plasmoids),
+					ID = PIConst.PlasmoidsID,
+					From = new List<int>() {PIConst.SuspendedPlasmaID},
+					To = new List<int>() {PIConst.RocketFuelID, PIConst.SuperconductorsID, PIConst.TransmitterID},
 				}
 			};
 		}
@@ -608,5 +771,51 @@ namespace PriceMonitor.DataTypes
 
 		public static string Silicon { get; }
 		public static int SiliconID { get; set; } = 9828;
+
+		// tier0
+		public static string AqueousLiquids { get; }
+		public static int AqueousLiquidsID { get; set; } = 3645;
+
+		public static string Autotrophs { get; }
+		public static int AutotrophsID { get; set; } = 3645;
+
+		public static string BaseMetals { get; }
+		public static int BaseMetalsID { get; set; } = 3645;
+
+		public static string CarbonCompounds { get; }
+		public static int CarbonCompoundsID { get; set; } = 3645;
+
+		public static string ComplexOrganisms { get; }
+		public static int ComplexOrganismsID { get; set; } = 3645;
+
+		public static string FelsicMagma { get; }
+		public static int FelsicMagmaID { get; set; } = 3645;
+
+		public static string HeavyMetals { get; }
+		public static int HeavyMetalsID { get; set; } = 3645;
+
+		public static string IonicSolutions { get; }
+		public static int IonicSolutionsID { get; set; } = 3645;
+
+		public static string MicroOrganisms { get; }
+		public static int MicroOrganismsID { get; set; } = 3645;
+
+		public static string NobleGas { get; }
+		public static int NobleGasID { get; set; } = 3645;
+
+		public static string NobleMetals { get; }
+		public static int NobleMetalsID { get; set; } = 3645;
+
+		public static string NonCsCrystals { get; }
+		public static int NonCsCrystalsID { get; set; } = 3645;
+
+		public static string PlankticColonies { get; }
+		public static int PlankticColoniesID { get; set; } = 3645;
+
+		public static string ReactiveGas { get; }
+		public static int ReactiveGasID { get; set; } = 3645;
+
+		public static string SuspendedPlasma { get; }
+		public static int SuspendedPlasmaID { get; set; } = 3645;
 	}
 }
