@@ -17,7 +17,9 @@ namespace PriceMonitor.DataTypes
 
 		public PITier Tier = PITier.Raw;
 
-		public static List<PINode> CreatePINodes()
+		public static List<PINode> AllPlanetaryItems = CreatePINodes();
+
+		private static List<PINode> CreatePINodes()
 		{
 			return new List<PINode>
 			{
@@ -557,6 +559,127 @@ namespace PriceMonitor.DataTypes
 					ID = PIConst.PlasmoidsID,
 					From = new List<int>() {PIConst.SuspendedPlasmaID},
 					To = new List<int>() {PIConst.RocketFuelID, PIConst.SuperconductorsID, PIConst.TransmitterID},
+				},
+				//tier0
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.AqueousLiquids),
+					ID = PIConst.AqueousLiquidsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.WaterID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.Autotrophs),
+					ID = PIConst.AutotrophsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.IndustrialFibersID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.BaseMetals),
+					ID = PIConst.BaseMetalsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.ReactiveMetalsID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.CarbonCompounds),
+					ID = PIConst.CarbonCompoundsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.BiofuelsID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.ComplexOrganisms),
+					ID = PIConst.ComplexOrganismsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.ProteinsID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.FelsicMagma),
+					ID = PIConst.FelsicMagmaID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.SiliconID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.HeavyMetals),
+					ID = PIConst.HeavyMetalsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.ToxicMetalsID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.IonicSolutions),
+					ID = PIConst.IonicSolutionsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.ElectrolytesID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.MicroOrganisms),
+					ID = PIConst.MicroOrganismsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.BacteriaID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.NobleGas),
+					ID = PIConst.NobleGasID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.OxygenID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.NobleMetals),
+					ID = PIConst.NobleMetalsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.PreciousMetalsID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.NonCsCrystals),
+					ID = PIConst.NonCsCrystalsID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.ChiralStructuresID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.PlankticColonies),
+					ID = PIConst.PlankticColoniesID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.BiomassID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.ReactiveGas),
+					ID = PIConst.ReactiveGasID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.OxidizingCompoundID},
+				},
+				new PINode()
+				{
+					Tier = PITier.Raw,
+					Name = nameof(PIConst.SuspendedPlasma),
+					ID = PIConst.SuspendedPlasmaID,
+					From = new List<int>(),
+					To = new List<int>() {PIConst.PlasmoidsID},
 				}
 			};
 		}
@@ -774,48 +897,48 @@ namespace PriceMonitor.DataTypes
 
 		// tier0
 		public static string AqueousLiquids { get; }
-		public static int AqueousLiquidsID { get; set; } = 3645;
+		public static int AqueousLiquidsID { get; set; } = 2268;
 
 		public static string Autotrophs { get; }
-		public static int AutotrophsID { get; set; } = 3645;
+		public static int AutotrophsID { get; set; } = 2305;
 
 		public static string BaseMetals { get; }
-		public static int BaseMetalsID { get; set; } = 3645;
+		public static int BaseMetalsID { get; set; } = 2267;
 
 		public static string CarbonCompounds { get; }
-		public static int CarbonCompoundsID { get; set; } = 3645;
+		public static int CarbonCompoundsID { get; set; } = 2288;
 
 		public static string ComplexOrganisms { get; }
-		public static int ComplexOrganismsID { get; set; } = 3645;
+		public static int ComplexOrganismsID { get; set; } = 2287;
 
 		public static string FelsicMagma { get; }
-		public static int FelsicMagmaID { get; set; } = 3645;
+		public static int FelsicMagmaID { get; set; } = 2307;
 
 		public static string HeavyMetals { get; }
-		public static int HeavyMetalsID { get; set; } = 3645;
+		public static int HeavyMetalsID { get; set; } = 2272;
 
 		public static string IonicSolutions { get; }
-		public static int IonicSolutionsID { get; set; } = 3645;
+		public static int IonicSolutionsID { get; set; } = 2309;
 
 		public static string MicroOrganisms { get; }
-		public static int MicroOrganismsID { get; set; } = 3645;
+		public static int MicroOrganismsID { get; set; } = 2073;
 
 		public static string NobleGas { get; }
-		public static int NobleGasID { get; set; } = 3645;
+		public static int NobleGasID { get; set; } = 2310;
 
 		public static string NobleMetals { get; }
-		public static int NobleMetalsID { get; set; } = 3645;
+		public static int NobleMetalsID { get; set; } = 2270;
 
 		public static string NonCsCrystals { get; }
-		public static int NonCsCrystalsID { get; set; } = 3645;
+		public static int NonCsCrystalsID { get; set; } = 2306;
 
 		public static string PlankticColonies { get; }
-		public static int PlankticColoniesID { get; set; } = 3645;
+		public static int PlankticColoniesID { get; set; } = 2286;
 
 		public static string ReactiveGas { get; }
-		public static int ReactiveGasID { get; set; } = 3645;
+		public static int ReactiveGasID { get; set; } = 2311;
 
 		public static string SuspendedPlasma { get; }
-		public static int SuspendedPlasmaID { get; set; } = 3645;
+		public static int SuspendedPlasmaID { get; set; } = 2308;
 	}
 }

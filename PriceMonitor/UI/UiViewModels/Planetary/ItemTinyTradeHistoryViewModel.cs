@@ -20,9 +20,15 @@ namespace PriceMonitor.UI.UiViewModels
 			Hub = hub;
 
 			CreateModel();
+		}
 
-			RequestHistory();
-			UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Quarter);
+		public void ChangeVisibility(bool isVisible)
+		{
+			if (isVisible)
+			{
+				RequestHistory();
+				UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Quarter);
+			}
 		}
 
 		private GameObject _gameObject;
@@ -74,8 +80,15 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
+		private bool _historyRequested = false;
 		private void RequestHistory()
 		{
+			if (_historyRequested)
+			{
+				return;
+			}
+			_historyRequested = true;
+
 			Model.Series.Clear();
 
 			Task.Run(async () =>

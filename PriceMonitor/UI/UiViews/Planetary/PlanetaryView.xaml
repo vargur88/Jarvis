@@ -5,17 +5,16 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 			 xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
-			 mc:Ignorable="d"
-			 d:DesignHeight="300" d:DesignWidth="300">
-	<ItemsControl ItemsSource="{Binding PlanetaryWatchingItems}" HorizontalAlignment="Left" VerticalAlignment="Top">
+			 mc:Ignorable="d">
+	<ItemsControl ItemsSource="{Binding PIGroups}" HorizontalAlignment="Left" VerticalAlignment="Top">
 		<ItemsControl.ItemsPanel>
 			<ItemsPanelTemplate>
-				<WrapPanel Orientation="Vertical"/>
+				<WrapPanel Orientation="Horizontal"/>
 			</ItemsPanelTemplate>
 		</ItemsControl.ItemsPanel>
 		<ItemsControl.Resources>
-			<DataTemplate DataType="{x:Type uiViewModels:ItemTinyTradeHistoryViewModel}">
-				<uiViews:ItemTinyTradeHistoryView />
+			<DataTemplate DataType="{x:Type uiViewModels:PIGroupViewModel}">
+				<uiViews:PIGroupView />
 			</DataTemplate>
 		</ItemsControl.Resources>
 	</ItemsControl>
