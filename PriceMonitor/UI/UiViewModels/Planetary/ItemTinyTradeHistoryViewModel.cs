@@ -4,30 +4,48 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using Entity.DataTypes;
 using EveCentralProvider;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using PriceMonitor.DataTypes;
 
 namespace PriceMonitor.UI.UiViewModels
 {
 	public class ItemTinyTradeHistoryViewModel : BaseViewModel
 	{
-		public ItemTinyTradeHistoryViewModel(GameObject gameObject, Station hub)
+		private readonly PlanetaryViewModel _planetaryViewModel;
+		private readonly PITier _tier;
+
+		public ItemTinyTradeHistoryViewModel(PlanetaryViewModel planetaryViewModel, PITier tier, GameObject gameObject, Station hub)
 		{
+			_planetaryViewModel = planetaryViewModel;
+			_tier = tier;
 			GameObject = gameObject;
 			Hub = hub;
 
 			CreateModel();
 		}
 
-		public void ChangeVisibility(bool isVisible)
+		public void UpdatePiChain(Brush parentBrush, bool build)
+		{
+			_planetaryViewModel.PIObserving(new PlanetaryViewModel.PIObserveInfo()
+			{
+				PiID = GameObject.TypeId,
+				Tier = _tier,
+				ParentBrush = parentBrush,
+				CreatePiChain = build
+			});
+		}
+
+		public void ShowHistory(bool isVisible)
 		{
 			if (isVisible)
 			{
 				RequestHistory();
-				UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Quarter);
+				UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Month);
 			}
 		}
 
@@ -81,6 +99,7 @@ namespace PriceMonitor.UI.UiViewModels
 		}
 
 		private bool _historyRequested = false;
+
 		private void RequestHistory()
 		{
 			if (_historyRequested)

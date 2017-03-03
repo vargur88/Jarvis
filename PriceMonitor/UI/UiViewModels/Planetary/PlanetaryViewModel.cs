@@ -2,6 +2,9 @@
 using Entity.DataTypes;
 using PriceMonitor.DataTypes;
 using System;
+using System.Linq;
+using System.Windows.Media;
+using PriceMonitor.Helpers;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -11,7 +14,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			foreach (PITier tier in Enum.GetValues(typeof(PITier)))
 			{
-				PIGroups.Add(new PIGroupViewModel(tier));
+				PIGroups.Add(new PIGroupViewModel(this, tier));
 			}
 		}
 
@@ -24,6 +27,25 @@ namespace PriceMonitor.UI.UiViewModels
 				_piGroups = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		public void PIObserving(PIObserveInfo info)
+		{
+			if (info.Tier == PITier.Advanced)
+			{
+				return;
+			}
+
+			var nextTier = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Next());
+			nextTier?.SelectChilds(info);
+		}
+
+		public struct PIObserveInfo
+		{
+			public int PiID;
+			public Brush ParentBrush;
+			public bool CreatePiChain;
+			public PITier Tier;
 		}
 	}
 }

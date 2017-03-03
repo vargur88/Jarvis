@@ -90,6 +90,7 @@
     <Compile Include="DataTypes\HubMarketStat.cs" />
     <Compile Include="DataTypes\PINode.cs" />
     <Compile Include="DataTypes\StationOrderInfo.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="UI\BaseViewModel.cs" />
     <Compile Include="UI\UiViewModels\Planetary\ItemTinyTradeHistoryViewModel.cs" />
     <Compile Include="UI\UiViewModels\ItemTradeHistoryViewModel.cs" />

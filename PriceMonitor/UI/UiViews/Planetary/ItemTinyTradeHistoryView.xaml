@@ -6,7 +6,7 @@
 			 xmlns:oxy="http://oxyplot.org/wpf"
 			 mc:Ignorable="d">
 	<Grid Margin="1" Width="250">
-		<Expander Header="{Binding Path=GameObject.Name}" Expanded="Expander_OnExpanded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="False">
+		<Expander Header="{Binding Path=GameObject.Name}" Name="ExpanderPI" MouseRightButtonUp="ExpanderPI_OnMouseRightButtonUp" Expanded="Expander_OnExpanded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="False">
 			<StackPanel>
 				<oxy:PlotView Model="{Binding Model}" Background="#1A1A1A" Width="245" Height="100"/>
 			</StackPanel>
