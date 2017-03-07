@@ -16,7 +16,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			Task.Run(() =>
 			{
-				Application.Current.Dispatcher.Invoke(() =>
+				/*Application.Current.Dispatcher.Invoke(() =>
 				{
 					// REWORK DAT SHIT
 					RegionListFirst = RegionListSecond = EntityService.Instance.RequestRegionsAsync().Result;
@@ -35,7 +35,7 @@ namespace PriceMonitor.UI.UiViewModels
 					{
 						MenuItems.Add(item);
 					}
-				});
+				});*/
 			});
 		}
 

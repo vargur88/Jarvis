@@ -65,16 +65,14 @@ namespace PriceMonitor.UI.UiViewModels
 
 		public void SelectChilds(PlanetaryViewModel.PIObserveInfo info)
 		{
-			var childList = PINode.AllPlanetaryItems.SelectMany(t => t.From.Where(k => k == info.PiID)).ToList();
+			var childList = PINode.AllPlanetaryItems.Where(t => t.From.Any(k => k == info.PiID)).ToList();
 
-			List<ItemTinyTradeHistoryViewModel> l = new List<ItemTinyTradeHistoryViewModel>();
+			var models = childList.Select(b => PlanetaryWatchingItems.Single(t => t.GameObject.TypeId == b.ID)).ToList();
 
-			foreach (var b in childList)
+			foreach (var model in models)
 			{
-				l.AddRange(PlanetaryWatchingItems.Where(t => t.GameObject.TypeId == b).ToList());
+				model.UpdatePiChain(info);
 			}
-
-			//var watchItems = PlanetaryWatchingItems.All(t => t.GameObject.TypeId == )
 		}
 	}
 }

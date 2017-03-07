@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -25,19 +26,28 @@ namespace PriceMonitor.UI.UiViewModels
 			_tier = tier;
 			GameObject = gameObject;
 			Hub = hub;
+			_unicItemBrush = PickBrush();
+			ExpanderBackgroundColor = _defaultBrush;
 
 			CreateModel();
 		}
 
-		public void UpdatePiChain(Brush parentBrush, bool build)
+		public void UpdatePiChain(bool build)
 		{
+			ExpanderBackgroundColor = build ? _unicItemBrush : _defaultBrush;
+
 			_planetaryViewModel.PIObserving(new PlanetaryViewModel.PIObserveInfo()
 			{
 				PiID = GameObject.TypeId,
 				Tier = _tier,
-				ParentBrush = parentBrush,
+				ParentBrush = ExpanderBackgroundColor,
 				CreatePiChain = build
 			});
+		}
+
+		public void UpdatePiChain(PlanetaryViewModel.PIObserveInfo info)
+		{
+			ExpanderBackgroundColor = info.CreatePiChain ? info.ParentBrush : _defaultBrush;
 		}
 
 		public void ShowHistory(bool isVisible)
@@ -47,6 +57,30 @@ namespace PriceMonitor.UI.UiViewModels
 				RequestHistory();
 				UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Month);
 			}
+		}
+
+		private readonly Brush _unicItemBrush;
+		private readonly Brush _defaultBrush = new SolidColorBrush(Color.FromArgb(0xCC, 0x64, 0x76, 0x87));
+
+		private Brush _expanderBackgroundColor;
+		public Brush ExpanderBackgroundColor
+		{
+			get { return _expanderBackgroundColor; }
+			set
+			{
+				_expanderBackgroundColor = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private static readonly PropertyInfo[] Properties = typeof(Brushes).GetProperties();
+		private Brush PickBrush()
+		{
+			Random rnd = new Random();
+
+			int random = rnd.Next(Properties.Length);
+
+			return (Brush)Properties[random].GetValue(null, null);
 		}
 
 		private GameObject _gameObject;
