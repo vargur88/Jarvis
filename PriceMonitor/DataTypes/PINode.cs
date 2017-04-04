@@ -335,7 +335,8 @@ namespace PriceMonitor.DataTypes
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.MiniatureElectronics),
 					ID = PIConst.MiniatureElectronicsID,
-					From = new List<int>() {PIConst.PlanetaryVehiclesID, PIConst.SmartfabUnitsID}
+					From = new List<int>() {PIConst.SiliconID, PIConst.ChiralStructuresID},
+					To = new List<int>() {PIConst.PlanetaryVehiclesID, PIConst.SmartfabUnitsID}
 				},
 				new PINode()
 				{
@@ -350,14 +351,16 @@ namespace PriceMonitor.DataTypes
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Oxides),
 					ID = PIConst.OxidesID,
-					From = new List<int>() {PIConst.CondensatesID, PIConst.GelMatrixBiopasteID}
+					From = new List<int>() {PIConst.OxygenID, PIConst.OxidizingCompoundID},
+					To = new List<int>() {PIConst.CondensatesID, PIConst.GelMatrixBiopasteID }
 				},
 				new PINode()
 				{
 					Tier = PITier.Refined,
 					Name = nameof(PIConst.Polyaramids),
 					ID = PIConst.PolyaramidsID,
-					From = new List<int>() {PIConst.HermeticMembranesID , PIConst.HighTechTransmittersID}
+					From = new List<int>() {PIConst.IndustrialFibersID , PIConst.OxidizingCompoundID},
+					To = new List<int>() {PIConst.HermeticMembranesID , PIConst.HighTechTransmittersID}
 				},
 				new PINode()
 				{

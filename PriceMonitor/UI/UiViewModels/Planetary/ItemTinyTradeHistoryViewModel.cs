@@ -12,6 +12,7 @@ using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using PriceMonitor.DataTypes;
+using PriceMonitor.Helpers;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -34,7 +35,15 @@ namespace PriceMonitor.UI.UiViewModels
 
 		public void UpdatePiChain(bool build)
 		{
-			ExpanderBackgroundColor = build ? _unicItemBrush : _defaultBrush;
+			if (build)
+			{
+				ExpanderBackgroundColor = _parentItemBrush ?? _unicItemBrush;
+			}
+			else
+			{
+				_parentItemBrush = null;
+				ExpanderBackgroundColor = _defaultBrush;
+			}
 
 			_planetaryViewModel.PIObserving(new PlanetaryViewModel.PIObserveInfo()
 			{
@@ -45,9 +54,35 @@ namespace PriceMonitor.UI.UiViewModels
 			});
 		}
 
+		private readonly string MatchMark = " - Match";
+		private bool Matching = false;
 		public void UpdatePiChain(PlanetaryViewModel.PIObserveInfo info)
 		{
-			ExpanderBackgroundColor = info.CreatePiChain ? info.ParentBrush : _defaultBrush;
+			if (info.CreatePiChain)
+			{
+				// means that PI item was selected by another chain
+				if (!Equals(ExpanderBackgroundColor, _defaultBrush))
+				{
+					GameObject.Name += MatchMark;
+					Matching = true;
+
+					NotifyPropertyChanged("GameObject");
+				}
+			}
+			else
+			{
+				if (Matching)
+				{
+					GameObject.Name = GameObject.Name.Remove(GameObject.Name.Length - MatchMark.Length);
+					Matching = false;
+
+					NotifyPropertyChanged("GameObject");
+				}
+			}
+
+			_parentItemBrush = info.ParentBrush;
+
+			ExpanderBackgroundColor = info.CreatePiChain ? _parentItemBrush : _defaultBrush;
 		}
 
 		public void ShowHistory(bool isVisible)
@@ -55,10 +90,10 @@ namespace PriceMonitor.UI.UiViewModels
 			if (isVisible)
 			{
 				RequestHistory();
-				UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Month);
 			}
 		}
 
+		private Brush _parentItemBrush;
 		private readonly Brush _unicItemBrush;
 		private readonly Brush _defaultBrush = new SolidColorBrush(Color.FromArgb(0xCC, 0x64, 0x76, 0x87));
 
@@ -74,13 +109,21 @@ namespace PriceMonitor.UI.UiViewModels
 		}
 
 		private static readonly PropertyInfo[] Properties = typeof(Brushes).GetProperties();
+		private static Random _random;
+		private static object _syncObj = new object();
 		private Brush PickBrush()
 		{
-			Random rnd = new Random();
+			int rnd;
+			lock (_syncObj)
+			{
+				if (_random == null)
+				{
+					_random = new Random();
+				}
+				rnd = _random.Next(Properties.Length);
+			}
 
-			int random = rnd.Next(Properties.Length);
-
-			return (Brush)Properties[random].GetValue(null, null);
+			return (Brush)Properties[rnd].GetValue(null, null);
 		}
 
 		private GameObject _gameObject;
@@ -148,8 +191,9 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				var historyResponse = await Services.Instance.HistoryAsync(GameObject.TypeId, Hub.RegionId);
 
-				var dataPoints =
-					historyResponse.Items.Select(item => new DataPoint(DateTimeAxis.ToDouble(item.Date), item.HighPrice)).ToList();
+				var dataPoints = historyResponse.Items
+					.Where(t => DateTime.Now - t.Date <= TimeSpan.FromDays((int)TimeFilter.TimeFilterEnum.Month))
+					.Select(t => new DataPoint(DateTimeAxis.ToDouble(t.Date), t.AvgPrice)).ToList();
 
 				var hubChart = new LineSeries
 				{
@@ -160,12 +204,20 @@ namespace PriceMonitor.UI.UiViewModels
 				Application.Current.Dispatcher.Invoke(() =>
 				{
 					Model.Series.Add(hubChart);
-					UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Quarter);
+
+					int max = (int)(Model.Axes.First().Maximum = dataPoints.Max(t => t.Y));
+					int min = (int)(Model.Axes.First().Minimum = dataPoints.Min(t => t.Y));
+
+					var rawPriceStep = (max - min)/2;
+					var stepDigitCount = (int)Math.Floor(Math.Log10(rawPriceStep) + 1);
+
+					Model.Axes.First().MajorStep = (rawPriceStep).RoundOff(stepDigitCount - 1);
+					UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Month);
 				});
 			}).ContinueWith(async t =>
 			{
-				var statResponse = await Services.Instance.MarketStatAsync(new List<int>() { GameObject.TypeId }, new List<int>() { Hub.RegionId });
-				var k = statResponse.Count();
+				/*var statResponse = await Services.Instance.MarketStatAsync(new List<int>() { GameObject.TypeId }, new List<int>() { Hub.RegionId });
+				var k = statResponse.Count();*/
 			});
 		}
 
