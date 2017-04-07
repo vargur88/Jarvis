@@ -77,18 +77,26 @@
 			<Button Grid.Row="3" Margin="2" Content="Generate" Command="{Binding Path=GenerateReportCmd}"/>
 		</Grid>
 
-		<ItemsControl Grid.Column="1" ItemsSource="{Binding BasicReportsItems}" HorizontalAlignment="Center" VerticalAlignment="Center">
-		<ItemsControl.ItemsPanel>
-			<ItemsPanelTemplate>
-				<StackPanel Orientation="Horizontal"/>
-			</ItemsPanelTemplate>
-		</ItemsControl.ItemsPanel>
-		<ItemsControl.Resources>
-			<DataTemplate DataType="{x:Type uiViewModels:BasicReportViewModel}">
-				<uiViews:BasicReportView />
-			</DataTemplate>
-		</ItemsControl.Resources>
-			
-		</ItemsControl>
+		<ListBox Grid.Column="1" HorizontalContentAlignment="Stretch" BorderThickness="0" Padding="0" Background="Transparent" Margin="0" Grid.IsSharedSizeScope="True"
+				 ItemsSource="{Binding BasicReportsItems}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate >
+					<WrapPanel />
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+			<ListBox.ItemTemplate>
+				<DataTemplate DataType="{x:Type uiViewModels:BasicReportViewModel}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition SharedSizeGroup="row1"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition SharedSizeGroup="col1"/>
+						</Grid.ColumnDefinitions>
+						<uiViews:BasicReportView />
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 	</Grid>
 </UserControl>

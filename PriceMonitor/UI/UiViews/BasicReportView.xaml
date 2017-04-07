@@ -6,14 +6,14 @@
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Border BorderThickness="1" BorderBrush="Black">
-		<Grid Margin="5">
+		<Grid Margin="5" MinHeight="300" MaxWidth="300">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 
-			<Label Content="ITEM NAME" HorizontalContentAlignment="Left" Grid.Row="0" />
+			<Label Content="{Binding Path=Report.ItemName}" HorizontalContentAlignment="Left" Grid.Row="0" />
 
 			<Grid Row ="1">
 				<Grid.RowDefinitions>
@@ -24,18 +24,13 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Label Content="STATION 1 NAME" HorizontalContentAlignment="Left" Grid.Column="0" Grid.Row="0" />
-				<Label Content="STATION 2 NAME" HorizontalContentAlignment="Left" Grid.Column="1" Grid.Row="0" />
+				<Label Content="{Binding Path=Report.BuyStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.Row="0" />
+				<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="1" Grid.Row="0" />
 			</Grid>
 
 			<Grid Row="2">
-				<DataGrid IsReadOnly="True"
-						  SelectionMode="Single"
-						  GridLinesVisibility="Horizontal"
-						  SelectionUnit="FullRow"
-						  ItemsSource="{Binding Path=SellOrdersInfo, UpdateSourceTrigger=PropertyChanged}"
-						  AutoGenerateColumns="False"
-						  BorderThickness="1">
+				<DataGrid IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="Horizontal" SelectionUnit="FullRow" AutoGenerateColumns="False" BorderThickness="1"
+							ItemsSource="{Binding Path=SellOrdersInfo, UpdateSourceTrigger=PropertyChanged}">
 					<DataGrid.Resources>
 						<Style x:Key="DataGridCellCentering" TargetType="{x:Type DataGridCell}">
 							<Setter Property="Template">
@@ -50,11 +45,10 @@
 						</Style>
 					</DataGrid.Resources>
 					<DataGrid.Columns>
-						<DataGridTextColumn Binding="{Binding SellPrice}" Header="Profit 1" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Binding="{Binding SellCount}" Header="Profit 10" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Binding="{Binding SellCount}" Header="Profit 30" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Binding="{Binding SellCount}" Header="Profit 50" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Binding="{Binding SellCount}" Header="Profit 100" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
+						<DataGridTextColumn Header="X 1" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
+						<DataGridTextColumn Header="X 10" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
+						<DataGridTextColumn Header="X 100" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
+						<DataGridTextColumn Header="X 1000" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
 					</DataGrid.Columns>
 				</DataGrid>
 

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Threading.Tasks;
 using System.Windows;
 using Entity;
@@ -16,7 +18,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			Task.Run(() =>
 			{
-				/*Application.Current.Dispatcher.Invoke(() =>
+				Application.Current.Dispatcher.Invoke(() =>
 				{
 					// REWORK DAT SHIT
 					RegionListFirst = RegionListSecond = EntityService.Instance.RequestRegionsAsync().Result;
@@ -35,7 +37,7 @@ namespace PriceMonitor.UI.UiViewModels
 					{
 						MenuItems.Add(item);
 					}
-				});*/
+				});
 			});
 		}
 
@@ -259,52 +261,80 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				return _generateReportCmd ?? (_generateReportCmd = 
 					new RelayCommand(
-						p => SelectedNode != null && SelectedNode.SubObjects == null, 
+						p => SelectedNode?.SubObjects != null, 
 						p => GenerateReport()));
+			}
+		}
+
+		private void CreateNextReport(IEnumerable<ObjectsNode> items, List<Task<BasicReportData>> tasks)
+		{
+			foreach (var item in items)
+			{
+				if (item.SubObjects != null)
+				{
+					CreateNextReport(item.SubObjects, tasks);
+				}
+				else
+				{
+					tasks.Add(Task.Factory.StartNew(() =>
+					{
+						/*var tst = await Services.Instance.MarketStatAsync(
+							new List<int>() { SelectedNode.Object.TypeId },
+							new List<int>() { SelectedStationFirst.RegionId },
+							1,
+							SelectedStationFirst.SystemId);*/
+
+						var firstStationOrders = Services.Instance.QuickLook(item.Object.TypeId, new List<int>() { SelectedStationFirst.RegionId }, 1, SelectedStationFirst.SystemId)
+							.SellOrders.OrderBy(k => k.Price);
+
+						var secondStationOrders = Services.Instance.QuickLook(item.Object.TypeId, new List<int>() { SelectedStationSecond.RegionId }, 1, SelectedStationSecond.SystemId)
+							.SellOrders.OrderBy(k => k.Price);
+
+						var whereToBuy = firstStationOrders.First().Price < secondStationOrders.First().Price ?
+							firstStationOrders : secondStationOrders;
+
+						var prices = new List<float> { whereToBuy.First().Price };
+						float firstBuyPrice = prices.First();
+						long buyVolume = whereToBuy.First().VolumeRemaining;
+
+						foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice * 0.02))
+						{
+							prices.Add(order.Price);
+							buyVolume += order.VolumeRemaining;
+						}
+
+						long averagePrice = prices.Sum(price => (long)price) / prices.Count;
+
+						return new BasicReportData()
+						{
+							ItemName = item.Object.Name,
+							BuyStation = whereToBuy.First().StationName,
+							SellStation = (whereToBuy.First().StationName == firstStationOrders.First().StationName) 
+								? secondStationOrders.First().StationName
+								: firstStationOrders.First().StationName
+						};
+					}));
+				}
 			}
 		}
 
 		private void GenerateReport()
 		{
-			Task.Run(async () =>
+			var tasks = new List<Task<BasicReportData>>();
+			CreateNextReport(SelectedNode.SubObjects, tasks);
+
+			BasicReportsItems.Clear();
+			foreach (var task in tasks)
 			{
-				var firstStationOrders = await Services.Instance.QuickLookAsync(SelectedNode.Object.TypeId, new List<int>() { SelectedStationFirst.RegionId }, 1, SelectedStationFirst.SystemId)
-					.ContinueWith(t =>
-					{
-						return t.Result.SellOrders.OrderBy(k => k.Price);
-					});
-
-				var tst = await Services.Instance.MarketStatAsync(
-					new List<int>() {SelectedNode.Object.TypeId},
-					new List<int>() { SelectedStationFirst.RegionId},
-					1,
-					SelectedStationFirst.SystemId);
-
-				var secondStationOrders = await Services.Instance.QuickLookAsync(SelectedNode.Object.TypeId, new List<int>() { SelectedStationSecond.RegionId }, 1, SelectedStationSecond.SystemId)
-					.ContinueWith(t =>
-					{
-						return t.Result.SellOrders.OrderBy(k => k.Price);
-					});
-
-				var whereToBuy = firstStationOrders.First().Price < secondStationOrders.First().Price ?
-					firstStationOrders : secondStationOrders;
-
-				var prices = new List<float> { whereToBuy.First().Price };
-				float firstBuyPrice = prices.First();
-				long buyVolume = whereToBuy.First().VolumeRemaining;
-
-				foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice * 0.02))
-				{
-					prices.Add(order.Price);
-					buyVolume += order.VolumeRemaining;
-				}
-
-				long averagePrice = prices.Sum(price => (long)price) / prices.Count;
-
-				averagePrice = averagePrice;
-			}).Wait();
-
-			BasicReportsItems.Add(new BasicReportViewModel());
+				BasicReportsItems.Add(new BasicReportViewModel(task));
+			}
 		}
+	}
+
+	public struct BasicReportData
+	{
+		public string ItemName { get; set; }
+		public string BuyStation { get; set; }
+		public string SellStation { get; set; }
 	}
 }
