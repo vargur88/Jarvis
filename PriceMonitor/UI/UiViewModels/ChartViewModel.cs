@@ -181,7 +181,7 @@ namespace PriceMonitor.UI.UiViewModels
 					{
 						StationName = buyOrder.StationName,
 						BuyCount = buyOrder.VolumeRemaining,
-						BuyPrice = buyOrder.Price
+						BuyPrice = (float)buyOrder.Price
 					});
 				}
 
@@ -193,7 +193,7 @@ namespace PriceMonitor.UI.UiViewModels
 					{
 						StationName = sellOrder.StationName,
 						SellCount = sellOrder.VolumeRemaining,
-						SellPrice = sellOrder.Price
+						SellPrice = (float)sellOrder.Price
 					});
 				}
 			}

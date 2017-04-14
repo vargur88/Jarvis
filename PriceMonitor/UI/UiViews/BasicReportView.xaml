@@ -3,56 +3,99 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Border BorderThickness="1" BorderBrush="Black">
-		<Grid Margin="5" MinHeight="300" MaxWidth="300">
+		<Grid Margin="5" MinHeight="265" MaxWidth="300">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 
-			<Label Content="{Binding Path=Report.ItemName}" HorizontalContentAlignment="Left" Grid.Row="0" />
+			<Label FontWeight="Bold" Content="{Binding Path=Report.ItemName}" HorizontalContentAlignment="Left" Grid.Row="0" />
 
-			<Grid Row ="1">
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Label Content="{Binding Path=Report.BuyStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.Row="0" />
-				<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="1" Grid.Row="0" />
-			</Grid>
+			<Label FontWeight="Bold" Content="{Binding Path=Report.Proffit}" HorizontalContentAlignment="Left" Grid.Row="1" />
 
-			<Grid Row="2">
-				<DataGrid IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="Horizontal" SelectionUnit="FullRow" AutoGenerateColumns="False" BorderThickness="1"
-							ItemsSource="{Binding Path=SellOrdersInfo, UpdateSourceTrigger=PropertyChanged}">
-					<DataGrid.Resources>
-						<Style x:Key="DataGridCellCentering" TargetType="{x:Type DataGridCell}">
-							<Setter Property="Template">
-								<Setter.Value>
-									<ControlTemplate TargetType="{x:Type DataGridCell}">
-										<Grid Background="{TemplateBinding Background}">
-											<ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
-										</Grid>
-									</ControlTemplate>
-								</Setter.Value>
-							</Setter>
-						</Style>
-					</DataGrid.Resources>
-					<DataGrid.Columns>
-						<DataGridTextColumn Header="X 1" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Header="X 10" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Header="X 100" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-						<DataGridTextColumn Header="X 1000" Width="*" CellStyle="{StaticResource DataGridCellCentering}"/>
-					</DataGrid.Columns>
-				</DataGrid>
+			<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" BorderBrush="Black" BorderThickness="1" SelectedIndex="0" TabStripPlacement="Top" Grid.Row="2">
+				<controls:MetroTabItem x:Name="BuyTab" BorderThickness="1">
+					<TabItem.Header>
+						<TextBlock Text="Buy" FontSize="14"/>
+					</TabItem.Header>
+					
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
 
-			</Grid>
+						<Label Content="{Binding Path=Report.BuyStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
+
+						<DataGrid Grid.Row="1" Grid.Column="0" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All" SelectionUnit="FullRow" AutoGenerateColumns="False"
+							ItemsSource="{Binding Path=Report.BuyStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Count" Binding="{Binding VolumeRemaining}" Width="*"/>
+								<DataGridTextColumn Header="Sell" Binding="{Binding Price}" Width="*"/>
+							</DataGrid.Columns>
+						</DataGrid>
+
+						<DataGrid Grid.Row="1" Grid.Column="1" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All" SelectionUnit="FullRow" AutoGenerateColumns="False"
+							ItemsSource="{Binding Path=Report.BuyStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Count" Binding="{Binding VolumeRemaining}" Width="*"/>
+								<DataGridTextColumn Header="Buy" Binding="{Binding Price}" Width="*"/>
+							</DataGrid.Columns>
+						</DataGrid>
+					</Grid>
+				</controls:MetroTabItem>
+
+				<controls:MetroTabItem x:Name="SellTab" BorderThickness="1">
+					<TabItem.Header>
+						<TextBlock Text="Sell" FontSize="14"/>
+					</TabItem.Header>
+					
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+
+						<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
+
+						<DataGrid Grid.Row="1" Grid.Column="0" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All" SelectionUnit="FullRow" AutoGenerateColumns="False"
+							ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Count" Binding="{Binding VolumeRemaining}" Width="*"/>
+								<DataGridTextColumn Header="Sell" Binding="{Binding Price}" Width="*"/>
+							</DataGrid.Columns>
+						</DataGrid>
+
+						<DataGrid Grid.Row="1" Grid.Column="1" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All" SelectionUnit="FullRow" AutoGenerateColumns="False"
+							ItemsSource="{Binding Path=Report.SellStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Count" Binding="{Binding VolumeRemaining}" Width="*"/>
+								<DataGridTextColumn Header="Buy" Binding="{Binding Price}" Width="*"/>
+							</DataGrid.Columns>
+						</DataGrid>
+					</Grid>
+				</controls:MetroTabItem>
+
+				<controls:MetroTabItem x:Name="HistoryTab" BorderThickness="1">
+					<TabItem.Header>
+						<TextBlock Text="History" FontSize="14"/>
+					</TabItem.Header>
+				</controls:MetroTabItem>
+
+			</controls:MetroAnimatedTabControl>
 		</Grid>
 	</Border>
 </UserControl>

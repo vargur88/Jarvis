@@ -10,7 +10,9 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			Report = new BasicReportData()
 			{
-				ItemName = _loadMessage, SellStation = _loadMessage, BuyStation = _loadMessage
+				ItemName = _loadMessage,
+				SellStation = _loadMessage,
+				BuyStation = _loadMessage
 			};
 
 			task.ContinueWith(t =>

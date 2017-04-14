@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.RightsManagement;
 using System.Threading.Tasks;
 using System.Windows;
 using Entity;
 using Entity.DataTypes;
 using EveCentralProvider;
+using EveCentralProvider.Types;
 using Helpers;
 
 namespace PriceMonitor.UI.UiViewModels
@@ -22,16 +22,19 @@ namespace PriceMonitor.UI.UiViewModels
 				{
 					// REWORK DAT SHIT
 					RegionListFirst = RegionListSecond = EntityService.Instance.RequestRegionsAsync().Result;
+
 					SelectedRegionFirst = RegionListFirst.Single(t => t.RegionId == 10000002); // The Forge
-					SelectedRegionSecond = RegionListSecond.Single(t => t.RegionId == 10000002); // The Forge
+					SelectedRegionSecond = RegionListSecond.Single(t => t.RegionId == 10000042); // The Metropolis
 
-					SystemListFirst = SystemListSecond = EntityService.Instance.RequestSystemsByRegionAsync(SelectedRegionFirst.RegionId).Result;
+					SystemListFirst = EntityService.Instance.RequestSystemsByRegionAsync(SelectedRegionFirst.RegionId).Result;
+					SystemListSecond = EntityService.Instance.RequestSystemsByRegionAsync(SelectedRegionSecond.RegionId).Result;
 					SelectedSystemFirst = SystemListFirst.Single(t => t.SystemId == 30000142); // Jita
-					SelectedSystemSecond = SystemListSecond.Single(t => t.SystemId == 30000142); // Jita
+					SelectedSystemSecond = SystemListSecond.Single(t => t.SystemId == 30002053); // Hek
 
-					StationListFirst = StationListSecond = EntityService.Instance.RequestStationsBySystemAsync(SelectedSystemFirst.SystemId).Result;
+					StationListFirst = EntityService.Instance.RequestStationsBySystemAsync(SelectedSystemFirst.SystemId).Result;
+					StationListSecond = EntityService.Instance.RequestStationsBySystemAsync(SelectedSystemSecond.SystemId).Result;
 					SelectedStationFirst = StationListFirst.Single(t => t.StationId == 60003760); //Jita IV - Moon 4 - Caldari Navy Assembly Plant
-					SelectedStationSecond = StationListSecond.Single(t => t.StationId == 60003760); //Jita IV - Moon 4 - Caldari Navy Assembly Plant
+					SelectedStationSecond = StationListSecond.Single(t => t.StationId == 60004516); //Hek IV - Krusual Tribe Bureau
 
 					foreach (var item in EntityService.Instance.RequestObjectNodes())
 					{
@@ -261,67 +264,125 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				return _generateReportCmd ?? (_generateReportCmd = 
 					new RelayCommand(
-						p => SelectedNode?.SubObjects != null, 
+						p => SelectedNode != null, 
 						p => GenerateReport()));
 			}
 		}
 
-		private void CreateNextReport(IEnumerable<ObjectsNode> items, List<Task<BasicReportData>> tasks)
+		private void CreateBasicsReportList(ObjectsNode obj, List<Task<BasicReportData>> tasks)
 		{
-			foreach (var item in items)
+			if (obj.SubObjects == null)
+			{
+				tasks.Add(CreateBasicReport(obj));
+				return;
+			}
+
+			foreach (var item in obj.SubObjects)
 			{
 				if (item.SubObjects != null)
 				{
-					CreateNextReport(item.SubObjects, tasks);
+					CreateBasicsReportList(item, tasks);
 				}
 				else
 				{
-					tasks.Add(Task.Factory.StartNew(() =>
-					{
-						/*var tst = await Services.Instance.MarketStatAsync(
-							new List<int>() { SelectedNode.Object.TypeId },
-							new List<int>() { SelectedStationFirst.RegionId },
-							1,
-							SelectedStationFirst.SystemId);*/
-
-						var firstStationOrders = Services.Instance.QuickLook(item.Object.TypeId, new List<int>() { SelectedStationFirst.RegionId }, 1, SelectedStationFirst.SystemId)
-							.SellOrders.OrderBy(k => k.Price);
-
-						var secondStationOrders = Services.Instance.QuickLook(item.Object.TypeId, new List<int>() { SelectedStationSecond.RegionId }, 1, SelectedStationSecond.SystemId)
-							.SellOrders.OrderBy(k => k.Price);
-
-						var whereToBuy = firstStationOrders.First().Price < secondStationOrders.First().Price ?
-							firstStationOrders : secondStationOrders;
-
-						var prices = new List<float> { whereToBuy.First().Price };
-						float firstBuyPrice = prices.First();
-						long buyVolume = whereToBuy.First().VolumeRemaining;
-
-						foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice * 0.02))
-						{
-							prices.Add(order.Price);
-							buyVolume += order.VolumeRemaining;
-						}
-
-						long averagePrice = prices.Sum(price => (long)price) / prices.Count;
-
-						return new BasicReportData()
-						{
-							ItemName = item.Object.Name,
-							BuyStation = whereToBuy.First().StationName,
-							SellStation = (whereToBuy.First().StationName == firstStationOrders.First().StationName) 
-								? secondStationOrders.First().StationName
-								: firstStationOrders.First().StationName
-						};
-					}));
+					tasks.Add(CreateBasicReport(item));
 				}
 			}
+		}
+
+		private Task<BasicReportData> CreateBasicReport(ObjectsNode obj)
+		{
+			return Task.Factory.StartNew(() =>
+			{
+				/*var firstStat = await Services.Instance.MarketStatAsync(
+					new List<int>() { obj.Object.TypeId },
+					new List<int>() { SelectedStationFirst.RegionId },
+					1,
+					SelectedStationFirst.SystemId);
+
+				var second = await Services.Instance.MarketStatAsync(
+					new List<int>() { obj.Object.TypeId },
+					new List<int>() { SelectedStationFirst.RegionId },
+					1,
+					SelectedStationFirst.SystemId);*/
+
+				/*
+				 * average calculation
+				 * var prices = new List<float> { whereToBuy.First().Price };
+				float firstBuyPrice = prices.First();
+				long buyVolume = whereToBuy.First().VolumeRemaining;
+
+				foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice * 0.02))
+				{
+					prices.Add(order.Price);
+					buyVolume += order.VolumeRemaining;
+				}
+
+				long averagePrice = prices.Sum(price => (long)price) / prices.Count;*/
+
+				var report = new BasicReportData()
+				{
+					ItemName = obj.Object.Name,
+					BuyStation = SelectedStationFirst.Name,
+					SellStation = SelectedStationSecond.Name
+				};
+
+			    Order PriceConvert(Order order)
+			    {
+			        order.Price = Math.Round(order.Price / 1000000, 4);
+			        return order;
+			    }
+
+			    var task1 = Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {SelectedStationFirst.RegionId}, 1, SelectedStationFirst.SystemId)
+					.ContinueWith(t =>
+					{
+						if (t.Result.SellOrders != null && t.Result.SellOrders.Any())
+						{
+							report.BuyStationSellOrders = t.Result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
+						}
+
+						if (t.Result.BuyOrders != null && t.Result.BuyOrders.Any())
+						{
+						    report.BuyStationBuyOrders = t.Result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
+						}
+					});
+
+				var task2 = Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {SelectedStationSecond.RegionId}, 1, SelectedStationSecond.SystemId)
+					.ContinueWith(t =>
+					{
+						if (t.Result.SellOrders != null && t.Result.SellOrders.Any())
+						{
+						    report.SellStationSellOrders = t.Result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
+						}
+
+						if (t.Result.BuyOrders != null && t.Result.BuyOrders.Any())
+						{
+						    report.SellStationBuyOrders = t.Result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
+						}
+					});
+
+				Task.WaitAll(task1, task2);
+
+				var diffSell = report.SellStationSellOrders.First().Price == 0
+					? report.BuyStationSellOrders.First().Price
+					: (report.SellStationSellOrders.First().Price - report.BuyStationSellOrders.First().Price);
+
+				var diffBuy = report.SellStationSellOrders.First().Price == 0
+					? report.BuyStationBuyOrders.First().Price
+					: (report.SellStationSellOrders.First().Price - report.BuyStationBuyOrders.First().Price);
+
+				var instantProffit = report.SellStationBuyOrders.First().Price - report.BuyStationSellOrders.First().Price;
+
+				report.Proffit = $"{Math.Round(diffSell, 4)}/{Math.Round(diffBuy, 4)}/{Math.Round(instantProffit, 4)}";
+
+				return report;
+			});
 		}
 
 		private void GenerateReport()
 		{
 			var tasks = new List<Task<BasicReportData>>();
-			CreateNextReport(SelectedNode.SubObjects, tasks);
+			CreateBasicsReportList(SelectedNode, tasks);
 
 			BasicReportsItems.Clear();
 			foreach (var task in tasks)
@@ -331,10 +392,16 @@ namespace PriceMonitor.UI.UiViewModels
 		}
 	}
 
-	public struct BasicReportData
+	public class BasicReportData
 	{
 		public string ItemName { get; set; }
 		public string BuyStation { get; set; }
 		public string SellStation { get; set; }
+		public string Proffit { get; set; }
+
+		public List<Order> BuyStationSellOrders { get; set; } = new List<Order>() {new Order()};
+		public List<Order> BuyStationBuyOrders { get; set; } = new List<Order>() {new Order()};
+		public List<Order> SellStationSellOrders { get; set; } = new List<Order>() {new Order()};
+		public List<Order> SellStationBuyOrders { get; set; } = new List<Order>() {new Order()};
 	}
 }

@@ -25,7 +25,7 @@ namespace EveCentralProvider.Types
 		public int Range { get; set; }
 
 		[XmlElement("price")]
-		public float Price { get; set; }
+		public double Price { get; set; }
 
 		[XmlElement("vol_remain")]
 		public long VolumeRemaining { get; set; }
