@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
-
-namespace PriceMonitor.UI.UiViewModels
+﻿namespace PriceMonitor.UI.UiViewModels
 {
 	public class BasicReportViewModel : BaseViewModel
 	{
 		private readonly string _loadMessage = "Loading...";
 
-		public BasicReportViewModel(Task<BasicReportData> task)
+		public BasicReportViewModel()
 		{
 			Report = new BasicReportData()
 			{
@@ -14,25 +12,30 @@ namespace PriceMonitor.UI.UiViewModels
 				SellStation = _loadMessage,
 				BuyStation = _loadMessage
 			};
-
+			/*
 			task.ContinueWith(t =>
 			{
 				if (t.IsCompleted)
 				{
 					Report = t.Result;
 				}
-			});
+			});*/
 		}
 
 		private BasicReportData _report;
 		public BasicReportData Report
 		{
-			get { return _report; }
+			get => _report;
 			set
 			{
 				_report = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		public void AssignReport(BasicReportData report)
+		{
+			Report = report;
 		}
 	}
 }

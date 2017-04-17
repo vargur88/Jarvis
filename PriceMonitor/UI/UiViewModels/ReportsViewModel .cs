@@ -9,6 +9,8 @@ using Entity.DataTypes;
 using EveCentralProvider;
 using EveCentralProvider.Types;
 using Helpers;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -47,7 +49,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private ObservableCollection<ObjectsNode> _menuItems = new ObservableCollection<ObjectsNode>();
 		public ObservableCollection<ObjectsNode> MenuItems
 		{
-			get { return _menuItems; }
+			get => _menuItems;
 			set
 			{
 				_menuItems = value;
@@ -58,18 +60,21 @@ namespace PriceMonitor.UI.UiViewModels
 		private ObservableCollection<BasicReportViewModel> _basicReportsItems = new ObservableCollection<BasicReportViewModel>();
 		public ObservableCollection<BasicReportViewModel> BasicReportsItems
 		{
-			get { return _basicReportsItems; }
+			get => _basicReportsItems;
 			set
 			{
-				_basicReportsItems = value;
-				NotifyPropertyChanged();
+				//if (!Equals(_basicReportsItems, value))
+				{
+					_basicReportsItems = value;
+					NotifyPropertyChanged();
+				}
 			}
 		}
 
 		private ObjectsNode _selectedNode;
 		public ObjectsNode SelectedNode
 		{
-			get { return _selectedNode; }
+			get => _selectedNode;
 			set
 			{
 				_selectedNode = value;
@@ -80,7 +85,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<Region> _regionListFirst = new List<Region>();
 		public IList<Region> RegionListFirst
 		{
-			get { return _regionListFirst; }
+			get => _regionListFirst;
 			set
 			{
 				_regionListFirst = value;
@@ -91,7 +96,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<SolarSystem> _systemListFirst = new List<SolarSystem>();
 		public IList<SolarSystem> SystemListFirst
 		{
-			get { return _systemListFirst; }
+			get => _systemListFirst;
 			set
 			{
 				_systemListFirst = value;
@@ -102,7 +107,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<Station> _stationListFirst = new List<Station>();
 		public IList<Station> StationListFirst
 		{
-			get { return _stationListFirst; }
+			get => _stationListFirst;
 			set
 			{
 				_stationListFirst = value;
@@ -113,7 +118,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<Region> _regionListSecond = new List<Region>();
 		public IList<Region> RegionListSecond
 		{
-			get { return _regionListSecond; }
+			get => _regionListSecond;
 			set
 			{
 				_regionListSecond = value;
@@ -124,7 +129,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<SolarSystem> _systemListSecond = new List<SolarSystem>();
 		public IList<SolarSystem> SystemListSecond
 		{
-			get { return _systemListSecond; }
+			get => _systemListSecond;
 			set
 			{
 				_systemListSecond = value;
@@ -135,7 +140,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<Station> _stationListSecond = new List<Station>();
 		public IList<Station> StationListSecond
 		{
-			get { return _stationListSecond; }
+			get => _stationListSecond;
 			set
 			{
 				_stationListSecond = value;
@@ -146,7 +151,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Region _selectedRegionFirst;
 		public Region SelectedRegionFirst
 		{
-			get { return _selectedRegionFirst; }
+			get => _selectedRegionFirst;
 			set
 			{
 				if (_selectedRegionFirst == value || value == null)
@@ -167,7 +172,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private SolarSystem _selectedSystemFirst;
 		public SolarSystem SelectedSystemFirst
 		{
-			get { return _selectedSystemFirst; }
+			get => _selectedSystemFirst;
 			set
 			{
 				if (_selectedSystemFirst == value || value == null)
@@ -188,7 +193,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Station _selectedStationFirst;
 		public Station SelectedStationFirst
 		{
-			get { return _selectedStationFirst; }
+			get => _selectedStationFirst;
 			set
 			{
 				if (_selectedStationFirst == value)
@@ -203,7 +208,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Region _selectedRegionSecond;
 		public Region SelectedRegionSecond
 		{
-			get { return _selectedRegionSecond; }
+			get => _selectedRegionSecond;
 			set
 			{
 				if (_selectedRegionSecond == value || value == null)
@@ -224,7 +229,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private SolarSystem _selectedSystemSecond;
 		public SolarSystem SelectedSystemSecond
 		{
-			get { return _selectedSystemSecond; }
+			get => _selectedSystemSecond;
 			set
 			{
 				if (_selectedSystemSecond == value || value == null)
@@ -245,7 +250,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Station _selectedStationSecond;
 		public Station SelectedStationSecond
 		{
-			get { return _selectedStationSecond; }
+			get => _selectedStationSecond;
 			set
 			{
 				if (_selectedStationSecond == value)
@@ -269,7 +274,7 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private void CreateBasicsReportList(ObjectsNode obj, List<Task<BasicReportData>> tasks)
+		private void CreateBasicsReportList(ObjectsNode obj, List<Action<Action<BasicReportData>>> tasks)
 		{
 			if (obj.SubObjects == null)
 			{
@@ -290,9 +295,9 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private Task<BasicReportData> CreateBasicReport(ObjectsNode obj)
+		private Action<Action<BasicReportData>> CreateBasicReport(ObjectsNode obj)
 		{
-			return Task.Factory.StartNew(() =>
+			return ((callback) =>
 			{
 				/*var firstStat = await Services.Instance.MarketStatAsync(
 					new List<int>() { obj.Object.TypeId },
@@ -327,41 +332,32 @@ namespace PriceMonitor.UI.UiViewModels
 					SellStation = SelectedStationSecond.Name
 				};
 
-			    Order PriceConvert(Order order)
-			    {
-			        order.Price = Math.Round(order.Price / 1000000, 4);
-			        return order;
-			    }
+				Order PriceConvert(Order order)
+				{
+					order.Price = Math.Round(order.Price / 1000000, 4);
+					return order;
+				}
 
-			    var task1 = Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {SelectedStationFirst.RegionId}, 1, SelectedStationFirst.SystemId)
-					.ContinueWith(t =>
-					{
-						if (t.Result.SellOrders != null && t.Result.SellOrders.Any())
-						{
-							report.BuyStationSellOrders = t.Result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
-						}
+				// TODO merge sell/buy from one station to single structure. Maybe only prices
+				var result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { SelectedStationFirst.RegionId }, 1, SelectedStationFirst.SystemId);
+				if (result.SellOrders != null && result.SellOrders.Any())
+				{
+					report.BuyStationSellOrders = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
+				}
+				if (result.BuyOrders != null && result.BuyOrders.Any())
+				{
+					report.BuyStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
+				}
 
-						if (t.Result.BuyOrders != null && t.Result.BuyOrders.Any())
-						{
-						    report.BuyStationBuyOrders = t.Result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
-						}
-					});
-
-				var task2 = Services.Instance.QuickLookAsync(obj.Object.TypeId, new List<int>() {SelectedStationSecond.RegionId}, 1, SelectedStationSecond.SystemId)
-					.ContinueWith(t =>
-					{
-						if (t.Result.SellOrders != null && t.Result.SellOrders.Any())
-						{
-						    report.SellStationSellOrders = t.Result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
-						}
-
-						if (t.Result.BuyOrders != null && t.Result.BuyOrders.Any())
-						{
-						    report.SellStationBuyOrders = t.Result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
-						}
-					});
-
-				Task.WaitAll(task1, task2);
+				result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { SelectedStationSecond.RegionId }, 1, SelectedStationSecond.SystemId);
+				if (result.SellOrders != null && result.SellOrders.Any())
+				{
+					report.SellStationSellOrders = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
+				}
+				if (result.BuyOrders != null && result.BuyOrders.Any())
+				{
+					report.SellStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
+				}
 
 				var diffSell = report.SellStationSellOrders.First().Price == 0
 					? report.BuyStationSellOrders.First().Price
@@ -375,20 +371,32 @@ namespace PriceMonitor.UI.UiViewModels
 
 				report.Proffit = $"{Math.Round(diffSell, 4)}/{Math.Round(diffBuy, 4)}/{Math.Round(instantProffit, 4)}";
 
-				return report;
+				callback(report);
 			});
 		}
 
 		private void GenerateReport()
 		{
-			var tasks = new List<Task<BasicReportData>>();
+			var tasks = new List<Action<Action<BasicReportData>>>();
 			CreateBasicsReportList(SelectedNode, tasks);
 
-			BasicReportsItems.Clear();
-			foreach (var task in tasks)
+			var bag = new ConcurrentBag<Action<BasicReportData>>();
+			for (var i = 0; i < tasks.Count; ++i)
 			{
-				BasicReportsItems.Add(new BasicReportViewModel(task));
+				var view = new BasicReportViewModel();
+
+				bag.Add(view.AssignReport);
+				BasicReportsItems.Add(view);
 			}
+
+			Parallel.ForEach(tasks, t =>
+			{
+				Action<BasicReportData> nextItem;
+
+				while (!bag.TryTake(out nextItem)){}
+
+				t.Invoke(nextItem);
+			});
 		}
 	}
 
