@@ -13,7 +13,7 @@ namespace PriceMonitor
 		private bool _uiAvailable;
 		public bool IsUiAvailable
 		{
-			get { return _uiAvailable; }
+			get => _uiAvailable;
 			set
 			{
 				_uiAvailable = value;

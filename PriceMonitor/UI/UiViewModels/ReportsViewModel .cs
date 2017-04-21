@@ -9,7 +9,6 @@ using Entity.DataTypes;
 using EveCentralProvider;
 using EveCentralProvider.Types;
 using Helpers;
-using System.Threading;
 using System.Collections.Concurrent;
 
 namespace PriceMonitor.UI.UiViewModels
@@ -18,32 +17,81 @@ namespace PriceMonitor.UI.UiViewModels
 	{
 		public ReportsViewModel()
 		{
+			BuyHubCheck = true;
+			SellHubCheck = false;
+
 			Task.Run(() =>
 			{
 				Application.Current.Dispatcher.Invoke(() =>
 				{
-					// REWORK DAT SHIT
-					RegionListFirst = RegionListSecond = EntityService.Instance.RequestRegionsAsync().Result;
-
-					SelectedRegionFirst = RegionListFirst.Single(t => t.RegionId == 10000002); // The Forge
-					SelectedRegionSecond = RegionListSecond.Single(t => t.RegionId == 10000042); // The Metropolis
-
-					SystemListFirst = EntityService.Instance.RequestSystemsByRegionAsync(SelectedRegionFirst.RegionId).Result;
-					SystemListSecond = EntityService.Instance.RequestSystemsByRegionAsync(SelectedRegionSecond.RegionId).Result;
-					SelectedSystemFirst = SystemListFirst.Single(t => t.SystemId == 30000142); // Jita
-					SelectedSystemSecond = SystemListSecond.Single(t => t.SystemId == 30002053); // Hek
-
-					StationListFirst = EntityService.Instance.RequestStationsBySystemAsync(SelectedSystemFirst.SystemId).Result;
-					StationListSecond = EntityService.Instance.RequestStationsBySystemAsync(SelectedSystemSecond.SystemId).Result;
-					SelectedStationFirst = StationListFirst.Single(t => t.StationId == 60003760); //Jita IV - Moon 4 - Caldari Navy Assembly Plant
-					SelectedStationSecond = StationListSecond.Single(t => t.StationId == 60004516); //Hek IV - Krusual Tribe Bureau
-
 					foreach (var item in EntityService.Instance.RequestObjectNodes())
 					{
 						MenuItems.Add(item);
 					}
 				});
 			});
+		}
+
+		private bool _buyHubCheck;
+		public bool BuyHubCheck
+		{
+			get => _buyHubCheck;
+			set
+			{
+				_buyHubCheck = value;
+				NotifyPropertyChanged();
+
+				if (_buyHubCheck)
+				{
+					BuyTarget = new RegionListBoxesViewModel<FromHubVisualizationType>();
+				}
+				else
+				{
+					BuyTarget = new RegionListBoxesViewModel<FromRegionVisualizationType>();
+				}
+			}
+		}
+
+		private bool _sellHubCheck;
+		public bool SellHubCheck
+		{
+			get => _sellHubCheck;
+			set
+			{
+				_sellHubCheck = value;
+				NotifyPropertyChanged();
+
+				if (_sellHubCheck)
+				{
+					SellTarget = new RegionListBoxesViewModel<FromHubVisualizationType>();
+				}
+				else
+				{
+					SellTarget = new RegionListBoxesViewModel<FromRegionVisualizationType>();
+				}
+			}
+		}
+
+		private RegionListBoxesBaseViewModel _buyTarget;
+		public RegionListBoxesBaseViewModel BuyTarget
+		{
+			get => _buyTarget;
+			set
+			{
+				_buyTarget = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private RegionListBoxesBaseViewModel _sellTarget;
+		public RegionListBoxesBaseViewModel SellTarget
+		{
+			get => _sellTarget;
+			set
+			{
+				_sellTarget = value;
+				NotifyPropertyChanged();
+			}
 		}
 
 		private ObservableCollection<ObjectsNode> _menuItems = new ObservableCollection<ObjectsNode>();
@@ -63,11 +111,8 @@ namespace PriceMonitor.UI.UiViewModels
 			get => _basicReportsItems;
 			set
 			{
-				//if (!Equals(_basicReportsItems, value))
-				{
-					_basicReportsItems = value;
-					NotifyPropertyChanged();
-				}
+				_basicReportsItems = value;
+				NotifyPropertyChanged();
 			}
 		}
 
@@ -78,186 +123,6 @@ namespace PriceMonitor.UI.UiViewModels
 			set
 			{
 				_selectedNode = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private IList<Region> _regionListFirst = new List<Region>();
-		public IList<Region> RegionListFirst
-		{
-			get => _regionListFirst;
-			set
-			{
-				_regionListFirst = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private IList<SolarSystem> _systemListFirst = new List<SolarSystem>();
-		public IList<SolarSystem> SystemListFirst
-		{
-			get => _systemListFirst;
-			set
-			{
-				_systemListFirst = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private IList<Station> _stationListFirst = new List<Station>();
-		public IList<Station> StationListFirst
-		{
-			get => _stationListFirst;
-			set
-			{
-				_stationListFirst = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private IList<Region> _regionListSecond = new List<Region>();
-		public IList<Region> RegionListSecond
-		{
-			get => _regionListSecond;
-			set
-			{
-				_regionListSecond = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private IList<SolarSystem> _systemListSecond = new List<SolarSystem>();
-		public IList<SolarSystem> SystemListSecond
-		{
-			get => _systemListSecond;
-			set
-			{
-				_systemListSecond = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private IList<Station> _stationListSecond = new List<Station>();
-		public IList<Station> StationListSecond
-		{
-			get => _stationListSecond;
-			set
-			{
-				_stationListSecond = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private Region _selectedRegionFirst;
-		public Region SelectedRegionFirst
-		{
-			get => _selectedRegionFirst;
-			set
-			{
-				if (_selectedRegionFirst == value || value == null)
-				{
-					return;
-				}
-				_selectedRegionFirst = value;
-				NotifyPropertyChanged();
-
-				SystemListFirst = EntityService.Instance.RequestSystemsByRegionAsync(value.RegionId).Result;
-				if (SystemListFirst != null && SystemListFirst.Count > 0)
-				{
-					SelectedSystemFirst = SystemListFirst.First();
-				}
-			}
-		}
-
-		private SolarSystem _selectedSystemFirst;
-		public SolarSystem SelectedSystemFirst
-		{
-			get => _selectedSystemFirst;
-			set
-			{
-				if (_selectedSystemFirst == value || value == null)
-				{
-					return;
-				}
-				_selectedSystemFirst = value;
-				NotifyPropertyChanged();
-
-				StationListFirst = EntityService.Instance.RequestStationsBySystemAsync(value.SystemId).Result;
-				if (StationListFirst != null && StationListFirst.Count > 0)
-				{
-					SelectedStationFirst = StationListFirst.First();
-				}
-			}
-		}
-
-		private Station _selectedStationFirst;
-		public Station SelectedStationFirst
-		{
-			get => _selectedStationFirst;
-			set
-			{
-				if (_selectedStationFirst == value)
-				{
-					return;
-				}
-				_selectedStationFirst = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		private Region _selectedRegionSecond;
-		public Region SelectedRegionSecond
-		{
-			get => _selectedRegionSecond;
-			set
-			{
-				if (_selectedRegionSecond == value || value == null)
-				{
-					return;
-				}
-				_selectedRegionSecond = value;
-				NotifyPropertyChanged();
-
-				SystemListSecond = EntityService.Instance.RequestSystemsByRegionAsync(value.RegionId).Result;
-				if (SystemListSecond != null && SystemListSecond.Count > 0)
-				{
-					SelectedSystemSecond = SystemListSecond.First();
-				}
-			}
-		}
-
-		private SolarSystem _selectedSystemSecond;
-		public SolarSystem SelectedSystemSecond
-		{
-			get => _selectedSystemSecond;
-			set
-			{
-				if (_selectedSystemSecond == value || value == null)
-				{
-					return;
-				}
-				_selectedSystemSecond = value;
-				NotifyPropertyChanged();
-
-				StationListSecond = EntityService.Instance.RequestStationsBySystemAsync(value.SystemId).Result;
-				if (StationListSecond != null && StationListSecond.Count > 0)
-				{
-					SelectedStationSecond = StationListSecond.First();
-				}
-			}
-		}
-
-		private Station _selectedStationSecond;
-		public Station SelectedStationSecond
-		{
-			get => _selectedStationSecond;
-			set
-			{
-				if (_selectedStationSecond == value)
-				{
-					return;
-				}
-				_selectedStationSecond = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -328,8 +193,8 @@ namespace PriceMonitor.UI.UiViewModels
 				var report = new BasicReportData()
 				{
 					ItemName = obj.Object.Name,
-					BuyStation = SelectedStationFirst.Name,
-					SellStation = SelectedStationSecond.Name
+					BuyStation = BuyTarget.ThirdSelection.Name,
+					SellStation = SellTarget.ThirdSelection.Name
 				};
 
 				Order PriceConvert(Order order)
@@ -339,7 +204,7 @@ namespace PriceMonitor.UI.UiViewModels
 				}
 
 				// TODO merge sell/buy from one station to single structure. Maybe only prices
-				var result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { SelectedStationFirst.RegionId }, 1, SelectedStationFirst.SystemId);
+				var result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { (int)BuyTarget.FirstSelection.Id }, 1, (int)BuyTarget.SecondSelection.Id);
 				if (result.SellOrders != null && result.SellOrders.Any())
 				{
 					report.BuyStationSellOrders = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
@@ -349,7 +214,7 @@ namespace PriceMonitor.UI.UiViewModels
 					report.BuyStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
 				}
 
-				result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { SelectedStationSecond.RegionId }, 1, SelectedStationSecond.SystemId);
+				result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { (int)SellTarget.FirstSelection.Id }, 1, (int)SellTarget.SecondSelection.Id);
 				if (result.SellOrders != null && result.SellOrders.Any())
 				{
 					report.SellStationSellOrders = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
@@ -381,6 +246,7 @@ namespace PriceMonitor.UI.UiViewModels
 			CreateBasicsReportList(SelectedNode, tasks);
 
 			var bag = new ConcurrentBag<Action<BasicReportData>>();
+			BasicReportsItems.Clear();
 			for (var i = 0; i < tasks.Count; ++i)
 			{
 				var view = new BasicReportViewModel();
@@ -389,13 +255,16 @@ namespace PriceMonitor.UI.UiViewModels
 				BasicReportsItems.Add(view);
 			}
 
-			Parallel.ForEach(tasks, t =>
+			Task.Factory.StartNew(() =>
 			{
-				Action<BasicReportData> nextItem;
+				Parallel.ForEach(tasks, t =>
+				{
+					Action<BasicReportData> nextItem;
 
-				while (!bag.TryTake(out nextItem)){}
+					while (!bag.TryTake(out nextItem)) { }
 
-				t.Invoke(nextItem);
+					t.Invoke(nextItem);
+				});
 			});
 		}
 	}

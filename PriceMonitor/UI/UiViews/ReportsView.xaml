@@ -6,6 +6,7 @@
 			 xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 			 xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 			 xmlns:dataTypes="clr-namespace:Entity.DataTypes;assembly=Entity"
+			 xmlns:controls="clr-namespace:PriceMonitor.UI.UiViewModels;assembly=PriceMonitor"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
@@ -36,42 +37,42 @@
 
 			<Grid Row ="1">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="50"/>
+					<ColumnDefinition Width="60"/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 
-				<Grid Column="1">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<ComboBox Grid.Row="0" ItemsSource="{Binding Path=RegionListFirst}" SelectedItem="{Binding Path=SelectedRegionFirst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="1" ItemsSource="{Binding Path=SystemListFirst}" SelectedItem="{Binding Path=SelectedSystemFirst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="2" ItemsSource="{Binding Path=StationListFirst}" SelectedItem="{Binding Path=SelectedStationFirst, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
-				</Grid>
-				
-				<Label Grid.Column="0" Content="First" HorizontalAlignment="Center"/>
+				<StackPanel Grid.Column="0" HorizontalAlignment="Center">
+					<Label Content="Buy" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					<CheckBox Content="Hubs" IsChecked="{Binding BuyHubCheck, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</StackPanel>
+
+				<UserControl Grid.Column="1" Content="{Binding BuyTarget}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<UserControl.Resources>
+						<DataTemplate DataType="{x:Type uiViewModels:RegionListBoxesBaseViewModel}">
+							<uiViews:RegionListBoxesView />
+						</DataTemplate>
+					</UserControl.Resources>
+				</UserControl>
 			</Grid>
 
 			<Grid Row ="2">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="50"/>
+					<ColumnDefinition Width="60"/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 
-				<Grid Column="1">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<ComboBox Grid.Row="0" ItemsSource="{Binding Path=RegionListSecond}" SelectedItem="{Binding Path=SelectedRegionSecond, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="1" ItemsSource="{Binding Path=SystemListSecond}" SelectedItem="{Binding Path=SelectedSystemSecond, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
-					<ComboBox Grid.Row="2" ItemsSource="{Binding Path=StationListSecond}" SelectedItem="{Binding Path=SelectedStationSecond, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="Name"/>
-				</Grid>
+				<StackPanel Grid.Column="0" HorizontalAlignment="Center">
+					<Label Content="Sell" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					<CheckBox Content="Hubs" IsChecked="{Binding SellHubCheck, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</StackPanel>
 
-				<Label Grid.Column="0" Content="Second" HorizontalAlignment="Center"/>
+				<UserControl Grid.Column="1" Content="{Binding SellTarget}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<UserControl.Resources>
+						<DataTemplate DataType="{x:Type uiViewModels:RegionListBoxesBaseViewModel}">
+							<uiViews:RegionListBoxesView />
+						</DataTemplate>
+					</UserControl.Resources>
+				</UserControl>
 			</Grid>
 
 			<Button Grid.Row="3" Margin="2" Content="Generate" Command="{Binding Path=GenerateReportCmd}"/>
@@ -100,3 +101,4 @@
 		</ListBox>
 	</Grid>
 </UserControl>
+

@@ -139,51 +139,6 @@ namespace Entity
 			}
 		}
 
-		public IEnumerable<ObjectsNode> RequestFullChain(ObjectsNode node)
-		{
-			yield return node;
-
-			foreach (var obj in node.SubObjects)
-			{
-				foreach (var subObj in RequestFullChain(obj))
-				{
-					yield return subObj;
-				}
-			}
-		}
-
-		/* private List<ObjectsNode> DoRequestChain(int level)
-		 {
-			 using (var ctx = new EntitiesConnection())
-			 {
-				 var list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
-					 .Select(t => new ObjectsNode()
-					 {
-						 Object = new GameObject()
-						 {
-							 Name = t.marketgroup_name,
-							 MarketGroupId = t.marketgroup_id
-						 }
-					 })
-					 .ToList();
-
-				 foreach (var item in list)
-				 {
-					 item.SubObjects = DoRequestChain(item.Object.MarketGroupId);
-				 }
-
-				 if (list.Count != 0)
-				 {
-					 yield return list;
-				 }
-
-				 var objects = RequestObjectsAsync(level).Result;
-				 list = objects.Select(gameObject => new ObjectsNode() {Object = gameObject}).ToList();
-
-				 yield return list;
-			 }
-		 }*/
-
 		public async Task<List<GameObject>> RequestObjectsAsync(int marketGroudpId)
 		{
 			using (var ctx = new sysEntities())

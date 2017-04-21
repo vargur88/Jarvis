@@ -1,5 +1,11 @@
 ﻿namespace Entity.DataTypes
 {
+	public class CommonMapObject
+	{
+		public string Name { get; set; }
+		public long Id { get; set; }
+	}
+
 	public class Region
 	{
 		public string Name { get; set; }
