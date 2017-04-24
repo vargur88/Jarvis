@@ -10,6 +10,8 @@ using EveCentralProvider;
 using EveCentralProvider.Types;
 using Helpers;
 using System.Collections.Concurrent;
+using System.Windows.Input;
+using PriceMonitor.Helpers;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -19,6 +21,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			BuyHubCheck = true;
 			SellHubCheck = false;
+			//FilterList.SetFlags(ItemFilter.All);
 
 			Task.Run(() =>
 			{
@@ -125,6 +128,29 @@ namespace PriceMonitor.UI.UiViewModels
 				_selectedNode = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		private Func<eve_inv_types, bool> _filterFunc = null;
+
+		private ItemFilter _filterList = ItemFilter.None;
+		public ItemFilter FilterList
+		{
+			get => _filterList;
+			set
+			{
+				_filterList = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private RelayCommand _filterChangedCommand;
+		public ICommand FilterChangedCommand => _filterChangedCommand ?? (_filterChangedCommand = new RelayCommand(t => UpdateFilterFlag()));
+
+		private void UpdateFilterFlag()
+		{
+			var func = PredicateBuilder.NewPredicate<eve_inv_types>();
+
+			// TODO
 		}
 
 		private RelayCommand _generateReportCmd;
@@ -280,5 +306,16 @@ namespace PriceMonitor.UI.UiViewModels
 		public List<Order> BuyStationBuyOrders { get; set; } = new List<Order>() {new Order()};
 		public List<Order> SellStationSellOrders { get; set; } = new List<Order>() {new Order()};
 		public List<Order> SellStationBuyOrders { get; set; } = new List<Order>() {new Order()};
+	}
+
+	[FlagsAttribute]
+	public enum ItemFilter
+	{
+		None = 0,
+		Tier1 = 1 << 0,
+		Tier2 = 1 << 1,
+		Faction = 1 << 2,
+		Deadsapce = 1 << 3,
+		All = Tier1 | Tier2 | Faction | Deadsapce
 	}
 }

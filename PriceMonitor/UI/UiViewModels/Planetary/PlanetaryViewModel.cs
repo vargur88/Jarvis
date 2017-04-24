@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Entity.DataTypes;
 using PriceMonitor.DataTypes;
 using System;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private ObservableCollection<PIGroupViewModel> _piGroups = new ObservableCollection<PIGroupViewModel>();
 		public ObservableCollection<PIGroupViewModel> PIGroups
 		{
-			get { return _piGroups; }
+			get => _piGroups;
 			set
 			{
 				_piGroups = value;

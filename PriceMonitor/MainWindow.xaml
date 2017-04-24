@@ -10,7 +10,7 @@
 		GlowBrush="{DynamicResource AccentColorBrush}"
 		Title="Util">
 
-	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="2" TabStripPlacement="Left">
+	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="1" TabStripPlacement="Left">
 		<!-- Watching tab -->
 		<controls:MetroTabItem x:Name="WatchingTab">
 			<controls:MetroTabItem.Header>

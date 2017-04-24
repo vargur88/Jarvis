@@ -6,9 +6,12 @@
 			 xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 			 xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 			 xmlns:dataTypes="clr-namespace:Entity.DataTypes;assembly=Entity"
-			 xmlns:controls="clr-namespace:PriceMonitor.UI.UiViewModels;assembly=PriceMonitor"
+			 xmlns:helpers="clr-namespace:PriceMonitor.Helpers"
 			 mc:Ignorable="d"
 			 d:DesignHeight="300" d:DesignWidth="300">
+	<UserControl.Resources>
+		<helpers:ItemFilterFlagToBoolConverter x:Key="FilterConverter" />
+	</UserControl.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
@@ -21,8 +24,10 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			
+
 			<TreeView Grid.Row="0"  ScrollViewer.VerticalScrollBarVisibility="Visible" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
 					  ItemsSource="{Binding Path=MenuItems}"
 					  SelectedItemChanged="TreeView_OnSelectedItemChanged">
@@ -35,7 +40,29 @@
 				</TreeView.ItemTemplate>
 			</TreeView>
 
-			<Grid Row ="1">
+			<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="2">
+				<StackPanel Orientation="Vertical" Width="100">
+					<CheckBox Content="All"
+								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.All}}"
+								Command="{Binding FilterChangedCommand}"/>
+
+					<CheckBox Content="Tier 1" 
+								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.Tier1}}"
+								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.Tier1}"/>
+
+					<CheckBox Content="Tier 2" 
+								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.Tier2}}"
+								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.Tier2}"/>
+				</StackPanel>
+				<StackPanel Orientation="Vertical"  Width="100">
+					<CheckBox Content="Faction" IsChecked="{Binding FilterList}"/>
+					<CheckBox Content="Deadspace" IsChecked="{Binding FilterList}"/>
+				</StackPanel>
+			</StackPanel>
+
+			<Separator Grid.Row="2"/>
+
+			<Grid Row ="3" Margin="2">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="60"/>
 					<ColumnDefinition/>
@@ -55,7 +82,7 @@
 				</UserControl>
 			</Grid>
 
-			<Grid Row ="2">
+			<Grid Row ="4" Margin="2">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="60"/>
 					<ColumnDefinition/>
@@ -75,7 +102,7 @@
 				</UserControl>
 			</Grid>
 
-			<Button Grid.Row="3" Margin="2" Content="Generate" Command="{Binding Path=GenerateReportCmd}"/>
+			<Button Grid.Row="5" Margin="2" Content="Generate" Command="{Binding Path=GenerateReportCmd}"/>
 		</Grid>
 
 		<ListBox Grid.Column="1" HorizontalContentAlignment="Stretch" BorderThickness="0" Padding="0" Background="Transparent" Margin="0" Grid.IsSharedSizeScope="True"

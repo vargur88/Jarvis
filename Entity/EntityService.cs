@@ -97,7 +97,8 @@ namespace Entity
 		{
 			using (var ctx = new sysEntities())
 			{
-				var list = ctx.eve_inv_marketgroups.Where(t => t.parentgroup_id == level)
+				var list = ctx.eve_inv_marketgroups
+					.Where(t => t.parentgroup_id == level)
 					.Select(t => new ObjectsNode()
 					{
 						Object = new GameObject()
@@ -111,7 +112,8 @@ namespace Entity
 
 				if (!list.Any())
 				{
-					list = ctx.eve_inv_types.Where(t => t.marketgroup_id == level)
+					list = ctx.eve_inv_types
+						.Where(t => t.marketgroup_id == level)
 						.Select(t => new ObjectsNode()
 						{
 							Object = new GameObject()
