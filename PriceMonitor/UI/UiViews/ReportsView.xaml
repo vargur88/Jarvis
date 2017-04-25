@@ -44,7 +44,7 @@
 				<StackPanel Orientation="Vertical" Width="100">
 					<CheckBox Content="All"
 								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.All}}"
-								Command="{Binding FilterChangedCommand}"/>
+								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.All}"/>
 
 					<CheckBox Content="Tier 1" 
 								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.Tier1}}"
@@ -55,8 +55,17 @@
 								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.Tier2}"/>
 				</StackPanel>
 				<StackPanel Orientation="Vertical"  Width="100">
-					<CheckBox Content="Faction" IsChecked="{Binding FilterList}"/>
-					<CheckBox Content="Deadspace" IsChecked="{Binding FilterList}"/>
+					<CheckBox Content="Faction"
+								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.Faction}}"
+								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.Faction}"/>
+
+					<CheckBox Content="Deadsapce" 
+								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.Deadsapce}}"
+								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.Deadsapce}"/>
+
+					<CheckBox Content="Officer" 
+								IsChecked="{Binding FilterList, Converter={StaticResource FilterConverter}, ConverterParameter={x:Static uiViewModels:ItemFilter.Officer}}"
+								Command="{Binding FilterChangedCommand}" CommandParameter="{x:Static uiViewModels:ItemFilter.Officer}"/>
 				</StackPanel>
 			</StackPanel>
 

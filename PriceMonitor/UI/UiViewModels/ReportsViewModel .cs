@@ -21,7 +21,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			BuyHubCheck = true;
 			SellHubCheck = false;
-			//FilterList.SetFlags(ItemFilter.All);
+			FilterList = ItemFilter.All;
 
 			Task.Run(() =>
 			{
@@ -130,8 +130,6 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private Func<eve_inv_types, bool> _filterFunc = null;
-
 		private ItemFilter _filterList = ItemFilter.None;
 		public ItemFilter FilterList
 		{
@@ -143,14 +141,35 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private RelayCommand _filterChangedCommand;
-		public ICommand FilterChangedCommand => _filterChangedCommand ?? (_filterChangedCommand = new RelayCommand(t => UpdateFilterFlag()));
+		private RelayCommandBase<ItemFilter> _filterChangedCommand;
+		public ICommand FilterChangedCommand => _filterChangedCommand ?? (_filterChangedCommand = new RelayCommandBase<ItemFilter>(UpdateFilterFlag));
 
-		private void UpdateFilterFlag()
+		private void UpdateFilterFlag(ItemFilter item)
 		{
 			var func = PredicateBuilder.NewPredicate<eve_inv_types>();
 
-			// TODO
+			if (_filterList.HasFlag(ItemFilter.Tier1))
+				func = func.And(t => t.meta_level < 5 && t.faction == "r");
+
+			if (_filterList.HasFlag(ItemFilter.Tier2))
+				func = func.And(t => t.meta_level == 5 && t.faction == "r");
+
+			if (_filterList.HasFlag(ItemFilter.Faction))
+				func = func.And(t => t.faction == "f" || (t.faction == "" && t.meta_level == 0));
+
+			if (_filterList.HasFlag(ItemFilter.Deadsapce))
+				func = func.And(t => t.faction == "d");
+
+			if (_filterList.HasFlag(ItemFilter.Officer))
+				func = func.And(t => t.faction == "o");
+
+			if (_filterList == ItemFilter.All)
+			{
+				EntityService.Instance.FilterFunc = t => true;
+				return;
+			}
+
+			EntityService.Instance.FilterFunc = func;
 		}
 
 		private RelayCommand _generateReportCmd;
@@ -316,6 +335,7 @@ namespace PriceMonitor.UI.UiViewModels
 		Tier2 = 1 << 1,
 		Faction = 1 << 2,
 		Deadsapce = 1 << 3,
-		All = Tier1 | Tier2 | Faction | Deadsapce
+		Officer = 1 << 4,
+		All = Tier1 | Tier2 | Faction | Deadsapce | Officer
 	}
 }

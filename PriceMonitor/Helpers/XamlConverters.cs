@@ -19,6 +19,13 @@ namespace PriceMonitor.Helpers
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
+			var item = (ItemFilter) parameter;
+			if (item == ItemFilter.All)
+			{
+				this.target = ItemFilter.All;
+				return this.target;
+			}
+
 			this.target ^= (ItemFilter)parameter;
 			return this.target;
 		}

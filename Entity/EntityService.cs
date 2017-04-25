@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Entity.DataTypes;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
+using LinqKit;
 
 namespace Entity
 {
@@ -88,6 +91,26 @@ namespace Entity
 			}
 		}
 
+		private Expression<Func<eve_inv_types, bool>> _itemFilterFunc = t => true;
+		private readonly object _syncFilterFunc = new object();
+		public Expression<Func<eve_inv_types, bool>> FilterFunc
+		{
+			get
+			{
+				lock (_syncFilterFunc)
+				{
+					return _itemFilterFunc;
+				}
+			}
+			set
+			{
+				lock (_syncFilterFunc)
+				{
+					_itemFilterFunc = value;
+				}
+			}
+		}
+
 		public IEnumerable<ObjectsNode> RequestObjectNodes(int level = 0)
 		{
 			return DoRequestChain(level);
@@ -114,6 +137,8 @@ namespace Entity
 				{
 					list = ctx.eve_inv_types
 						.Where(t => t.marketgroup_id == level)
+						.AsExpandable()
+						.Where(FilterFunc)
 						.Select(t => new ObjectsNode()
 						{
 							Object = new GameObject()
