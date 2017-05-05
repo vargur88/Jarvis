@@ -56,7 +56,7 @@
 					</Grid>
 				</controls:MetroTabItem>
 
-				<!--controls:MetroTabItem x:Name="SellTab" BorderThickness="1">
+				<controls:MetroTabItem x:Name="SellTab" BorderThickness="1">
 					<controls:MetroTabItem.Header>
 						<TextBlock Text="Sell"/>
 					</controls:MetroTabItem.Header>
@@ -73,23 +73,25 @@
 
 						<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
 
-						<DataGrid Grid.Row="1" Grid.Column="0" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All" SelectionUnit="FullRow" AutoGenerateColumns="False"
-							ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Count" Binding="{Binding VolumeRemaining}" Width="*"/>
-								<DataGridTextColumn Header="Sell" Binding="{Binding Price}" Width="*"/>
-							</DataGrid.Columns>
-						</DataGrid>
+						<ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
+							<ListView.View>
+								<GridView>
+									<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
+									<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+								</GridView>
+							</ListView.View>
+						</ListView>
 
-						<DataGrid Grid.Row="1" Grid.Column="1" IsReadOnly="True" SelectionMode="Single" GridLinesVisibility="All" SelectionUnit="FullRow" AutoGenerateColumns="False"
-							ItemsSource="{Binding Path=Report.SellStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Count" Binding="{Binding VolumeRemaining}" Width="*"/>
-								<DataGridTextColumn Header="Buy" Binding="{Binding Price}" Width="*"/>
-							</DataGrid.Columns>
-						</DataGrid>
+						<ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Report.SellStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
+							<ListView.View>
+								<GridView>
+									<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
+									<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+								</GridView>
+							</ListView.View>
+						</ListView>
 					</Grid>
-				</-->
+				</controls:MetroTabItem>
 
 				<!--controls:MetroTabItem x:Name="HistoryTab" BorderThickness="1">
 					<TabItem.Header>

@@ -47,6 +47,7 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Types\AggregateInfo.cs" />
     <Compile Include="Types\EveMonResult.cs" />
     <Compile Include="Types\RouteJump.cs" />
     <Compile Include="Types\TypeHistory.cs" />

@@ -21,6 +21,8 @@ namespace EveCentralProvider
 	{
 		private readonly string ApiFormat = "http://api.eve-central.com/api/{0}?{1}";
 		private readonly string CrestApiFormat = "https://crest-tq.eveonline.com/market/{0}/history/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
+		private readonly string AggregateFormat = "https://market.fuzzwork.co.uk/aggregates/?region={0}&types={1}";
+
 		private readonly string UserAgent = String.Format(".NET Eve Central Provider v{0}", FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
 		private static JsonSerializerSettings _jsonSerializerSettings;
@@ -225,6 +227,22 @@ namespace EveCentralProvider
 			string json = reader.ReadToEnd();
 
 			return await Deserialize<TypeCrestHistory>(json);
+		}
+
+		private Uri BuildAggregateUrl(int regionId, int typeid)
+		{
+			return new Uri(String.Format(AggregateFormat, regionId, typeid));
+		}
+
+		public async Task<AggregateInfoList> AggregateInfoAsync(int typeid, int regionId)
+		{
+			Uri apiUrl = BuildAggregateUrl(regionId, typeid);
+
+			var stream = await GetAsync(apiUrl);
+			StreamReader reader = new StreamReader(stream);
+			string json = reader.ReadToEnd();
+
+			return await Deserialize<AggregateInfoList>(json);
 		}
 
 		public List<TypeHistory> History(int type, LocaleType locale, string idOrName, OrderType bid)

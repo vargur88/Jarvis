@@ -259,6 +259,14 @@ namespace PriceMonitor.UI.UiViewModels
 					report.BuyStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
 				}
 
+				var dds = Services.Instance.AggregateInfoAsync(obj.Object.TypeId, (int)SellTarget.FirstSelection.Id).Result;
+
+				var kd = Services.Instance.MarketStat(
+					new List<int>() {obj.Object.TypeId},
+					new List<int>() {(int) SellTarget.FirstSelection.Id}, 
+					1, 
+					(int) SellTarget.SecondSelection.Id);
+
 				result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { (int)SellTarget.FirstSelection.Id }, 1, (int)SellTarget.SecondSelection.Id);
 				if (result.SellOrders != null && result.SellOrders.Any())
 				{
@@ -277,9 +285,12 @@ namespace PriceMonitor.UI.UiViewModels
 					? report.BuyStationBuyOrders.First().Price
 					: (report.SellStationSellOrders.First().Price - report.BuyStationBuyOrders.First().Price);
 
-				var instantProffit = report.SellStationBuyOrders.First().Price - report.BuyStationSellOrders.First().Price;
+				var instantProffit = report.SellStationSellOrders.First().Price == 0
+					? 0xFFFFFF
+					: report.SellStationBuyOrders.First().Price - report.BuyStationSellOrders.First().Price;
 
-				report.Proffit = $"{Math.Round(diffSell, 4)}/{Math.Round(diffBuy, 4)}/{Math.Round(instantProffit, 4)}";
+				var instStr = (instantProffit == 0xFFFFFF) ? "up to you" : Math.Round(instantProffit, 4).ToString();
+				report.Proffit = $"{Math.Round(diffSell, 4)}/{Math.Round(diffBuy, 4)}/{instStr}";
 
 				callback(report);
 			});
