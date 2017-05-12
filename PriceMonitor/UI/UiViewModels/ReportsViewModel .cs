@@ -33,6 +33,8 @@ namespace PriceMonitor.UI.UiViewModels
 					}
 				});
 			});
+
+			//var dds = Services.Instance.AggregateInfoAsync(1236, 10000069).Result;
 		}
 
 		private bool _buyHubCheck;
@@ -259,7 +261,7 @@ namespace PriceMonitor.UI.UiViewModels
 					report.BuyStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
 				}
 
-				var dds = Services.Instance.AggregateInfoAsync(obj.Object.TypeId, (int)SellTarget.FirstSelection.Id).Result;
+				var dds = Services.Instance.AggregateInfoAsync(obj.Object.TypeId, (int)BuyTarget.FirstSelection.Id).Result;
 
 				var kd = Services.Instance.MarketStat(
 					new List<int>() {obj.Object.TypeId},

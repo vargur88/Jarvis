@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Linq;
@@ -241,6 +242,14 @@ namespace EveCentralProvider
 			var stream = await GetAsync(apiUrl);
 			StreamReader reader = new StreamReader(stream);
 			string json = reader.ReadToEnd();
+
+			//	this	{ "1236":{ "buy":
+			//	to		{"id":"1236","buy":
+
+			json = json.Insert(0, "{\"items\":[").Replace("}}}", "}}]}");
+			var uglystr1 = "{\"" + typeid + "\":{";
+			var uglystr2 = "{\"id\":\"" + typeid + "\",";
+			json = json.Replace(uglystr1, uglystr2);
 
 			return await Deserialize<AggregateInfoList>(json);
 		}

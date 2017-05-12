@@ -2,16 +2,16 @@
 {
 	public class AggregateInfoList
 	{
-		public AggregateInfo[] ItemsInfos { get; set; }
+		public AggregateInfo[] Items { get; set; }
 	}
 
 	public class AggregateInfo
 	{
-		public int ItemId { get; set; }
+		public string id { get; set; }
 
-		public AggreateInfoStat Buy { get; set; }
+		public AggreateInfoStat buy { get; set; }
 
-		public AggreateInfoStat Sell { get; set; }
+		public AggreateInfoStat sell { get; set; }
 	}
 
 	public class AggreateInfoStat
