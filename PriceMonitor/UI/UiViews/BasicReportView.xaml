@@ -5,101 +5,83 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
 			 mc:Ignorable="d"
-			 d:DesignHeight="300" d:DesignWidth="300">
+			 d:DesignHeight="150" d:DesignWidth="300">
 	<Border BorderThickness="1" BorderBrush="Black">
-		<Grid Margin="5" MinHeight="265" MaxWidth="300">
+		<Grid Margin="5" MinHeight="150" MaxWidth="300">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
 
-			<Label FontWeight="Bold" Content="{Binding Path=Report.ItemName}" HorizontalContentAlignment="Left" Grid.Row="0" />
+			<Label FontWeight="Bold" Content="{Binding Path=Report.ItemName}" HorizontalContentAlignment="Left" Grid.ColumnSpan="2"/>
 
-			<Label FontWeight="Bold" Content="{Binding Path=Report.Proffit}" HorizontalContentAlignment="Left" Grid.Row="1" />
+			<Button Command="{Binding Path=ShowAggregateInfoCmd}" Content="Info" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
 
-			<controls:MetroTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" BorderBrush="Black" BorderThickness="1" SelectedIndex="0" TabStripPlacement="Top" Grid.Row="2">
-				<controls:MetroTabItem x:Name="BuyTab" BorderThickness="1">
-					<controls:MetroTabItem.Header>
-						<TextBlock Text="Buy"/>
-					</controls:MetroTabItem.Header>
-					
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition/>
-							<ColumnDefinition/>
-						</Grid.ColumnDefinitions>
+			<Popup Grid.Row="0" Grid.Column="0" x:Name="FieldsPopup" Placement="Center" IsOpen="{Binding IsAggregateInfoOpen}">
+				<DataGrid ItemsSource="{Binding AggregateList.DefaultView}"  
+						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
+			</Popup>
 
-						<Label Content="{Binding Path=Report.BuyStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
+			<Label FontWeight="Bold" Content="{Binding Path=Report.Proffit}" HorizontalContentAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
 
-						<ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
-							<ListView.View>
-								<GridView>
-									<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
-									<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
-								</GridView>
-							</ListView.View>
-						</ListView>
+			<Grid Row="2" Grid.Column="0" ColumnSpan="2">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition Width="144"/>
+				</Grid.ColumnDefinitions>
 
-						<ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
-							<ListView.View>
-								<GridView>
-									<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
-									<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
-								</GridView>
-							</ListView.View>
-						</ListView>
-					</Grid>
-				</controls:MetroTabItem>
+				<Label Content="{Binding Path=Report.BuyStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
 
-				<controls:MetroTabItem x:Name="SellTab" BorderThickness="1">
-					<controls:MetroTabItem.Header>
-						<TextBlock Text="Sell"/>
-					</controls:MetroTabItem.Header>
-					
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition/>
-							<ColumnDefinition/>
-						</Grid.ColumnDefinitions>
+				<ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
+							<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
 
-						<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
+				<ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
+							<GridViewColumn Header="Buy" Width="70" DisplayMemberBinding="{Binding Price}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
 
-						<ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
-							<ListView.View>
-								<GridView>
-									<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
-									<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
-								</GridView>
-							</ListView.View>
-						</ListView>
+				<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" />
 
-						<ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Report.SellStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
-							<ListView.View>
-								<GridView>
-									<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
-									<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
-								</GridView>
-							</ListView.View>
-						</ListView>
-					</Grid>
-				</controls:MetroTabItem>
+				<ListView Grid.Column="0" Grid.Row="4" ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
+							<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
 
-				<!--controls:MetroTabItem x:Name="HistoryTab" BorderThickness="1">
-					<TabItem.Header>
-						<TextBlock Text="History" FontSize="14"/>
-					</TabItem.Header>
-				</-->
-
-			</controls:MetroTabControl>
+				<ListView Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Path=Report.SellStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
+							<GridViewColumn Header="Buy" Width="70" DisplayMemberBinding="{Binding Price}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</Grid>
 		</Grid>
 	</Border>
 </UserControl>

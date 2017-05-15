@@ -207,36 +207,15 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
+		/*
+		 * For more intellectual report and/or master new API has to be introduced
+		 * to prevent ban multiple objects info must be aggregate to single request for station/system
+		 * as it recommended by API developers
+		 */
 		private Action<Action<BasicReportData>> CreateBasicReport(ObjectsNode obj)
 		{
 			return ((callback) =>
 			{
-				/*var firstStat = await Services.Instance.MarketStatAsync(
-					new List<int>() { obj.Object.TypeId },
-					new List<int>() { SelectedStationFirst.RegionId },
-					1,
-					SelectedStationFirst.SystemId);
-
-				var second = await Services.Instance.MarketStatAsync(
-					new List<int>() { obj.Object.TypeId },
-					new List<int>() { SelectedStationFirst.RegionId },
-					1,
-					SelectedStationFirst.SystemId);*/
-
-				/*
-				 * average calculation
-				 * var prices = new List<float> { whereToBuy.First().Price };
-				float firstBuyPrice = prices.First();
-				long buyVolume = whereToBuy.First().VolumeRemaining;
-
-				foreach (var order in whereToBuy.Where(order => order.Price - firstBuyPrice <= firstBuyPrice * 0.02))
-				{
-					prices.Add(order.Price);
-					buyVolume += order.VolumeRemaining;
-				}
-
-				long averagePrice = prices.Sum(price => (long)price) / prices.Count;*/
-
 				var report = new BasicReportData()
 				{
 					ItemName = obj.Object.Name,
@@ -261,13 +240,7 @@ namespace PriceMonitor.UI.UiViewModels
 					report.BuyStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
 				}
 
-				var dds = Services.Instance.AggregateInfoAsync(obj.Object.TypeId, (int)BuyTarget.FirstSelection.Id).Result;
-
-				var kd = Services.Instance.MarketStat(
-					new List<int>() {obj.Object.TypeId},
-					new List<int>() {(int) SellTarget.FirstSelection.Id}, 
-					1, 
-					(int) SellTarget.SecondSelection.Id);
+				//var aggregatePrice = Services.Instance.AggregateInfoAsync(obj.Object.TypeId, (int)BuyTarget.FirstSelection.Id).Result;
 
 				result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { (int)SellTarget.FirstSelection.Id }, 1, (int)SellTarget.SecondSelection.Id);
 				if (result.SellOrders != null && result.SellOrders.Any())

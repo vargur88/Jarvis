@@ -239,7 +239,7 @@ namespace EveCentralProvider
 		{
 			Uri apiUrl = BuildAggregateUrl(regionId, typeid);
 
-			var stream = await GetAsync(apiUrl);
+			var stream = await GetAsync(apiUrl, "Chrome/58.0.3029.110");
 			StreamReader reader = new StreamReader(stream);
 			string json = reader.ReadToEnd();
 
@@ -371,10 +371,10 @@ namespace EveCentralProvider
 			return ParseRouteJson(json);
 		}
 
-		private Stream Get(Uri apiUrl)
+		private Stream Get(Uri apiUrl, string userAgent = "")
 		{
 			HttpWebRequest req = WebRequest.CreateHttp(apiUrl);
-			req.UserAgent = UserAgent;
+			req.UserAgent = string.IsNullOrEmpty(userAgent) ? UserAgent : userAgent;
 			req.Method = "GET";
 
 			using (var response = req.GetResponse())
@@ -385,10 +385,10 @@ namespace EveCentralProvider
 
 		}
 
-		private async Task<Stream> GetAsync(Uri apiUrl)
+		private async Task<Stream> GetAsync(Uri apiUrl, string userAgent = "")
 		{
 			HttpWebRequest req = WebRequest.CreateHttp(apiUrl);
-			req.UserAgent = UserAgent;
+			req.UserAgent = string.IsNullOrEmpty(userAgent) ? UserAgent : userAgent;
 			req.Method = "GET";
 
 			using (var response = await req.GetResponseAsync())
@@ -396,7 +396,6 @@ namespace EveCentralProvider
 				var stream = CopyAndClose(response.GetResponseStream());
 				return stream;
 			}
-
 		}
 
 		/// <summary>

@@ -24,7 +24,7 @@ namespace PriceMonitor.UI.UiViewModels
 
 			CreateModel();
 
-			RequestHistory();
+			//RequestHistory();
 		}
 
 		private GameObject GameObject { get; set; }
