@@ -18,13 +18,17 @@
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
 
-			<Label FontWeight="Bold" Content="{Binding Path=Report.ItemName}" HorizontalContentAlignment="Left" Grid.ColumnSpan="2"/>
+			<Label FontWeight="Bold" Content="{Binding Path=Report.Item.Name}" HorizontalContentAlignment="Left" Grid.ColumnSpan="2"/>
 
 			<Button Command="{Binding Path=ShowAggregateInfoCmd}" Content="Info" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
 
 			<Popup Grid.Row="0" Grid.Column="0" x:Name="FieldsPopup" Placement="Center" IsOpen="{Binding IsAggregateInfoOpen}">
 				<DataGrid ItemsSource="{Binding AggregateList.DefaultView}"  
-						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
+						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"
+						  MinWidth="100"
+						  MinHeight="100"
+						  BorderBrush="Black"
+						  BorderThickness="1"/>
 			</Popup>
 
 			<Label FontWeight="Bold" Content="{Binding Path=Report.Proffit}" HorizontalContentAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
@@ -42,7 +46,7 @@
 					<ColumnDefinition Width="144"/>
 				</Grid.ColumnDefinitions>
 
-				<Label Content="{Binding Path=Report.BuyStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
+				<Label Content="{Binding Path=Report.BuyStation.Name}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" />
 
 				<ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
 					<ListView.View>
@@ -62,7 +66,7 @@
 					</ListView.View>
 				</ListView>
 
-				<Label Content="{Binding Path=Report.SellStation}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" />
+				<Label Content="{Binding Path=Report.SellStation.Name}" HorizontalContentAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" />
 
 				<ListView Grid.Column="0" Grid.Row="4" ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
 					<ListView.View>

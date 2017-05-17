@@ -218,9 +218,21 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				var report = new BasicReportData()
 				{
-					ItemName = obj.Object.Name,
-					BuyStation = BuyTarget.ThirdSelection.Name,
-					SellStation = SellTarget.ThirdSelection.Name
+					Item = new GameObject()
+					{
+						Name = obj.Object.Name,
+						TypeId = obj.Object.TypeId
+					},
+					BuyStation = new Station()
+					{
+						RegionId = (int)BuyTarget.FirstSelection.Id,
+						Name = BuyTarget.ThirdSelection.Name
+					},
+					SellStation = new Station()
+					{
+						RegionId = (int)SellTarget.FirstSelection.Id,
+						Name = SellTarget.ThirdSelection.Name
+					}
 				};
 
 				Order PriceConvert(Order order)
@@ -302,9 +314,9 @@ namespace PriceMonitor.UI.UiViewModels
 
 	public class BasicReportData
 	{
-		public string ItemName { get; set; }
-		public string BuyStation { get; set; }
-		public string SellStation { get; set; }
+		public GameObject Item { get; set; }
+		public Station BuyStation { get; set; }
+		public Station SellStation { get; set; }
 		public string Proffit { get; set; }
 
 		public List<Order> BuyStationSellOrders { get; set; } = new List<Order>() {new Order()};

@@ -16,13 +16,13 @@
 
 	public class AggreateInfoStat
 	{
-		public double weightedAverage { get; set; }
+		public float weightedAverage { get; set; }
 
 		public float max { get; set; }
 
 		public float min { get; set; }
 
-		public double stddev { get; set; }
+		public float stddev { get; set; }
 
 		public float median { get; set; }
 

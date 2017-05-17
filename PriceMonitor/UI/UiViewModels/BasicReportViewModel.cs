@@ -3,10 +3,10 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Entity.DataTypes;
 using EveCentralProvider;
 using EveCentralProvider.Types;
 using Helpers;
-using PriceMonitor.DataTypes;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -20,9 +20,10 @@ namespace PriceMonitor.UI.UiViewModels
 
 			Report = new BasicReportData()
 			{
-				ItemName = _loadMessage,
-				SellStation = _loadMessage,
-				BuyStation = _loadMessage
+				Item = new GameObject()
+				{
+					Name = _loadMessage
+				}
 			};
 		}
 
@@ -77,46 +78,52 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			if (!IsAggregateInfoOpen)
 			{
-				Task.Run(async () =>
+				if (AggregateList == null)
 				{
-					DataTable table = new DataTable();
-
-					table.Columns.Add("info");
-
-					var aggregateStats = new List<AggreateInfoStat>();
-
-					table.Columns.Add(Report.BuyStation);
-					var buyStationAggregate = await Services.Instance.AggregateInfoAsync(42, 10000002);
-					aggregateStats.Add(buyStationAggregate.Items.First().buy);
-
-					table.Columns.Add(Report.SellStation);
-					var sellStationAggregate = await Services.Instance.AggregateInfoAsync(42, 10000042);
-					aggregateStats.Add(sellStationAggregate.Items.First().buy);
-
-					var stats = typeof(AggreateInfoStat).GetProperties();
-					foreach (var stat in stats)
+					Task.Run(async () =>
 					{
-						var nextRow = table.NewRow();
+						DataTable table = new DataTable();
 
-						int index = 0;
-						nextRow[index] = stat.Name;
+						table.Columns.Add("info");
 
-						foreach (var hubStat in aggregateStats)
+						var aggregateStats = new List<AggreateInfoStat>();
+
+						table.Columns.Add(Report.BuyStation.Name.Substring(0, Report.BuyStation.Name.IndexOf(' ')));
+						var buyStationAggregate = await Services.Instance.AggregateInfoAsync(Report.Item.TypeId, Report.BuyStation.RegionId);
+						aggregateStats.Add(buyStationAggregate.Items.First().sell);
+
+						table.Columns.Add(Report.SellStation.Name.Substring(0, Report.SellStation.Name.IndexOf(' ')));
+						var sellStationAggregate = await Services.Instance.AggregateInfoAsync(Report.Item.TypeId, Report.SellStation.RegionId);
+						aggregateStats.Add(sellStationAggregate.Items.First().sell);
+
+						var stats = typeof(AggreateInfoStat).GetProperties();
+						foreach (var stat in stats)
 						{
-							index++;
-							nextRow[index] = typeof(AggreateInfoStat).GetProperty(stat.Name).GetValue(hubStat, null);
+							var nextRow = table.NewRow();
+
+							int index = 0;
+							nextRow[index] = stat.Name;
+
+							foreach (var hubStat in aggregateStats)
+							{
+								index++;
+								nextRow[index] = typeof(AggreateInfoStat).GetProperty(stat.Name).GetValue(hubStat, null);
+							}
+							table.Rows.Add(nextRow);
 						}
-						table.Rows.Add(nextRow);
-					}
 
-					Application.Current.Dispatcher.Invoke(() =>
-					{
-						AggregateList = table;
+						Application.Current.Dispatcher.Invoke(() =>
+						{
+							AggregateList = table;
+						});
 					});
-				});
+				}
+				IsAggregateInfoOpen = true;
 			}
-
-			IsAggregateInfoOpen = !IsAggregateInfoOpen;
+			else
+			{
+				IsAggregateInfoOpen = false;
+			}
 		}
 	}
 }
