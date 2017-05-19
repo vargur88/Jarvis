@@ -6,21 +6,21 @@ namespace PriceMonitor
 	{
 		public MainWindowViewModel()
 		{
-			WatchingVM = new WatchingViewModel();
+			ShopListVM = new ShopListViewModel();
 			ReportsVM = new ReportsViewModel();
 			PlanetaryVM = new PlanetaryViewModel();
 		}
 
-		public WatchingViewModel WatchingVM { get; private set; }
+		public ShopListViewModel ShopListVM { get; }
 
-		public ReportsViewModel ReportsVM { get; private set; }
+		public ReportsViewModel ReportsVM { get; }
 
-		public PlanetaryViewModel PlanetaryVM { get; private set; }
+		public PlanetaryViewModel PlanetaryVM { get; }
 
 		private int _menuCount;
 		public int MenuCount
 		{
-			get { return _menuCount; }
+			get => _menuCount;
 			set
 			{
 				_menuCount = value;
