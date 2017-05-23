@@ -1,4 +1,5 @@
-﻿using Entity.DataTypes;
+﻿using System.Collections.Generic;
+using Entity.DataTypes;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,23 +61,36 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			get
 			{
-				return _reviewCmd ?? (_reviewCmd = new RelayCommand(t =>
+				return _reviewCmd ?? (_reviewCmd = new RelayCommand(async t =>
 				{
+					var stationList = new ObservableCollection<CommonMapObject>();
+
 					var win = new Window
 					{
-						Content = new LookupStationListViewModel(),
+						Content = new LookupStationListViewModel(ref stationList),
 						SizeToContent = SizeToContent.WidthAndHeight,
-						WindowStartupLocation = WindowStartupLocation.CenterOwner,
+						WindowStartupLocation = WindowStartupLocation.CenterScreen,
 						ResizeMode = ResizeMode.NoResize,
 						WindowStyle = WindowStyle.None
 					};
 					win.ShowDialog();
 
+					List<GameObject> shopList;
 					lock (ShopList)
 					{
-						ShopList.Clear();
+						shopList = ShopList.ToList();
 					}
+
+					await GenerateReviewReportAsync(stationList.ToList(), shopList).ConfigureAwait(false);
 				}));
+			}
+		}
+
+		private async Task GenerateReviewReportAsync(List<CommonMapObject> stationList, List<GameObject> shopList)
+		{
+			if (stationList.Any() && shopList.Any())
+			{
+
 			}
 		}
 

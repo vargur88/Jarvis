@@ -10,15 +10,14 @@
 			 d:DesignHeight="300" d:DesignWidth="300">
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
-			<ColumnDefinition Width="4*"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
 		<Grid Column = "0">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
@@ -45,10 +44,15 @@
 
 				<Button Command="{Binding Path=ClearCmd}"  Height="30" Content="Clear" Margin="2"/>
 			</StackPanel>
+		</Grid>
+		
+		<Grid Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
 
-			<Separator Grid.Row="2"/>
-
-			<Button Grid.Row="5" Margin="2" Content="Generate" Command="{Binding Path=GenerateReportCmd}"/>
+			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" MinWidth="400" Margin="10" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
 		</Grid>
 	</Grid>
 </UserControl>
