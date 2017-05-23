@@ -5,10 +5,23 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:oxy="http://oxyplot.org/wpf"
 			 mc:Ignorable="d">
-	<Grid Margin="1" Width="250">
-		<Expander Header="{Binding Path=GameObject.Name}" Background="{Binding ExpanderBackgroundColor}" Name="ExpanderPI" MouseRightButtonUp="ExpanderPI_OnMouseRightButtonUp" Expanded="Expander_OnExpanded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="False">
+	<Grid Margin="1" Width="300">
+		<Expander Background="{Binding ExpanderBackgroundColor}" Name="ExpanderPI"
+				  MouseRightButtonUp="ExpanderPI_OnMouseRightButtonUp" 
+				  Expanded="Expander_OnExpanded" 
+				  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="False">
+			<Expander.Header>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="2*"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Label Grid.Column="0" Content="{Binding Path=GameObject.Name}"/>
+					<Label Grid.Column="1" Content="{Binding Path=Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+				</Grid>
+			</Expander.Header>
 			<StackPanel>
-				<oxy:PlotView Model="{Binding Model}" Background="#1A1A1A" Width="245" Height="100"/>
+				<oxy:PlotView Model="{Binding Model}" Background="#1A1A1A" Width="295" Height="100"/>
 			</StackPanel>
 		</Expander>
 	</Grid>

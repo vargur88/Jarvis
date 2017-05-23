@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Entity.DataTypes;
 using PriceMonitor.DataTypes;
+using EveCentralProvider;
+using System.Threading.Tasks;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -28,18 +30,52 @@ namespace PriceMonitor.UI.UiViewModels
 			this._planetaryViewModel = planetaryViewModel;
 			this.Tier = tier;
 
+			var piListId = new List<int>();
 			foreach (var pi in allPi)
 			{
+				piListId.Add(pi.ID);
+
 				PlanetaryWatchingItems.Add(new ItemTinyTradeHistoryViewModel(
 					_planetaryViewModel,
 					tier,
+					station,
 					new GameObject()
 					{
 						Name = pi.Name,
 						MarketGroupId = 0,
 						TypeId = pi.ID
-					}, station));
+					}));
 			}
+
+			string PriceConvert(float sellPrice, float buyPrice)
+			{
+				switch(tier)
+				{
+					case PITier.Raw:
+					case PITier.Basic:
+					case PITier.Refined:
+						return $"{Math.Round(sellPrice)}/{Math.Round(buyPrice)}";
+					default:
+						return $"{Math.Round(sellPrice / 1000000, 4)}/{Math.Round(buyPrice / 1000000, 4)}";
+				}
+			}
+
+			Task.Run(async () =>
+			{
+				await Services.Instance.MarketStatAsync(piListId, new List<int>() { station.RegionId }, 100)
+				.ContinueWith(t =>
+				{
+					if (t.Status == TaskStatus.RanToCompletion && t.Result != null)
+					{
+						foreach (var item in t.Result)
+						{
+							PlanetaryWatchingItems.Single(g => g.GameObject.TypeId == item.Id).Price =
+								PriceConvert(item.Sell.Percentile, item.Buy.Percentile);
+						}
+					}
+				})
+				.ConfigureAwait(false);
+			});
 		}
 
 		private ObservableCollection<ItemTinyTradeHistoryViewModel> _planetaryWatchingItems = new ObservableCollection<ItemTinyTradeHistoryViewModel>();

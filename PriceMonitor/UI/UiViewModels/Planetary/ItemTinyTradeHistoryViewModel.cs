@@ -21,7 +21,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private readonly PlanetaryViewModel _planetaryViewModel;
 		private readonly PITier _tier;
 
-		public ItemTinyTradeHistoryViewModel(PlanetaryViewModel planetaryViewModel, PITier tier, GameObject gameObject, Station hub)
+		public ItemTinyTradeHistoryViewModel(PlanetaryViewModel planetaryViewModel, PITier tier, Station hub, GameObject gameObject)
 		{
 			_planetaryViewModel = planetaryViewModel;
 			_tier = tier;
@@ -124,6 +124,17 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 
 			return (Brush)Properties[rnd].GetValue(null, null);
+		}
+
+		private string _price;
+		public string Price
+		{
+			get { return _price; }
+			set
+			{
+				_price = value;
+				NotifyPropertyChanged();
+			}
 		}
 
 		private GameObject _gameObject;

@@ -33,8 +33,6 @@ namespace PriceMonitor.UI.UiViewModels
 					}
 				});
 			});
-
-			//var dds = Services.Instance.AggregateInfoAsync(1236, 10000069).Result;
 		}
 
 		private bool _buyHubCheck;
