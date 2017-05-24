@@ -28,6 +28,17 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
+		public void PIFocusing(PIObserveInfo info)
+		{
+			if (info.Tier == PITier.Raw)
+			{
+				return;
+			}
+
+			var prevTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Prev());
+			prevTierGroupView?.FocusParent(info);
+		}
+
 		public void PIObserving(PIObserveInfo info)
 		{
 			if (info.Tier == PITier.Advanced)
@@ -35,8 +46,8 @@ namespace PriceMonitor.UI.UiViewModels
 				return;
 			}
 
-			var nextTier = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Next());
-			nextTier?.SelectChilds(info);
+			var nextTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Next());
+			nextTierGroupView?.SelectChilds(info);
 		}
 
 		public struct PIObserveInfo
@@ -45,6 +56,7 @@ namespace PriceMonitor.UI.UiViewModels
 			public Brush ParentBrush;
 			public bool CreatePiChain;
 			public PITier Tier;
+			public bool InFocus;
 		}
 	}
 }

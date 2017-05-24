@@ -1,9 +1,6 @@
-﻿using System;
-using System.Reflection;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using PriceMonitor.UI.UiViewModels;
 
 namespace PriceMonitor.UI.UiViews
@@ -32,6 +29,18 @@ namespace PriceMonitor.UI.UiViews
 
 			var viewModel = this.DataContext as ItemTinyTradeHistoryViewModel;
 			viewModel?.UpdatePiChain(_selected);
+		}
+
+		private void ExpanderPI_OnMouseEnter(object sender, MouseEventArgs e)
+		{
+			var viewModel = this.DataContext as ItemTinyTradeHistoryViewModel;
+			viewModel?.UpdateFocus(true);
+		}
+
+		private void ExpanderPI_OnMouseLeave(object sender, MouseEventArgs e)
+		{
+			var viewModel = this.DataContext as ItemTinyTradeHistoryViewModel;
+			viewModel?.UpdateFocus(false);
 		}
 	}
 }

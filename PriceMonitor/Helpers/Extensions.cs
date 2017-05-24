@@ -14,6 +14,15 @@ namespace PriceMonitor.Helpers
 			return (arr.Length == j) ? arr[0] : arr[j];
 		}
 
+		public static T Prev<T>(this T src) where T : struct
+		{
+			if (!typeof(T).IsEnum) throw new ArgumentException($"Argumnent {typeof(T).FullName} is not an Enum");
+
+			T[] arr = (T[])Enum.GetValues(src.GetType());
+			int j = Array.IndexOf<T>(arr, src) - 1;
+			return (arr.Length == j) ? arr[0] : arr[j];
+		}
+
 		public static int RoundOff(this int i, int nearest)
 		{
 			nearest = (int)Math.Pow(10, nearest);

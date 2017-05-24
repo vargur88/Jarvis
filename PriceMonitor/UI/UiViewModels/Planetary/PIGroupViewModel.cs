@@ -82,7 +82,7 @@ namespace PriceMonitor.UI.UiViewModels
 
 		public ObservableCollection<ItemTinyTradeHistoryViewModel> PlanetaryWatchingItems
 		{
-			get { return _planetaryWatchingItems; }
+			get => _planetaryWatchingItems;
 			set
 			{
 				_planetaryWatchingItems = value;
@@ -92,11 +92,8 @@ namespace PriceMonitor.UI.UiViewModels
 
 		public string TierLevelName
 		{
-			get { return Tier.ToString(); }
-			set
-			{
-				NotifyPropertyChanged();
-			}
+			get => Tier.ToString();
+			set => NotifyPropertyChanged();
 		}
 
 		public void SelectChilds(PlanetaryViewModel.PIObserveInfo info)
@@ -108,6 +105,18 @@ namespace PriceMonitor.UI.UiViewModels
 			foreach (var model in models)
 			{
 				model.UpdatePiChain(info);
+			}
+		}
+
+		public void FocusParent(PlanetaryViewModel.PIObserveInfo info)
+		{
+			var parentList = PINode.AllPlanetaryItems.Where(t => t.Tier != PITier.Advanced && t.To.Any(k => k == info.PiID)).ToList();
+
+			var models = parentList.Select(b => PlanetaryWatchingItems.Single(t => t.GameObject.TypeId == b.ID)).ToList();
+
+			foreach (var model in models)
+			{
+				model.ChangeFocus(info);
 			}
 		}
 	}
