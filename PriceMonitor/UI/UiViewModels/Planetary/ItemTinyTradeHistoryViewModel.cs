@@ -84,8 +84,10 @@ namespace PriceMonitor.UI.UiViewModels
 			ExpanderBackgroundColor = info.CreatePiChain ? _parentItemBrush : _defaultBrush;
 		}
 
+		private bool _selectionInitiate = false;
 		public void UpdateFocus(bool inFocus)
 		{
+			_selectionInitiate = inFocus;
 			BorderBrushColor = inFocus ? _borderSelectedBrush : _defaultBrush;
 
 			_planetaryViewModel.PIFocusing(new PlanetaryViewModel.PIObserveInfo()
@@ -101,6 +103,43 @@ namespace PriceMonitor.UI.UiViewModels
 			BorderBrushColor = info.InFocus ? _borderSelectedBrush : _defaultBrush;
 		}
 
+		private bool _inheritedSelectionModify = false;
+		public void Focusing(PlanetaryViewModel.PIObserveInfo info)
+		{
+			if (_selectionInitiate)
+			{
+				return;
+			}
+
+			if (_inheritedSelectionModify == false)
+			{
+				BorderBrushColor = _borderSelectedBrush;
+				_inheritedSelectionModify = true;
+
+				_planetaryViewModel.PIFocusing(new PlanetaryViewModel.PIObserveInfo()
+				{
+					PiID = GameObject.TypeId,
+					Tier = _tier,
+					InFocus = info.InFocus
+				});
+			}
+			else if (_inheritedSelectionModify)
+			{
+				if (info.InFocus == false)
+				{
+					BorderBrushColor = _defaultBrush;
+					_inheritedSelectionModify = false;
+
+					_planetaryViewModel.PIFocusing(new PlanetaryViewModel.PIObserveInfo()
+					{
+						PiID = GameObject.TypeId,
+						Tier = _tier,
+						InFocus = info.InFocus
+					});
+				}
+			}
+		}
+
 		public void ShowHistory(bool isVisible)
 		{
 			if (isVisible)
@@ -112,7 +151,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Brush _parentItemBrush;
 		private readonly Brush _unicItemBrush;
 		private readonly Brush _defaultBrush = new SolidColorBrush(Color.FromArgb(0xCC, 0x64, 0x76, 0x87));
-		private readonly Brush _borderSelectedBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF));
+		private readonly Brush _borderSelectedBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00));
 
 		private Brush _expanderBackgroundColor;
 		public Brush ExpanderBackgroundColor

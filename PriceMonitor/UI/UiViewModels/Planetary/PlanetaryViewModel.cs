@@ -30,13 +30,21 @@ namespace PriceMonitor.UI.UiViewModels
 
 		public void PIFocusing(PIObserveInfo info)
 		{
-			if (info.Tier == PITier.Raw)
+			PIGroupViewModel prevTierGroupView = null;
+			PIGroupViewModel nextTierGroupView = null;
+
+			if (info.Tier != PITier.Raw)
 			{
-				return;
+				prevTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Prev());
 			}
 
-			var prevTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Prev());
-			prevTierGroupView?.FocusParent(info);
+			if (info.Tier != PITier.Advanced)
+			{
+				nextTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Next());
+			}
+
+			prevTierGroupView?.Focusing(info);
+			nextTierGroupView?.Focusing(info);
 		}
 
 		public void PIObserving(PIObserveInfo info)
