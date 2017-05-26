@@ -103,6 +103,11 @@ namespace PriceMonitor.UI.UiViewModels
 			BorderBrushColor = info.InFocus ? _borderSelectedBrush : _defaultBrush;
 		}
 
+		public void ChangeFocus2(bool focus)
+		{
+			BorderBrushColor = focus ? _borderSelectedBrush : _defaultBrush;
+		}
+
 		private bool _inheritedSelectionModify = false;
 		public void Focusing(PlanetaryViewModel.PIObserveInfo info)
 		{
