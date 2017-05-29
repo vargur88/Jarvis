@@ -25,13 +25,13 @@ namespace PriceMonitor.UI.UiViewModels
 				RegionId = 10000002
 			};
 
-			var allPi = PINode.AllPlanetaryItems.Where(t => t.Tier == tier).ToList();
+			var allTierPi = PINode.AllPlanetaryItems.Where(t => t.Tier == tier).ToList();
 
 			this._planetaryViewModel = planetaryViewModel;
 			this.Tier = tier;
 
 			var piListId = new List<int>();
-			foreach (var pi in allPi)
+			foreach (var pi in allTierPi)
 			{
 				piListId.Add(pi.ID);
 
@@ -94,6 +94,19 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			get => Tier.ToString();
 			set => NotifyPropertyChanged();
+		}
+
+		public void Focusing(PlanetaryViewModel.PIObserveInfo info)
+		{
+			// non optimal
+			var childList = PINode.AllPlanetaryItems.Where(t => t.Tier != PITier.Raw && t.From.Any(k => k == info.PiID)).ToList();
+			var parentList = PINode.AllPlanetaryItems.Where(t => t.Tier != PITier.Advanced && t.To.Any(k => k == info.PiID)).ToList();
+
+			var modelChilds1 = PlanetaryWatchingItems.Where(t => childList.Any(k => k.ID == t.GameObject.TypeId) || parentList.Any(k => k.ID == t.GameObject.TypeId));
+			foreach (var model in modelChilds1)
+			{
+				model.Focusing(info);
+			}
 		}
 
 		public void SelectChilds(PlanetaryViewModel.PIObserveInfo info)
