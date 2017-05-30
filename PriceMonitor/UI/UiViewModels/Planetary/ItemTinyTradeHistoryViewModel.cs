@@ -32,58 +32,6 @@ namespace PriceMonitor.UI.UiViewModels
 			CreateModel();
 		}
 
-		public void UpdatePiChain(bool build)
-		{
-			if (build)
-			{
-				ExpanderBackgroundColor = _parentItemBrush ?? _unicItemBrush;
-			}
-			else
-			{
-				_parentItemBrush = null;
-				ExpanderBackgroundColor = _defaultBrush;
-			}
-
-			_planetaryViewModel.PIObserving(new PlanetaryViewModel.PIObserveInfo()
-			{
-				PiID = GameObject.TypeId,
-				Tier = _tier,
-				ParentBrush = ExpanderBackgroundColor,
-				CreatePiChain = build
-			});
-		}
-
-		private readonly string MatchMark = " - Match";
-		private bool Matching = false;
-		public void UpdatePiChain(PlanetaryViewModel.PIObserveInfo info)
-		{
-			if (info.CreatePiChain)
-			{
-				// means that PI item was selected by another chain
-				if (!Equals(ExpanderBackgroundColor, _defaultBrush))
-				{
-					GameObject.Name += MatchMark;
-					Matching = true;
-
-					NotifyPropertyChanged("GameObject");
-				}
-			}
-			else
-			{
-				if (Matching)
-				{
-					GameObject.Name = GameObject.Name.Remove(GameObject.Name.Length - MatchMark.Length);
-					Matching = false;
-
-					NotifyPropertyChanged("GameObject");
-				}
-			}
-
-			_parentItemBrush = info.ParentBrush;
-
-			ExpanderBackgroundColor = info.CreatePiChain ? _parentItemBrush : _defaultBrush;
-		}
-
 		private bool _selectionInitiate = false;
 		public void UpdateFocus(bool inFocus)
 		{
