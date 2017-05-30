@@ -6,13 +6,11 @@
 			 xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 			 xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-			 mc:Ignorable="d"
-			 d:DesignHeight="300" d:DesignWidth="300">
+			 mc:Ignorable="d">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
 		<Grid Column = "0">
@@ -46,13 +44,39 @@
 			</StackPanel>
 		</Grid>
 		
-		<Grid Column="1">
+		<Grid Column="1" Margin="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 
-			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" MinWidth="400" Margin="10" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" Grid.Column="0" AutoGenerateColumns="False">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Name"/>
+					<DataGridTextColumn Header="Jita"/>
+					<DataGridTextColumn Header="Hek"/>
+					<DataGridTextColumn Header="Ichoria"/>
+					<DataGridTextColumn Header="Maila"/>
+				</DataGrid.Columns>
+			</DataGrid>
+
+			<StackPanel Grid.Column="0" Grid.Row="1">
+				<Label Content="Orders info" HorizontalContentAlignment="Left"/>
+
+				<ListView ItemsSource="{Binding Path=Report.BuyStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
+							<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</StackPanel>
+
 		</Grid>
 	</Grid>
 </UserControl>
