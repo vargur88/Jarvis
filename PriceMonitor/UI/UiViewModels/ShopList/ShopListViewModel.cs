@@ -11,6 +11,73 @@ namespace PriceMonitor.UI.UiViewModels
 {
 	public class ShopListViewModel : BaseViewModel
 	{
+		public ShopListViewModel()
+		{
+			OrdersInfoList = new List<OrderItemInfo>()
+			{
+				new OrderItemInfo()
+				{
+					StationName = "Jita",
+					BuyList = new List<OrderInfo>()
+					{
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						},
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						}
+					},
+					SellList = new List<OrderInfo>()
+					{
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						},
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						}
+					}
+				},
+				new OrderItemInfo()
+				{
+					StationName = "Hek",
+					BuyList = new List<OrderInfo>()
+					{
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						},
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						}
+					},
+					SellList = new List<OrderInfo>()
+					{
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						},
+						new OrderInfo()
+						{
+							ItemsCount = 10,
+							ItemPrice = 123
+						}
+					}
+				}
+			};
+		}
+
 		public async Task FindItemByNameAsync(string itemName)
 		{
 			lock (ShopList)
@@ -118,6 +185,32 @@ namespace PriceMonitor.UI.UiViewModels
 				_shopList = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		private List<OrderItemInfo> _ordersInfoList = new List<OrderItemInfo>();
+		public List<OrderItemInfo> OrdersInfoList
+		{
+			get => _ordersInfoList;
+			set
+			{
+				_ordersInfoList = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		public struct OrderItemInfo
+		{
+			public GameObject Object { get; set; }
+			public string StationName { get; set; }
+
+			public List<OrderInfo> SellList { get; set; }
+			public List<OrderInfo> BuyList { get; set; }
+		}
+
+		public struct OrderInfo
+		{
+			public int ItemsCount { get; set; }
+			public float ItemPrice { get; set; }
 		}
 	}
 }
