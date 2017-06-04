@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Entity;
 using Helpers;
+using System.Data;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -157,6 +158,8 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			if (stationList.Any() && shopList.Any())
 			{
+				AggregateList.Clear();
+
 
 			}
 		}
@@ -211,6 +214,17 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			public int ItemsCount { get; set; }
 			public float ItemPrice { get; set; }
+		}
+
+		private DataTable _aggregateList;
+		public DataTable AggregateList
+		{
+			get => _aggregateList;
+			set
+			{
+				_aggregateList = value;
+				NotifyPropertyChanged();
+			}
 		}
 	}
 }
