@@ -7,6 +7,8 @@ using System.Windows;
 using Entity;
 using Helpers;
 using System.Data;
+using EveCentralProvider;
+using EveCentralProvider.Types;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -85,7 +87,7 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				SearchingItemName = "";
 
-				if (ShopList.Any(t => t.Name != itemName))
+				if (ShopList.Any(t => t.Name == itemName))
 				{
 					return;
 				}
@@ -154,13 +156,59 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private async Task GenerateReviewReportAsync(List<CommonMapObject> stationList, List<GameObject> shopList)
+		private async Task GenerateReviewReportAsync(List<CommonMapObject> systemList, List<GameObject> shopList)
 		{
-			if (stationList.Any() && shopList.Any())
+			if (systemList.Any() && shopList.Any())
 			{
-				AggregateList.Clear();
+				await Task.Run(async () =>
+				{
+					DataTable table = new DataTable();
+					table.Columns.Add("Item");
 
+					var aggregates = new Dictionary<string, List<AggreateInfoStat>>();
+					foreach (var item in shopList)
+					{
+						table.Columns.Add(item.Name);
+						aggregates[item.Name] = new List<AggreateInfoStat>(systemList.Count);
+					}
 
+					//var 
+					foreach (var system in systemList)
+					{
+						var aggregate = await Services.Instance.AggregateInfoAsync(shopList.Select(t => t.TypeId).ToList(), (int)system.Id);
+					}
+
+					//Report.BuyStation.Name.IndexOf(' '))
+					/*
+					var aggregate = await Services.Instance.AggregateInfoAsync(shopList.Select(t => t.TypeId).ToList(), Report.BuyStation.RegionId);
+					aggregateStats.Add(buyStationAggregate.Items.First().sell);
+
+					table.Columns.Add(Report.SellStation.Name.Substring(0, Report.SellStation.Name.IndexOf(' ')));
+					var sellStationAggregate = await Services.Instance.AggregateInfoAsync(Report.Item.TypeId, Report.SellStation.RegionId);
+					aggregateStats.Add(sellStationAggregate.Items.First().sell);
+
+					var stats = typeof(AggreateInfoStat).GetProperties();
+					foreach (var stat in stats)
+					{
+						var nextRow = table.NewRow();
+
+						int index = 0;
+						nextRow[index] = stat.Name;
+
+						foreach (var hubStat in aggregateStats)
+						{
+							index++;
+							nextRow[index] = typeof(AggreateInfoStat).GetProperty(stat.Name).GetValue(hubStat, null);
+						}
+						table.Rows.Add(nextRow);
+					}*/
+
+					Application.Current.Dispatcher.Invoke(() =>
+					{
+						AggregateList = table;
+					});
+				})
+				.ConfigureAwait(false);
 			}
 		}
 

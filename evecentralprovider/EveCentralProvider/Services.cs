@@ -5,15 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace EveCentralProvider
@@ -24,12 +20,11 @@ namespace EveCentralProvider
 		private readonly string CrestApiFormat = "https://crest-tq.eveonline.com/market/{0}/history/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
 		private readonly string AggregateFormat = "https://market.fuzzwork.co.uk/aggregates/?region={0}&types={1}";
 
-		private readonly string UserAgent = String.Format(".NET Eve Central Provider v{0}", FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+		private readonly string UserAgent = $".NET Eve Central Provider v{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion}";
 
 		private static JsonSerializerSettings _jsonSerializerSettings;
 
-		private static readonly Services _instance = new Services();
-		public static Services Instance { get { return _instance; } }
+		public static Services Instance { get; } = new Services();
 
 		private Services()
 		{
@@ -230,14 +225,14 @@ namespace EveCentralProvider
 			return await Deserialize<TypeCrestHistory>(json);
 		}
 
-		private Uri BuildAggregateUrl(int regionId, int typeid)
-		{
-			return new Uri(String.Format(AggregateFormat, regionId, typeid));
-		}
-
 		public async Task<AggregateInfoList> AggregateInfoAsync(int typeid, int regionId)
 		{
-			Uri apiUrl = BuildAggregateUrl(regionId, typeid);
+			return await AggregateInfoAsync(new List<int>() {typeid}, regionId);
+		}
+
+		public async Task<AggregateInfoList> AggregateInfoAsync(List<int> typeidList, int region)
+		{
+			Uri apiUrl = BuildAggregateUrl(typeidList, region);
 
 			var stream = await GetAsync(apiUrl, "Chrome/58.0.3029.110");
 			StreamReader reader = new StreamReader(stream);
@@ -246,12 +241,29 @@ namespace EveCentralProvider
 			//	this	{ "1236":{ "buy":
 			//	to		{"id":"1236","buy":
 
-			json = json.Insert(0, "{\"items\":[").Replace("}}}", "}}]}");
-			var uglystr1 = "{\"" + typeid + "\":{";
-			var uglystr2 = "{\"id\":\"" + typeid + "\",";
-			json = json.Replace(uglystr1, uglystr2);
+			json = json.Insert(0, "{\"items\":[{").Replace("}}}", "}}]}");
+
+			foreach (var typeid in typeidList)
+			{
+				var uglystr1 = typeid + "\":{";
+				var uglystr2 = "{id\":\"" + typeid + "\",";
+				json = json.Replace(uglystr1, uglystr2);
+			}
 
 			return await Deserialize<AggregateInfoList>(json);
+		}
+
+		private Uri BuildAggregateUrl(List<int> typeid, int region)
+		{
+			var types = "";
+			foreach (int type in typeid)
+			{
+				types += type.ToString();
+				types += ",";
+			}
+
+			Uri apiUrl = new Uri(String.Format(AggregateFormat, region, types));
+			return apiUrl;
 		}
 
 		public List<TypeHistory> History(int type, LocaleType locale, string idOrName, OrderType bid)
