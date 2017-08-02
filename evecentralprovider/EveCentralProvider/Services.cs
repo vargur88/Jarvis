@@ -238,16 +238,16 @@ namespace EveCentralProvider
 			StreamReader reader = new StreamReader(stream);
 			string json = reader.ReadToEnd();
 
+			json = json.Remove(0, 2).Insert(0, "{\"items\":[").Replace("}}}", "}}]}");
+
 			//	this	{ "1236":{ "buy":
 			//	to		{"id":"1236","buy":
-
-			json = json.Insert(0, "{\"items\":[{").Replace("}}}", "}}]}");
 
 			foreach (var typeid in typeidList)
 			{
 				var uglystr1 = typeid + "\":{";
-				var uglystr2 = "{id\":\"" + typeid + "\",";
-				json = json.Replace(uglystr1, uglystr2);
+				var uglystr2 = "{\"id\":\"" + typeid + "\",";
+				json = json.Replace(uglystr1, uglystr2).Replace("}},\"", "}},");
 			}
 
 			return await Deserialize<AggregateInfoList>(json);

@@ -1,8 +1,12 @@
-﻿namespace EveCentralProvider.Types
+﻿using Newtonsoft.Json;
+
+namespace EveCentralProvider.Types
 {
 	public class AggregateInfoList
 	{
 		public AggregateInfo[] Items { get; set; }
+
+		public string RegionId { get; set; }
 	}
 
 	public class AggregateInfo
@@ -16,6 +20,9 @@
 
 	public class AggreateInfoStat
 	{
+		[JsonIgnore]
+		public string RegionName { get; set; }
+
 		public float weightedAverage { get; set; }
 
 		public float max { get; set; }

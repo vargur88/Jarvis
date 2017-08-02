@@ -60,12 +60,13 @@
 
 			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" Grid.Column="0"
 					  ItemsSource="{Binding AggregateList.DefaultView}" 
+					  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
 					  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
 
 			<StackPanel Grid.Column="0" Grid.Row="1">
 				<Label Content="Orders info" HorizontalContentAlignment="Left"/>
 
-				<ListView ItemsSource="{Binding Path=OrdersInfoList}" MinHeight="200" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+				<ListView ItemsSource="{Binding Path=SelectedItemOrders}" MinHeight="200" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 					<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
 							<Setter Property="HorizontalContentAlignment" Value="Center" />

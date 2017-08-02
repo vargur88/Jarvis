@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Entity.DataTypes;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -14,73 +16,6 @@ namespace PriceMonitor.UI.UiViewModels
 {
 	public class ShopListViewModel : BaseViewModel
 	{
-		public ShopListViewModel()
-		{
-			OrdersInfoList = new List<OrderItemInfo>()
-			{
-				new OrderItemInfo()
-				{
-					StationName = "Jita",
-					BuyList = new List<OrderInfo>()
-					{
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						},
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						}
-					},
-					SellList = new List<OrderInfo>()
-					{
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						},
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						}
-					}
-				},
-				new OrderItemInfo()
-				{
-					StationName = "Hek",
-					BuyList = new List<OrderInfo>()
-					{
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						},
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						}
-					},
-					SellList = new List<OrderInfo>()
-					{
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						},
-						new OrderInfo()
-						{
-							ItemsCount = 10,
-							ItemPrice = 123
-						}
-					}
-				}
-			};
-		}
-
 		public async Task FindItemByNameAsync(string itemName)
 		{
 			lock (ShopList)
@@ -133,11 +68,9 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				return _reviewCmd ?? (_reviewCmd = new RelayCommand(async t =>
 				{
-					var stationList = new ObservableCollection<CommonMapObject>();
-
 					var win = new Window
 					{
-						Content = new LookupStationListViewModel(ref stationList),
+						Content = new LookupStationListViewModel(ref _stationList),
 						SizeToContent = SizeToContent.WidthAndHeight,
 						WindowStartupLocation = WindowStartupLocation.CenterScreen,
 						ResizeMode = ResizeMode.NoResize,
@@ -151,57 +84,80 @@ namespace PriceMonitor.UI.UiViewModels
 						shopList = ShopList.ToList();
 					}
 
-					await GenerateReviewReportAsync(stationList.ToList(), shopList).ConfigureAwait(false);
+					await GenerateReviewReportAsync(_stationList.ToList(), shopList).ConfigureAwait(false);
 				}));
 			}
 		}
 
-		private async Task GenerateReviewReportAsync(List<CommonMapObject> systemList, List<GameObject> shopList)
+		private async Task GenerateReviewReportAsync(List<Station> stationList, List<GameObject> itemList)
 		{
-			if (systemList.Any() && shopList.Any())
+			if (stationList.Any() && itemList.Any())
 			{
-				await Task.Run(async () =>
+				await Task.Run(() =>
 				{
 					DataTable table = new DataTable();
 					table.Columns.Add("Item");
 
-					var aggregates = new Dictionary<string, List<AggreateInfoStat>>();
-					foreach (var item in shopList)
+					var aggregates = new Dictionary<int, List<AggreateInfoStat>>();
+					foreach (var item in itemList)
 					{
-						table.Columns.Add(item.Name);
-						aggregates[item.Name] = new List<AggreateInfoStat>(systemList.Count);
+						aggregates[item.TypeId] = new List<AggreateInfoStat>(stationList.Count);
 					}
 
-					//var 
-					foreach (var system in systemList)
+					var waitList = new List<Task>();
+					foreach (var station in stationList)
 					{
-						var aggregate = await Services.Instance.AggregateInfoAsync(shopList.Select(t => t.TypeId).ToList(), (int)system.Id);
+						var formatRegionName = station.Name.Substring(0, station.Name.IndexOf(' '));
+						table.Columns.Add(formatRegionName);
+
+						waitList.Add(Services.Instance.AggregateInfoAsync(itemList.Select(t => t.TypeId).ToList(), (int)station.StationId)
+							.ContinueWith(t =>
+							{
+								if (t.IsFaulted)
+								{
+									return;
+								}
+
+								if (t.IsCompleted)
+								{
+									foreach (var item in t.Result.Items)
+									{
+										// not thread safe
+										item.sell.RegionName = formatRegionName;
+
+										lock (aggregates)
+										{
+											aggregates[Convert.ToInt32(item.id)].Add(item.sell);
+										}
+									}
+								}
+							}));
 					}
 
-					//Report.BuyStation.Name.IndexOf(' '))
-					/*
-					var aggregate = await Services.Instance.AggregateInfoAsync(shopList.Select(t => t.TypeId).ToList(), Report.BuyStation.RegionId);
-					aggregateStats.Add(buyStationAggregate.Items.First().sell);
+					//improvement: do not wait all of the tasks, start to draw results ASAP
+					Task.WaitAll(waitList.ToArray());
 
-					table.Columns.Add(Report.SellStation.Name.Substring(0, Report.SellStation.Name.IndexOf(' ')));
-					var sellStationAggregate = await Services.Instance.AggregateInfoAsync(Report.Item.TypeId, Report.SellStation.RegionId);
-					aggregateStats.Add(sellStationAggregate.Items.First().sell);
-
-					var stats = typeof(AggreateInfoStat).GetProperties();
-					foreach (var stat in stats)
+					foreach (var item in itemList)
 					{
 						var nextRow = table.NewRow();
 
 						int index = 0;
-						nextRow[index] = stat.Name;
+						nextRow[index++] = item.Name;
 
-						foreach (var hubStat in aggregateStats)
+						var list = aggregates[item.TypeId];
+						for (int i = 0; i < stationList.Count; ++i)
 						{
+							var regionPrice = list.SingleOrDefault(t => t.RegionName == table.Columns[i + 1].ColumnName);
+							if (regionPrice != null)
+							{
+								nextRow[index] = regionPrice.percentile;
+							}
+
 							index++;
-							nextRow[index] = typeof(AggreateInfoStat).GetProperty(stat.Name).GetValue(hubStat, null);
 						}
+
 						table.Rows.Add(nextRow);
-					}*/
+					}
 
 					Application.Current.Dispatcher.Invoke(() =>
 					{
@@ -210,6 +166,78 @@ namespace PriceMonitor.UI.UiViewModels
 				})
 				.ConfigureAwait(false);
 			}
+		}
+
+		private DataRowView _selectedItem;
+		public DataRowView SelectedItem
+		{
+			get => _selectedItem;
+			set
+			{
+				if (Equals(_selectedItem, value))
+				{
+					return;
+				}
+				_selectedItem = value;
+				NotifyPropertyChanged();
+
+				RequestOrdersForItemAsync(SelectedItem[0] as string);
+			}
+		}
+
+		private async void RequestOrdersForItemAsync(string itemName)
+		{
+			lock (_allOrdersInfoList)
+			{
+				var itemInfo = _allOrdersInfoList.Where(t => t.Object.Name == itemName).ToList();
+				if (itemInfo.Any())
+				{
+					SelectedItemOrders = new ObservableCollection<OrderItemInfo>(itemInfo);
+					return;
+				}
+			}
+
+			SelectedItemOrders.Clear();
+
+			await Task.Run(() =>
+			{
+				OrderInfo ItemConvert(Order order)
+				{
+					return new OrderInfo()
+					{
+						ItemPrice = (float)Math.Round(order.Price / 1000000, 4),
+						ItemsCount = (int)order.VolumeRemaining
+					};
+				}
+
+				foreach (var station in _stationList)
+				{
+					var item = ShopList.Single(t => t.Name == itemName);
+					var result = Services.Instance.QuickLook(item.TypeId, new List<int>() {station.RegionId}, 1, station.SystemId);
+
+					var ordersInfo = new OrderItemInfo() {Object = item, StationName = station.Name};
+
+					if (result.SellOrders != null && result.SellOrders.Any())
+					{
+						ordersInfo.SellList = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(ItemConvert).ToList();
+					}
+					if (result.BuyOrders != null && result.BuyOrders.Any())
+					{
+						ordersInfo.BuyList = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(ItemConvert).ToList();
+					}
+
+					lock (_allOrdersInfoList)
+					{
+						_allOrdersInfoList.Add(ordersInfo);
+
+						Application.Current.Dispatcher.Invoke(() =>
+						{
+							SelectedItemOrders.Add(ordersInfo);
+						});
+					}
+				}
+			})
+			.ConfigureAwait(false);
 		}
 
 		private string _searchingItemName;
@@ -227,6 +255,8 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
+		private ObservableCollection<Station> _stationList = new ObservableCollection<Station>();
+
 		private ObservableCollection<GameObject> _shopList = new ObservableCollection<GameObject>();
 		public ObservableCollection<GameObject> ShopList
 		{
@@ -238,18 +268,20 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private List<OrderItemInfo> _ordersInfoList = new List<OrderItemInfo>();
-		public List<OrderItemInfo> OrdersInfoList
+		private List<OrderItemInfo> _allOrdersInfoList = new List<OrderItemInfo>();
+
+		private ObservableCollection<OrderItemInfo> _selectedItemOrders = new ObservableCollection<OrderItemInfo>();
+		public ObservableCollection<OrderItemInfo> SelectedItemOrders
 		{
-			get => _ordersInfoList;
+			get => _selectedItemOrders;
 			set
 			{
-				_ordersInfoList = value;
+				_selectedItemOrders = value;
 				NotifyPropertyChanged();
 			}
 		}
 
-		public struct OrderItemInfo
+		public class OrderItemInfo
 		{
 			public GameObject Object { get; set; }
 			public string StationName { get; set; }
