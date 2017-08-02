@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Entity.DataTypes;
 using Helpers;
 
@@ -12,7 +13,7 @@ namespace PriceMonitor.UI.UiViewModels
 
 	public class LookupStationListViewModel : BaseViewModel
 	{
-		public LookupStationListViewModel(ref ObservableCollection<CommonMapObject> stationList)
+		public LookupStationListViewModel(ref ObservableCollection<Station> stationList)
 		{
 			SelectedStationType = HubStationType.Hub;
 			_stationList = stationList;
@@ -27,7 +28,16 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				return _addStationCmd ?? (_addStationCmd = new RelayCommand(p => StationBoxes.ThirdSelection != null, t =>
 				{
-					StationList.Add(StationBoxes.ThirdSelection);
+					if (StationList.SingleOrDefault(k => k.StationId == StationBoxes.ThirdSelection.Id) == null)
+					{
+						StationList.Add(new Station()
+						{
+							RegionId = (int) StationBoxes.FirstSelection.Id,
+							SystemId = (int) StationBoxes.SecondSelection.Id,
+							StationId = (int) StationBoxes.ThirdSelection.Id,
+							Name = StationBoxes.ThirdSelection.Name
+						});
+					}
 				}));
 			}
 		}
@@ -86,8 +96,8 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private ObservableCollection<CommonMapObject> _stationList = new ObservableCollection<CommonMapObject>();
-		public ObservableCollection<CommonMapObject> StationList
+		private ObservableCollection<Station> _stationList;
+		public ObservableCollection<Station> StationList
 		{
 			get => _stationList;
 			set
