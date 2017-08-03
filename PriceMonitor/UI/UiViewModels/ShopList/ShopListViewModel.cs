@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Entity.DataTypes;
 using System.Collections.ObjectModel;
@@ -9,13 +8,53 @@ using System.Windows;
 using Entity;
 using Helpers;
 using System.Data;
+using System.IO;
 using EveCentralProvider;
 using EveCentralProvider.Types;
+using Newtonsoft.Json;
 
 namespace PriceMonitor.UI.UiViewModels
 {
 	public class ShopListViewModel : BaseViewModel
 	{
+		public ShopListViewModel()
+		{
+			_jsonSerializerSettings = new JsonSerializerSettings
+			{
+				PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+				TypeNameHandling = TypeNameHandling.Auto,
+				ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+			};
+
+			foreach (var nextFile in Directory.EnumerateFiles(Path.Combine(Resource1.UserData, Resource1.ShopList)))
+			{
+				try
+				{
+					SavedLists.Add(Deserialize<SavableShopList>(File.ReadAllText(nextFile)));
+				}
+				catch (Exception e)
+				{}
+			}
+		}
+
+		public override void Dispose()
+		{
+			foreach (var list in SavedLists)
+			{
+				TextWriter writer = null;
+				try
+				{
+					var json = JsonConvert.SerializeObject(list);
+					writer = new StreamWriter(Path.Combine(Resource1.UserData, Resource1.ShopList, list.Name));
+					writer.Write(json);
+				}
+				finally
+				{
+					writer?.Close();
+				}
+			}
+		}
+
 		public async Task FindItemByNameAsync(string itemName)
 		{
 			lock (ShopList)
@@ -85,6 +124,46 @@ namespace PriceMonitor.UI.UiViewModels
 					}
 
 					await GenerateReviewReportAsync(_stationList.ToList(), shopList).ConfigureAwait(false);
+				}));
+			}
+		}
+
+		private RelayCommand _saveToListCmd;
+		public RelayCommand SaveToListCmd
+		{
+			get
+			{
+				return _saveToListCmd ?? (_saveToListCmd = new RelayCommand(t => ShopList.Any(), t =>
+				{
+					SavedLists.Add(new SavableShopList()
+					{
+						Name = "New List",
+						Objects = ShopList.ToList()
+					});
+				}));
+			}
+		}
+
+		private RelayCommand _deleteListCmd;
+		public RelayCommand DeleteListCmd
+		{
+			get
+			{
+				return _deleteListCmd ?? (_deleteListCmd = new RelayCommand(t => SelectedShopList != null, t =>
+				{
+					SavedLists.Remove(SavedLists.Single(p => p.Name == SelectedShopList.Name));
+				}));
+			}
+		}
+
+		private RelayCommand _loadListCmd;
+		public RelayCommand LoadListCmd
+		{
+			get
+			{
+				return _loadListCmd ?? (_loadListCmd = new RelayCommand(t => SelectedShopList != null, t =>
+				{
+					ShopList = new ObservableCollection<GameObject>(SelectedShopList.Objects);
 				}));
 			}
 		}
@@ -268,6 +347,28 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
+		private ObservableCollection<SavableShopList> _savedList = new ObservableCollection<SavableShopList>();
+		public ObservableCollection<SavableShopList> SavedLists
+		{
+			get => _savedList;
+			set
+			{
+				_savedList = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private SavableShopList _selectedShopList = new SavableShopList();
+		public SavableShopList SelectedShopList
+		{
+			get => _selectedShopList;
+			set
+			{
+				_selectedShopList = value;
+				NotifyPropertyChanged();
+			}
+		}
+
 		private List<OrderItemInfo> _allOrdersInfoList = new List<OrderItemInfo>();
 
 		private ObservableCollection<OrderItemInfo> _selectedItemOrders = new ObservableCollection<OrderItemInfo>();
@@ -279,6 +380,24 @@ namespace PriceMonitor.UI.UiViewModels
 				_selectedItemOrders = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		private DataTable _aggregateList;
+		public DataTable AggregateList
+		{
+			get => _aggregateList;
+			set
+			{
+				_aggregateList = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private static JsonSerializerSettings _jsonSerializerSettings;
+
+		private static T Deserialize<T>(string content)
+		{
+			return JsonConvert.DeserializeObject<T>(content, _jsonSerializerSettings);
 		}
 
 		public class OrderItemInfo
@@ -296,15 +415,10 @@ namespace PriceMonitor.UI.UiViewModels
 			public float ItemPrice { get; set; }
 		}
 
-		private DataTable _aggregateList;
-		public DataTable AggregateList
+		public class SavableShopList
 		{
-			get => _aggregateList;
-			set
-			{
-				_aggregateList = value;
-				NotifyPropertyChanged();
-			}
+			public string Name { get; set; }
+			public List<GameObject> Objects { get; set; }
 		}
 	}
 }

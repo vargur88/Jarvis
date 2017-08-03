@@ -19,13 +19,12 @@
 
 		<Grid Column = "0">
 			<Grid.RowDefinitions>
-				<RowDefinition/>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
-			<StackPanel Grid.Row="0" Orientation="Vertical" Margin="2">
+			<StackPanel Grid.Row="0" Orientation="Vertical" Margin="2" VerticalAlignment="Top">
 				<TextBox controls:TextBoxHelper.Watermark="Type item name here..." 
 						 controls:TextBoxHelper.ClearTextButton="True"
 						 KeyDown="TextBox_OnKeyDown"
@@ -45,6 +44,29 @@
 				<Button Command="{Binding Path=ReviewCmd}"  Height="30" Content="Review" Margin="2"/>
 
 				<Button Command="{Binding Path=ClearCmd}"  Height="30" Content="Clear" Margin="2"/>
+
+				<Button Command="{Binding Path=SaveToListCmd}"  Height="30" Content="Save to list" Margin="2"/>
+			</StackPanel>
+
+			<StackPanel Grid.Row="1" Orientation="Vertical" Margin="2" VerticalAlignment="Top">
+
+				<Separator/>
+
+				<Label Content="Shop list:"/>
+
+				<ListBox ItemsSource="{Binding SavedLists, UpdateSourceTrigger=PropertyChanged}"
+						 SelectedItem="{Binding SelectedShopList, UpdateSourceTrigger=PropertyChanged}"
+						 SelectionMode="Single" MinHeight="100" Margin="2">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Name}"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+				<Button Command="{Binding Path=LoadListCmd}"  Height="30" Content="Load" Margin="2"/>
+
+				<Button Command="{Binding Path=DeleteListCmd}"  Height="30" Content="Delete" Margin="2"/>
 			</StackPanel>
 		</Grid>
 		
