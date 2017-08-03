@@ -23,6 +23,8 @@ namespace PriceMonitor
 
 		public virtual void Refresh() { }
 
+		public virtual void Dispose() { }
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{

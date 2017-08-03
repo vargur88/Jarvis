@@ -8,6 +8,7 @@
 		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 		mc:Ignorable="d"
 		GlowBrush="{DynamicResource AccentColorBrush}"
+		Closed="MainWindow_OnClosed"
 		Title="Util">
 
 	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="0" TabStripPlacement="Left">
