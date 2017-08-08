@@ -40,7 +40,7 @@ namespace Entity
 					.OrderBy(t => t.station_name)
 					.Select(t => new Station()
 					{
-						Name = t.station_name,
+						StationName = t.station_name,
 						RegionId = t.region_id,
 						StationId = t.station_id,
 						SystemId = t.solarsystem_id
@@ -58,7 +58,7 @@ namespace Entity
 					.OrderBy(t => t.station_name)
 					.Select(t => new Station()
 					{
-						Name = t.station_name,
+						StationName = t.station_name,
 						RegionId = t.region_id,
 						StationId = t.station_id
 					})

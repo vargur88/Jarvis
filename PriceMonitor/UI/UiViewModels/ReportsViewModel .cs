@@ -224,12 +224,12 @@ namespace PriceMonitor.UI.UiViewModels
 					BuyStation = new Station()
 					{
 						RegionId = (int)BuyTarget.FirstSelection.Id,
-						Name = BuyTarget.ThirdSelection.Name
+						StationName = BuyTarget.ThirdSelection.Name
 					},
 					SellStation = new Station()
 					{
 						RegionId = (int)SellTarget.FirstSelection.Id,
-						Name = SellTarget.ThirdSelection.Name
+						StationName = SellTarget.ThirdSelection.Name
 					}
 				};
 

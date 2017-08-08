@@ -14,19 +14,28 @@
 
 	public class Station
 	{
-		public string Name { get; set; }
-		public long StationId { get; set; } 
+		public string StationName { get; set; }
+		public long StationId { get; set; }
+
+		public string RegionName { get; set; }
 		public int RegionId { get; set; }
+
+		public string SystemName { get; set; }
 		public int SystemId { get; set; }
 
 		public static Station GetJita()
 		{
 			return new Station()
 			{
-				Name = "Jita",
+				StationName = "Jita",
 				SystemId = 10000002,
 				RegionId = 10000002
 			};
+		}
+
+		public string ShortName()
+		{
+			return StationName.Substring(0, StationName.IndexOf(' '));
 		}
 	}
 

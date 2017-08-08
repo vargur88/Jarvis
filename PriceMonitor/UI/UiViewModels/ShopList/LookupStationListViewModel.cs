@@ -33,9 +33,11 @@ namespace PriceMonitor.UI.UiViewModels
 						StationList.Add(new Station()
 						{
 							RegionId = (int) StationBoxes.FirstSelection.Id,
+							RegionName = StationBoxes.FirstSelection.Name,
 							SystemId = (int) StationBoxes.SecondSelection.Id,
+							SystemName = StationBoxes.SecondSelection.Name,
 							StationId = (int) StationBoxes.ThirdSelection.Id,
-							Name = StationBoxes.ThirdSelection.Name
+							StationName = StationBoxes.ThirdSelection.Name
 						});
 					}
 				}));

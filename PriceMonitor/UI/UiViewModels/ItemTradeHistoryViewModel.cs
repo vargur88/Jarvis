@@ -129,8 +129,8 @@ namespace PriceMonitor.UI.UiViewModels
 
 					var hubChart = new LineSeries
 					{
-						Title = hub.Name,
-						Color = ResolveColorFromHub(hub.Name)
+						Title = hub.StationName,
+						Color = ResolveColorFromHub(hub.StationName)
 					};
 					hubChart.Points.AddRange(dataPoints);
 
@@ -147,12 +147,12 @@ namespace PriceMonitor.UI.UiViewModels
 				var hubStats = new List<HubMarketStat>();
 				foreach (var hub in Hubs)
 				{
-					table.Columns.Add(hub.Name);
+					table.Columns.Add(hub.StationName);
 
 					var statResponse = await Services.Instance.MarketStatAsync(new List<int>() { GameObject.TypeId }, new List<int>() { hub.RegionId });
 					hubStats.Add(new HubMarketStat()
 					{
-						HubName = hub.Name,
+						HubName = hub.StationName,
 						Stat = statResponse.First().Sell
 					});
 				}

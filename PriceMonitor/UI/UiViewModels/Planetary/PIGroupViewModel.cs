@@ -20,7 +20,7 @@ namespace PriceMonitor.UI.UiViewModels
 
 			var station = new Station()
 			{
-				Name = "Jita",
+				StationName = "Jita",
 				SystemId = 10000002,
 				RegionId = 10000002
 			};

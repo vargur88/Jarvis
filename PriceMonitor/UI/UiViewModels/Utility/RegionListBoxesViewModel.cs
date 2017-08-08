@@ -136,7 +136,7 @@ namespace PriceMonitor.UI.UiViewModels
 		internal override IList<CommonMapObject> SecondSelectionChanged(CommonMapObject secondSelection)
 		{
 			ThirdList = EntityService.Instance.RequestStationsBySystemAsync((int)secondSelection.Id)
-				.Result.Select(t => new CommonMapObject() { Id = t.StationId, Name = t.Name }).ToList();
+				.Result.Select(t => new CommonMapObject() { Id = t.StationId, Name = t.StationName }).ToList();
 
 			return ThirdList;
 		}
@@ -213,7 +213,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			ThirdList = EntityService.Instance.RequestStationsBySystemAsync((int)secondSelection.Id).Result
 				.Where(t => _stationHubList.Contains((int)t.StationId))
-				.Select(t => new CommonMapObject() { Id = t.StationId, Name = t.Name })
+				.Select(t => new CommonMapObject() { Id = t.StationId, Name = t.StationName })
 				.ToList();
 
 			return ThirdList;

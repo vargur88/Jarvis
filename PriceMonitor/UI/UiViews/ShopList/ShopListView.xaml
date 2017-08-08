@@ -74,13 +74,15 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+			    <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="2*"/>
 			</Grid.RowDefinitions>
 
-			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" Grid.Column="0"
+			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
 					  ItemsSource="{Binding AggregateList.DefaultView}" 
 					  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
 					  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
