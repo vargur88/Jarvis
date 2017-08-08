@@ -20,7 +20,7 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private Dictionary<PITier, PIGroupViewModel> _dictView = new Dictionary<PITier, PIGroupViewModel>();
+		private readonly Dictionary<PITier, PIGroupViewModel> _dictView = new Dictionary<PITier, PIGroupViewModel>();
 
 		private ObservableCollection<PIGroupViewModel> _piGroups = new ObservableCollection<PIGroupViewModel>();
 		public ObservableCollection<PIGroupViewModel> PIGroups
@@ -68,23 +68,6 @@ namespace PriceMonitor.UI.UiViewModels
 					_prevSelected.Add(view);
 				}
 			}
-
-			/*
-			PIGroupViewModel prevTierGroupView = null;
-			PIGroupViewModel nextTierGroupView = null;
-
-			if (info.Tier != PITier.Raw)
-			{
-				prevTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Prev());
-			}
-
-			if (info.Tier != PITier.Advanced)
-			{
-				nextTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Next());
-			}
-
-			prevTierGroupView?.Focusing(info);
-			nextTierGroupView?.Focusing(info);*/
 		}
 
 		private void BuildPIChain(bool directionToHigh, PITier tier, List<int> piList, Dictionary<PITier, List<int>> result)
@@ -131,17 +114,6 @@ namespace PriceMonitor.UI.UiViewModels
 					BuildPIChain(false, prevTier, childs, result);
 				}
 			}
-		}
-
-		public void PIObserving(PIObserveInfo info)
-		{
-			if (info.Tier == PITier.Advanced)
-			{
-				return;
-			}
-
-			var nextTierGroupView = PIGroups.SingleOrDefault(t => t.Tier == info.Tier.Next());
-			nextTierGroupView?.SelectChilds(info);
 		}
 
 		public struct PIObserveInfo

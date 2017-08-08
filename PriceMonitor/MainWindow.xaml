@@ -8,11 +8,12 @@
 		xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
 		mc:Ignorable="d"
 		GlowBrush="{DynamicResource AccentColorBrush}"
+		Closed="MainWindow_OnClosed"
 		Title="Util">
 
-	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="1" TabStripPlacement="Left">
-		<!-- Watching tab -->
-		<controls:MetroTabItem x:Name="WatchingTab">
+	<controls:MetroAnimatedTabControl VerticalContentAlignment="Stretch" Background="#F1F4F9" SelectedIndex="0" TabStripPlacement="Left">
+		<!-- ShopList tab -->
+		<controls:MetroTabItem x:Name="ShopListTab">
 			<controls:MetroTabItem.Header>
 				<Border BorderThickness="0.2, 0, 0.2, 0.2" BorderBrush="Black">
 					<Grid Width="150" Height="75">
@@ -20,17 +21,17 @@
 							<RowDefinition Height="2*"/>
 							<RowDefinition />
 						</Grid.RowDefinitions>
-						<TextBlock Grid.Row="1" Text="Watching" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+						<TextBlock Grid.Row="1" Text="Shop list" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 					</Grid>
 				</Border>
 			</controls:MetroTabItem.Header>
 			<UserControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<UserControl.Resources>
-					<DataTemplate DataType="{x:Type uiViewModels:WatchingViewModel}">
-						<uiViews:WatchingView/>
+					<DataTemplate DataType="{x:Type uiViewModels:ShopListViewModel}">
+						<uiViews:ShopListView/>
 					</DataTemplate>
 				</UserControl.Resources>
-				<ContentControl Content="{Binding WatchingVM}"/>
+				<ContentControl Content="{Binding ShopListVM}"/>
 			</UserControl>
 		</controls:MetroTabItem>
 		

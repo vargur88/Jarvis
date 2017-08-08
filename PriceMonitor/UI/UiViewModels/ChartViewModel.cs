@@ -36,7 +36,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Region _selectedRegion;
 		public Region SelectedRegion
 		{
-			get { return _selectedRegion; }
+			get => _selectedRegion;
 			set
 			{
 				if (_selectedRegion == value || value == null)
@@ -58,7 +58,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<SolarSystem> _systemList;
 		public IList<SolarSystem> SystemList
 		{
-			get { return _systemList; }
+			get => _systemList;
 			set
 			{
 				_systemList = value;
@@ -69,7 +69,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private SolarSystem _selectedSystem;
 		public SolarSystem SelectedSystem
 		{
-			get { return _selectedSystem; }
+			get => _selectedSystem;
 			set
 			{
 				if (_selectedSystem == value || value == null)
@@ -91,7 +91,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private IList<Station> _stationList;
 		public IList<Station> StationList
 		{
-			get { return _stationList; }
+			get => _stationList;
 			set
 			{
 				_stationList = value;
@@ -102,7 +102,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private Station _selectedStation;
 		public Station SelectedStation
 		{
-			get { return _selectedStation; }
+			get => _selectedStation;
 			set
 			{
 				if (_selectedStation == value)
@@ -117,7 +117,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private GameObject _targetGameObject;
 		public GameObject TargetGameObject
 		{
-			get { return _targetGameObject; }
+			get => _targetGameObject;
 			set
 			{
 				if (_targetGameObject == value || value == null)
@@ -135,7 +135,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private ObservableCollection<StationBuyOrderInfo> _buyOrdersInfo = new ObservableCollection<StationBuyOrderInfo>();
 		public ObservableCollection<StationBuyOrderInfo> BuyOrdersInfo
 		{
-			get { return _buyOrdersInfo; }
+			get => _buyOrdersInfo;
 			set
 			{
 				_buyOrdersInfo = value;
@@ -146,7 +146,7 @@ namespace PriceMonitor.UI.UiViewModels
 		private ObservableCollection<StationSellOrderInfo> _sellOrdersInfo = new ObservableCollection<StationSellOrderInfo>();
 		public ObservableCollection<StationSellOrderInfo> SellOrdersInfo
 		{
-			get { return _sellOrdersInfo; }
+			get => _sellOrdersInfo;
 			set
 			{
 				_sellOrdersInfo = value;

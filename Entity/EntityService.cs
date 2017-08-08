@@ -18,7 +18,7 @@ namespace Entity
 		{
 			using (var ctx = new sysEntities())
 			{
-				var list = await ctx.eve_map_solarsystems
+				return await ctx.eve_map_solarsystems
 					.Where(t => t.region_id == regionId)
 					.OrderBy(t => t.solarsystem_name)
 					.Select(t => new SolarSystem()
@@ -28,8 +28,6 @@ namespace Entity
 						SystemId = t.solarsystem_id
 					})
 					.ToListAsync();
-
-				return list;
 			}
 		}
 
@@ -37,7 +35,7 @@ namespace Entity
 		{
 			using (var ctx = new sysEntities())
 			{
-				var list = await ctx.eve_sta_stations
+				return await ctx.eve_sta_stations
 					.Where(t => t.solarsystem_id == systemId)
 					.OrderBy(t => t.station_name)
 					.Select(t => new Station()
@@ -48,8 +46,6 @@ namespace Entity
 						SystemId = t.solarsystem_id
 					})
 					.ToListAsync();
-
-				return list;
 			}
 		}
 
@@ -57,7 +53,7 @@ namespace Entity
 		{
 			using (var ctx = new sysEntities())
 			{
-				var list = await ctx.eve_sta_stations
+				return await ctx.eve_sta_stations
 					.Where(t => t.region_id == regionId)
 					.OrderBy(t => t.station_name)
 					.Select(t => new Station()
@@ -67,8 +63,6 @@ namespace Entity
 						StationId = t.station_id
 					})
 					.ToListAsync();
-
-				return list;
 			}
 		}
 
@@ -77,7 +71,7 @@ namespace Entity
 			using (var ctx = new sysEntities())
 			{
 				// except Unknown systems by filtering id
-				var list = await ctx.eve_map_regions
+				return await ctx.eve_map_regions
 					.Where(t => t.region_id < 11000000)
 					.OrderBy(t => t.region_name)
 					.Select(t => new Region()
@@ -86,8 +80,6 @@ namespace Entity
 						RegionId = t.region_id
 					})
 					.ToListAsync();
-
-				return list;
 			}
 		}
 
@@ -166,20 +158,25 @@ namespace Entity
 			}
 		}
 
-		public async Task<List<GameObject>> RequestObjectsAsync(int marketGroudpId)
+		public async Task<GameObject> RequestObjectAsync(string objectName)
 		{
 			using (var ctx = new sysEntities())
 			{
-				var list = await ctx.eve_inv_types.Where(t => t.marketgroup_id == marketGroudpId)
-					.Select(t => new GameObject()
+				return await ctx.eve_inv_types.SingleOrDefaultAsync(t => t.name == objectName)
+					.ContinueWith(t =>
 					{
-						Name = t.name,
-						MarketGroupId = (int)t.marketgroup_id,
-						TypeId = t.type_id
-					})
-					.ToListAsync();
+						if (t.IsFaulted || t.Result == null)
+						{
+							return null;
+						}
 
-				return list;
+						return new GameObject()
+						{
+							Name = t.Result.name,
+							MarketGroupId = (int)t.Result.marketgroup_id,
+							TypeId = t.Result.type_id
+						};
+					});
 			}
 		}
 	}

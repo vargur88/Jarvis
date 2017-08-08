@@ -108,29 +108,5 @@ namespace PriceMonitor.UI.UiViewModels
 				model.Focusing(info);
 			}
 		}
-
-		public void SelectChilds(PlanetaryViewModel.PIObserveInfo info)
-		{
-			var childList = PINode.AllPlanetaryItems.Where(t => t.From.Any(k => k == info.PiID)).ToList();
-
-			var models = childList.Select(b => PlanetaryWatchingItems.Single(t => t.GameObject.TypeId == b.ID)).ToList();
-
-			foreach (var model in models)
-			{
-				model.UpdatePiChain(info);
-			}
-		}
-
-		public void FocusParent(PlanetaryViewModel.PIObserveInfo info)
-		{
-			var parentList = PINode.AllPlanetaryItems.Where(t => t.Tier != PITier.Advanced && t.To.Any(k => k == info.PiID)).ToList();
-
-			var models = parentList.Select(b => PlanetaryWatchingItems.Single(t => t.GameObject.TypeId == b.ID)).ToList();
-
-			foreach (var model in models)
-			{
-				model.ChangeFocus(info);
-			}
-		}
 	}
 }

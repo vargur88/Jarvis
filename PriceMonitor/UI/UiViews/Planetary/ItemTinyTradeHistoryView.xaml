@@ -10,7 +10,6 @@
 					BorderThickness="4"
 					BorderBrush="{Binding BorderBrushColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 					Background="{Binding ExpanderBackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-					MouseRightButtonUp="ExpanderPI_OnMouseRightButtonUp" 
 					MouseEnter="ExpanderPI_OnMouseEnter"
 					MouseLeave="ExpanderPI_OnMouseLeave"
 					Expanded="Expander_OnExpanded" 
