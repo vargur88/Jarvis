@@ -55,6 +55,9 @@
       <HintPath>..\packages\MahApps.Metro.1.3.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
@@ -94,14 +97,20 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\PredicateBuilder.cs" />
     <Compile Include="Helpers\XamlConverters.cs" />
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
     <Compile Include="UI\BaseViewModel.cs" />
     <Compile Include="UI\UiViewModels\Planetary\ItemTinyTradeHistoryViewModel.cs" />
     <Compile Include="UI\UiViewModels\ItemTradeHistoryViewModel.cs" />
     <Compile Include="UI\UiViewModels\Planetary\PIGroupViewModel.cs" />
     <Compile Include="UI\UiViewModels\ReportsViewModel .cs" />
     <Compile Include="UI\UiViewModels\Planetary\PlanetaryViewModel.cs" />
+    <Compile Include="UI\UiViewModels\ShopList\LookupStationListViewModel.cs" />
     <Compile Include="UI\UiViewModels\Utility\RegionListBoxesViewModel.cs" />
-    <Compile Include="UI\UiViewModels\WatchingViewModel.cs" />
+    <Compile Include="UI\UiViewModels\ShopList\ShopListViewModel.cs" />
     <Compile Include="UI\UiViewModels\BasicReportViewModel.cs" />
     <Compile Include="UI\UiViewModels\ChartViewModel.cs" />
     <Compile Include="UI\UiViews\Planetary\ItemTinyTradeHistoryView.xaml.cs">
@@ -119,11 +128,14 @@
     <Compile Include="UI\UiViews\Planetary\PlanetaryView.xaml.cs">
       <DependentUpon>PlanetaryView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\UiViews\ShopList\LookupStationListView.xaml.cs">
+      <DependentUpon>LookupStationListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\UiViews\Utility\RegionListBoxesView.xaml.cs">
       <DependentUpon>RegionListBoxesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\UiViews\WatchingView.xaml.cs">
-      <DependentUpon>WatchingView.xaml</DependentUpon>
+    <Compile Include="UI\UiViews\ShopList\ShopListView.xaml.cs">
+      <DependentUpon>ShopListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\UiViews\BasicReportView.xaml.cs">
       <DependentUpon>BasicReportView.xaml</DependentUpon>
@@ -164,11 +176,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UI\UiViews\ShopList\LookupStationListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\UiViews\Utility\RegionListBoxesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\UiViews\WatchingView.xaml">
+    <Page Include="UI\UiViews\ShopList\ShopListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -199,6 +215,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

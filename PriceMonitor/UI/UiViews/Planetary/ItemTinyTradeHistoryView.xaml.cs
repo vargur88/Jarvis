@@ -22,15 +22,6 @@ namespace PriceMonitor.UI.UiViews
 			viewModel?.ShowHistory(true);
 		}
 
-		private bool _selected = false;
-		private void ExpanderPI_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
-		{
-			_selected = !_selected;
-
-			var viewModel = this.DataContext as ItemTinyTradeHistoryViewModel;
-			viewModel?.UpdatePiChain(_selected);
-		}
-
 		private void ExpanderPI_OnMouseEnter(object sender, MouseEventArgs e)
 		{
 			var viewModel = this.DataContext as ItemTinyTradeHistoryViewModel;

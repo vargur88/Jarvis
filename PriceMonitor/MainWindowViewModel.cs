@@ -1,4 +1,6 @@
-﻿using PriceMonitor.UI.UiViewModels;
+﻿using System.IO;
+using System.Reflection;
+using PriceMonitor.UI.UiViewModels;
 
 namespace PriceMonitor
 {
@@ -6,21 +8,45 @@ namespace PriceMonitor
 	{
 		public MainWindowViewModel()
 		{
-			WatchingVM = new WatchingViewModel();
+			ShopListVM = new ShopListViewModel();
 			ReportsVM = new ReportsViewModel();
 			PlanetaryVM = new PlanetaryViewModel();
+
+			CreateFolders();
 		}
 
-		public WatchingViewModel WatchingVM { get; private set; }
+		public void Close()
+		{
+			ShopListVM.Dispose();
+			ReportsVM.Dispose();
+			PlanetaryVM.Dispose();
+		}
 
-		public ReportsViewModel ReportsVM { get; private set; }
+		private void CreateFolders()
+		{
+			var rootDirPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-		public PlanetaryViewModel PlanetaryVM { get; private set; }
+			if (!Directory.Exists(Path.Combine(rootDirPath, Resource1.UserData)))
+			{
+				Directory.CreateDirectory(Path.Combine(rootDirPath, Resource1.UserData));
+			}
+
+			if (!Directory.Exists(Path.Combine(rootDirPath, Resource1.UserData, Resource1.ShopList)))
+			{
+				Directory.CreateDirectory(Path.Combine(rootDirPath, Resource1.UserData, Resource1.ShopList));
+			}
+		}
+
+		public ShopListViewModel ShopListVM { get; }
+
+		public ReportsViewModel ReportsVM { get; }
+
+		public PlanetaryViewModel PlanetaryVM { get; }
 
 		private int _menuCount;
 		public int MenuCount
 		{
-			get { return _menuCount; }
+			get => _menuCount;
 			set
 			{
 				_menuCount = value;
