@@ -23,20 +23,20 @@ namespace EveCentralProvider.Types
 		[JsonIgnore]
 		public string RegionName { get; set; }
 
-		public float weightedAverage { get; set; }
+		public double weightedAverage { get; set; }
 
-		public float max { get; set; }
+		public double max { get; set; }
 
-		public float min { get; set; }
+		public double min { get; set; }
 
-		public float stddev { get; set; }
+		public double stddev { get; set; }
 
-		public float median { get; set; }
+		public double median { get; set; }
 
-		public float volume { get; set; }
+		public double volume { get; set; }
 
 		public int orderCount { get; set; }
 
-		public float percentile { get; set; }
+		public double percentile { get; set; }
 	}
 }

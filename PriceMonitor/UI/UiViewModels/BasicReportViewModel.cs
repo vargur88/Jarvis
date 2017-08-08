@@ -88,11 +88,11 @@ namespace PriceMonitor.UI.UiViewModels
 
 						var aggregateStats = new List<AggreateInfoStat>();
 
-						table.Columns.Add(Report.BuyStation.Name.Substring(0, Report.BuyStation.Name.IndexOf(' ')));
+						table.Columns.Add(Report.BuyStation.StationName.Substring(0, Report.BuyStation.StationName.IndexOf(' ')));
 						var buyStationAggregate = await Services.Instance.AggregateInfoAsync(Report.Item.TypeId, Report.BuyStation.RegionId);
 						aggregateStats.Add(buyStationAggregate.Items.First().sell);
 
-						table.Columns.Add(Report.SellStation.Name.Substring(0, Report.SellStation.Name.IndexOf(' ')));
+						table.Columns.Add(Report.SellStation.StationName.Substring(0, Report.SellStation.StationName.IndexOf(' ')));
 						var sellStationAggregate = await Services.Instance.AggregateInfoAsync(Report.Item.TypeId, Report.SellStation.RegionId);
 						aggregateStats.Add(sellStationAggregate.Items.First().sell);
 

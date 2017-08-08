@@ -26,7 +26,6 @@ namespace PriceMonitor.UI.UiViewModels
 			_tier = tier;
 			GameObject = gameObject;
 			Hub = hub;
-			_unicItemBrush = PickBrush();
 			ExpanderBackgroundColor = BorderBrushColor = _defaultBrush;
 
 			CreateModel();
@@ -101,8 +100,6 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private Brush _parentItemBrush;
-		private readonly Brush _unicItemBrush;
 		private readonly Brush _defaultBrush = new SolidColorBrush(Color.FromArgb(0xCC, 0x64, 0x76, 0x87));
 		private readonly Brush _borderSelectedBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x00, 0x00));
 
@@ -223,8 +220,9 @@ namespace PriceMonitor.UI.UiViewModels
 				var historyResponse = await Services.Instance.HistoryAsync(GameObject.TypeId, Hub.RegionId);
 
 				var dataPoints = historyResponse.Items
-					.Where(t => DateTime.Now - t.Date <= TimeSpan.FromDays((int)TimeFilter.TimeFilterEnum.Month))
-					.Select(t => new DataPoint(DateTimeAxis.ToDouble(t.Date), t.AvgPrice)).ToList();
+					.Where(t => DateTime.Now - t.Date <= TimeSpan.FromDays((int) TimeFilter.TimeFilterEnum.Month))
+					.Select(t => new DataPoint(DateTimeAxis.ToDouble(t.Date), t.AvgPrice))
+					.ToList();
 
 				var hubChart = new LineSeries
 				{
@@ -236,19 +234,15 @@ namespace PriceMonitor.UI.UiViewModels
 				{
 					Model.Series.Add(hubChart);
 
-					int max = (int)(Model.Axes.First().Maximum = dataPoints.Max(t => t.Y));
-					int min = (int)(Model.Axes.First().Minimum = dataPoints.Min(t => t.Y));
+					int max = (int) (Model.Axes.First().Maximum = dataPoints.Max(t => t.Y));
+					int min = (int) (Model.Axes.First().Minimum = dataPoints.Min(t => t.Y));
 
-					var rawPriceStep = (max - min)/2;
-					var stepDigitCount = (int)Math.Floor(Math.Log10(rawPriceStep) + 1);
+					var rawPriceStep = (max - min) / 2;
+					var stepDigitCount = (int) Math.Floor(Math.Log10(rawPriceStep) + 1);
 
 					Model.Axes.First().MajorStep = (rawPriceStep).RoundOff(stepDigitCount - 1);
-					UpdateTimeAxis((int)TimeFilter.TimeFilterEnum.Month);
+					UpdateTimeAxis((int) TimeFilter.TimeFilterEnum.Month);
 				});
-			}).ContinueWith(async t =>
-			{
-				/*var statResponse = await Services.Instance.MarketStatAsync(new List<int>() { GameObject.TypeId }, new List<int>() { Hub.RegionId });
-				var k = statResponse.Count();*/
 			});
 		}
 

@@ -186,10 +186,9 @@ namespace PriceMonitor.UI.UiViewModels
 					var waitList = new List<Task>();
 					foreach (var station in stationList)
 					{
-						var formatRegionName = station.Name.Substring(0, station.Name.IndexOf(' '));
-						table.Columns.Add(formatRegionName);
+						table.Columns.Add(station.RegionName);
 
-						waitList.Add(Services.Instance.AggregateInfoAsync(itemList.Select(t => t.TypeId).ToList(), (int)station.StationId)
+						waitList.Add(Services.Instance.AggregateInfoAsync(itemList.Select(t => t.TypeId).ToList(), station.RegionId)
 							.ContinueWith(t =>
 							{
 								if (t.IsFaulted)
@@ -202,7 +201,7 @@ namespace PriceMonitor.UI.UiViewModels
 									foreach (var item in t.Result.Items)
 									{
 										// not thread safe
-										item.sell.RegionName = formatRegionName;
+										item.sell.RegionName = station.RegionName;
 
 										lock (aggregates)
 										{
@@ -229,7 +228,7 @@ namespace PriceMonitor.UI.UiViewModels
 							var regionPrice = list.SingleOrDefault(t => t.RegionName == table.Columns[i + 1].ColumnName);
 							if (regionPrice != null)
 							{
-								nextRow[index] = regionPrice.percentile;
+								nextRow[index] = Math.Round(regionPrice.percentile, 2);
 							}
 
 							index++;
@@ -294,7 +293,7 @@ namespace PriceMonitor.UI.UiViewModels
 					var item = ShopList.Single(t => t.Name == itemName);
 					var result = Services.Instance.QuickLook(item.TypeId, new List<int>() {station.RegionId}, 1, station.SystemId);
 
-					var ordersInfo = new OrderItemInfo() {Object = item, StationName = station.Name};
+					var ordersInfo = new OrderItemInfo() {Object = item, StationName = station.SystemName};
 
 					if (result.SellOrders != null && result.SellOrders.Any())
 					{
@@ -358,7 +357,7 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private SavableShopList _selectedShopList = new SavableShopList();
+		private SavableShopList _selectedShopList;
 		public SavableShopList SelectedShopList
 		{
 			get => _selectedShopList;

@@ -60,7 +60,7 @@
 				<ListBox Grid.Column="1" Grid.Row="2" Width="Auto" MinHeight="100" ItemsSource="{Binding StationList, UpdateSourceTrigger=PropertyChanged}">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding Name}"/>
+							<TextBlock Text="{Binding StationName}"/>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>

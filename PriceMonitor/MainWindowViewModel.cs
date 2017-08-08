@@ -8,11 +8,11 @@ namespace PriceMonitor
 	{
 		public MainWindowViewModel()
 		{
+			CreateFolders();
+
 			ShopListVM = new ShopListViewModel();
 			ReportsVM = new ReportsViewModel();
 			PlanetaryVM = new PlanetaryViewModel();
-
-			CreateFolders();
 		}
 
 		public void Close()
