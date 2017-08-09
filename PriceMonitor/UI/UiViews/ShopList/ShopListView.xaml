@@ -3,13 +3,21 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:uiViews="clr-namespace:PriceMonitor.UI.UiViews"
-			 xmlns:uiViewModels="clr-namespace:PriceMonitor.UI.UiViewModels"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-			 xmlns:helpers="clr-namespace:PriceMonitor.Helpers"
 			 mc:Ignorable="d">
 	<UserControl.Resources>
-		<helpers:PercentageConverter x:Key="percentageConverter" />
+		<Style x:Key="Body_Content_DataGrid_Centering"
+		       TargetType="{x:Type DataGridCell}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type DataGridCell}">
+						<Grid Background="{TemplateBinding Background}">
+							<ContentPresenter VerticalAlignment="Top" />
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 	</UserControl.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -74,104 +82,64 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-			    <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="2*"/>
 			</Grid.RowDefinitions>
 
-			<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-					  ItemsSource="{Binding AggregateList.DefaultView}" 
-					  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
-					  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
+			<Grid Column="0" ColumnSpan="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Column="0"
+						  ItemsSource="{Binding AggregateList.DefaultView}" 
+						  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+						  Name="MainDataGrid"
+						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
 
-			<StackPanel Grid.Column="0" Grid.Row="1">
-				<Label Content="Orders info" HorizontalContentAlignment="Left"/>
+				<DataGrid Grid.Column="1"
+						  ItemsSource="{Binding SelectedItemOrders}"
+						  CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
+						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False">
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Jita Sell" Width="*">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate>
+									<DataGrid ItemsSource="{Binding Path=SellList}" 
+											  MaxHeight="{Binding ElementName=MainDataGrid, Path=ActualHeight}"
+											  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" 
+											  AutoGenerateColumns="False" HeadersVisibility="None" GridLinesVisibility="All">
+										<DataGrid.Columns>
+											<DataGridTextColumn Binding="{Binding Path=ItemsCount}" Width="*"/>
+											<DataGridTextColumn Binding="{Binding Path=ItemPrice}" Width="*"/>
+										</DataGrid.Columns>
+									</DataGrid>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
 
-				<ListView ItemsSource="{Binding Path=SelectedItemOrders}" MinHeight="200" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-					<ListView.ItemContainerStyle>
-						<Style TargetType="ListViewItem">
-							<Setter Property="HorizontalContentAlignment" Value="Center" />
-						</Style>
-					</ListView.ItemContainerStyle>
-					<ListView.View>
-						<GridView>
-							<GridViewColumn Header="Station" DisplayMemberBinding="{Binding StationName}" x:Name="col1"/>
-							<GridViewColumn Header="Sell" Width="{Binding ElementName=helperField, Path=ActualWidth}" x:Name="sellcol">
-							<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<ListView ItemsSource="{Binding Path=SellList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-											<ListView.ItemContainerStyle>
-												<Style TargetType="ListViewItem">
-													<Setter Property="HorizontalContentAlignment" Value="Center" />
-												</Style>
-											</ListView.ItemContainerStyle>
-											<ListView.View>
-												<GridView>
-													<GridViewColumn DisplayMemberBinding="{Binding ItemsCount}" Width="{Binding ElementName=helperField2, Path=ActualWidth}"/>
-													<GridViewColumn DisplayMemberBinding="{Binding ItemPrice}" Width="{Binding ElementName=helperField2, Path=ActualWidth}"/>
-												</GridView>
-											</ListView.View>
-										</ListView>
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
-							<GridViewColumn Header="Buy" Width="{Binding ElementName=helperField, Path=ActualWidth}" x:Name="buycol">
-								<GridViewColumn.CellTemplate>
-									<DataTemplate>
-										<ListView ItemsSource="{Binding Path=BuyList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-											<ListView.ItemContainerStyle>
-												<Style TargetType="ListViewItem">
-													<Setter Property="HorizontalContentAlignment" Value="Center" />
-												</Style>
-											</ListView.ItemContainerStyle>
-											<ListView.View>
-												<GridView>
-													<GridViewColumn DisplayMemberBinding="{Binding ItemsCount}" Width="{Binding ElementName=helperField3, Path=ActualWidth}"/>
-													<GridViewColumn DisplayMemberBinding="{Binding ItemPrice}" Width="{Binding ElementName=helperField3, Path=ActualWidth}"/>
-												</GridView>
-											</ListView.View>
-										</ListView>
-									</DataTemplate>
-								</GridViewColumn.CellTemplate>
-							</GridViewColumn>
-						</GridView>
-					</ListView.View>
-				</ListView>
-
-				<Grid Visibility="Hidden">
-					<Grid.ColumnDefinitions>
-						<!--Width is bound to width of the first GridViewColumn -->
-						<ColumnDefinition Width="{Binding ElementName=col1, Path=ActualWidth}"/>
-						<!--Width is set to "Fill"-->
-						<ColumnDefinition Width="*"/>
-						<!--Correction Width-->
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
-					<!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
-					<Grid Grid.Column="1" x:Name="helperField"/>
-				</Grid>
-
-				<Grid Visibility="Hidden">
-					<Grid.ColumnDefinitions>
-						<!--Width is set to "Fill"-->
-						<ColumnDefinition Width="{Binding Path=ActualWidth, ElementName=sellcol, Converter={StaticResource percentageConverter}, ConverterParameter='0.5'}"/>
-					</Grid.ColumnDefinitions>
-					<!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
-					<Grid Grid.Column="0" x:Name="helperField2"/>
-				</Grid>
-
-				<Grid Visibility="Hidden">
-					<Grid.ColumnDefinitions>
-						<!--Width is set to "Fill"-->
-						<ColumnDefinition Width="{Binding Path=ActualWidth, ElementName=buycol, Converter={StaticResource percentageConverter}, ConverterParameter='0.5'}"/>
-					</Grid.ColumnDefinitions>
-					<!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
-					<Grid Grid.Column="0" x:Name="helperField3"/>
-				</Grid>
-			</StackPanel>
+						<DataGridTemplateColumn Header="Jita Buy" Width="*">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate>
+									<DataGrid ItemsSource="{Binding Path=BuyList}" 
+											  MaxHeight="{Binding ElementName=MainDataGrid, Path=ActualHeight}"
+											  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" 
+											  AutoGenerateColumns="False" HeadersVisibility="None" GridLinesVisibility="All">
+										<DataGrid.Columns>
+											<DataGridTextColumn Binding="{Binding Path=ItemsCount}" Width="*"/>
+											<DataGridTextColumn Binding="{Binding Path=ItemPrice}" Width="*"/>
+										</DataGrid.Columns>
+									</DataGrid>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+				</DataGrid>
+			</Grid>
 
 		</Grid>
 	</Grid>
