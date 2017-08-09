@@ -265,9 +265,9 @@ namespace PriceMonitor.UI.UiViewModels
 
 		private async void RequestOrdersForItemAsync(string itemName)
 		{
-			lock (_allOrdersInfoList)
+			lock (_cacheOrdersInfoList)
 			{
-				var itemInfo = _allOrdersInfoList.Where(t => t.Object.Name == itemName).ToList();
+				var itemInfo = _cacheOrdersInfoList.Where(t => t.Object.Name == itemName).ToList();
 				if (itemInfo.Any())
 				{
 					SelectedItemOrders = new ObservableCollection<OrderItemInfo>(itemInfo);
@@ -288,31 +288,29 @@ namespace PriceMonitor.UI.UiViewModels
 					};
 				}
 
-				foreach (var station in _stationList)
+				var jita = Station.GetJita();
+				var item = ShopList.Single(t => t.Name == itemName);
+				var result = Services.Instance.QuickLook(item.TypeId, new List<int>() {jita.RegionId}, 1, jita.SystemId);
+
+				var ordersInfo = new OrderItemInfo() {Object = item, StationName = jita.SystemName};
+
+				if (result.SellOrders != null && result.SellOrders.Any())
 				{
-					var item = ShopList.Single(t => t.Name == itemName);
-					var result = Services.Instance.QuickLook(item.TypeId, new List<int>() {station.RegionId}, 1, station.SystemId);
+					ordersInfo.SellList = result.SellOrders.OrderBy(k => k.Price).Select(ItemConvert).ToList();
+				}
+				if (result.BuyOrders != null && result.BuyOrders.Any())
+				{
+					ordersInfo.BuyList = result.BuyOrders.OrderByDescending(k => k.Price).Select(ItemConvert).ToList();
+				}
 
-					var ordersInfo = new OrderItemInfo() {Object = item, StationName = station.SystemName};
+				lock (_cacheOrdersInfoList)
+				{
+					_cacheOrdersInfoList.Add(ordersInfo);
 
-					if (result.SellOrders != null && result.SellOrders.Any())
+					Application.Current.Dispatcher.Invoke(() =>
 					{
-						ordersInfo.SellList = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(ItemConvert).ToList();
-					}
-					if (result.BuyOrders != null && result.BuyOrders.Any())
-					{
-						ordersInfo.BuyList = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(ItemConvert).ToList();
-					}
-
-					lock (_allOrdersInfoList)
-					{
-						_allOrdersInfoList.Add(ordersInfo);
-
-						Application.Current.Dispatcher.Invoke(() =>
-						{
-							SelectedItemOrders.Add(ordersInfo);
-						});
-					}
+						SelectedItemOrders.Add(ordersInfo);
+					});
 				}
 			})
 			.ConfigureAwait(false);
@@ -368,7 +366,7 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private List<OrderItemInfo> _allOrdersInfoList = new List<OrderItemInfo>();
+		private readonly List<OrderItemInfo> _cacheOrdersInfoList = new List<OrderItemInfo>();
 
 		private ObservableCollection<OrderItemInfo> _selectedItemOrders = new ObservableCollection<OrderItemInfo>();
 		public ObservableCollection<OrderItemInfo> SelectedItemOrders
