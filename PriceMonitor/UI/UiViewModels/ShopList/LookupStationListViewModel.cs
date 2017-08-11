@@ -18,6 +18,7 @@ namespace PriceMonitor.UI.UiViewModels
 			SelectedStationType = HubStationType.Hub;
 			_stationList = stationList;
 
+			StationList.Clear();
 			StationList.Add(Station.GetJita());
 		}
 

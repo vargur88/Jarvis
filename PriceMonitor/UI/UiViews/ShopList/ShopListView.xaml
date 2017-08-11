@@ -4,6 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+			 xmlns:oxy="http://oxyplot.org/wpf"
 			 mc:Ignorable="d">
 	<UserControl.Resources>
 		<Style x:Key="Body_Content_DataGrid_Centering"
@@ -101,7 +102,7 @@
 						  Name="MainDataGrid"
 						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="True"/>
 
-				<DataGrid Grid.Column="1"
+				<DataGrid BorderThickness="1" BorderBrush="LightSlateGray" Grid.Column="1" Margin="5,0,0,0"
 						  ItemsSource="{Binding SelectedItemOrders}"
 						  CellStyle="{StaticResource Body_Content_DataGrid_Centering}"
 						  IsReadOnly="True" SelectionMode="Single" SelectionUnit="FullRow" AutoGenerateColumns="False">
@@ -140,6 +141,17 @@
 					</DataGrid.Columns>
 				</DataGrid>
 			</Grid>
+
+			<oxy:PlotView Model="{Binding Model}" Background="#1A1A1A" Grid.Column="2" Margin="5,0,0,0" Grid.ColumnSpan="2" Grid.Row="0"/>
+
+			<ComboBox Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top"
+					  ItemsSource="{Binding Path=TimeFilters}"
+					  SelectedIndex="1"
+					  Width="80"
+					  Margin="5,0,0,0"
+					  SelectedItem="{Binding Path=SelectedTimeFilter, Mode=TwoWay}"
+					  DisplayMemberPath="Name">
+			</ComboBox>
 
 		</Grid>
 	</Grid>

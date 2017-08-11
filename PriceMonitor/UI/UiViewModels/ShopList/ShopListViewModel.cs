@@ -9,9 +9,12 @@ using Entity;
 using Helpers;
 using System.Data;
 using System.IO;
+using System.Windows.Data;
 using EveCentralProvider;
 using EveCentralProvider.Types;
 using Newtonsoft.Json;
+using OxyPlot;
+using OxyPlot.Axes;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -34,6 +37,101 @@ namespace PriceMonitor.UI.UiViewModels
 				}
 				catch (Exception e)
 				{}
+			}
+
+			CreateModel();
+		}
+
+		private void CreateModel()
+		{
+			Model = new PlotModel
+			{
+				LegendBorder = OxyColors.Aqua,
+				LegendBackground = OxyColor.FromAColor(200, OxyColors.White),
+				LegendPosition = LegendPosition.LeftBottom,
+				LegendPlacement = LegendPlacement.Inside,
+				Axes =
+				{
+					new LinearAxis()
+					{
+						Position = AxisPosition.Right,
+						MajorGridlineStyle = LineStyle.Solid,
+						MinorGridlineStyle = LineStyle.Solid,
+						MajorGridlineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						MinorTicklineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						ExtraGridlineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						AxislineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						TicklineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						MinorGridlineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						TextColor = OxyColors.Aqua
+					},
+					new DateTimeAxis()
+					{
+						Position = AxisPosition.Bottom,
+						MajorGridlineStyle = LineStyle.Solid,
+						MinorGridlineStyle = LineStyle.Solid,
+						MajorGridlineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						MinorTicklineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						ExtraGridlineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						AxislineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						TicklineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						MinorGridlineColor = OxyColor.FromRgb(0x3a,0x3a,0x3a),
+						TextColor = OxyColors.Aqua
+					}
+				}
+			};
+		}
+
+		public CollectionView TimeFilters { get; } = new CollectionView(new List<TimeFilter>()
+		{
+			new TimeFilter(TimeFilter.TimeFilterEnum.Day),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Week),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Month),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Quarter),
+			new TimeFilter(TimeFilter.TimeFilterEnum.Year),
+			new TimeFilter(TimeFilter.TimeFilterEnum.AllTime),
+		});
+
+		private TimeFilter _selectedTimeFilter = new TimeFilter(TimeFilter.TimeFilterEnum.Month);
+		public TimeFilter SelectedTimeFilter
+		{
+			get => _selectedTimeFilter;
+			set
+			{
+				if (_selectedTimeFilter == value)
+				{
+					return;
+				}
+
+				_selectedTimeFilter = value;
+				NotifyPropertyChanged();
+
+				UpdateTimeAxis((int)SelectedTimeFilter.Value);
+			}
+		}
+
+		private void UpdateTimeAxis(int days)
+		{
+			if (Model != null)
+			{
+				Model.Axes[1].FilterMinValue = days == 0 ? 0 : DateTimeAxis.ToDouble(DateTime.Now - TimeSpan.FromDays(days));
+
+				Model.ResetAllAxes();
+				Model.InvalidatePlot(true);
+			}
+		}
+
+		private PlotModel model;
+		public PlotModel Model
+		{
+			get { return model; }
+			set
+			{
+				if (model != value)
+				{
+					model = value;
+					NotifyPropertyChanged();
+				}
 			}
 		}
 
@@ -90,7 +188,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			get
 			{
-				return _clearCmd ?? (_clearCmd = new RelayCommand(t =>
+				return _clearCmd ?? (_clearCmd = new RelayCommand(t => ShopList.Any(), t =>
 				{
 					lock (ShopList)
 					{
@@ -105,7 +203,7 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			get
 			{
-				return _reviewCmd ?? (_reviewCmd = new RelayCommand(async t =>
+				return _reviewCmd ?? (_reviewCmd = new RelayCommand(t => ShopList.Any(), async t =>
 				{
 					var win = new Window
 					{
@@ -137,7 +235,7 @@ namespace PriceMonitor.UI.UiViewModels
 				{
 					SavedLists.Add(new SavableShopList()
 					{
-						Name = "New List",
+						Name = "New List" + SavedLists.Count,
 						Objects = ShopList.ToList()
 					});
 				}));
@@ -151,7 +249,15 @@ namespace PriceMonitor.UI.UiViewModels
 			{
 				return _deleteListCmd ?? (_deleteListCmd = new RelayCommand(t => SelectedShopList != null, t =>
 				{
-					SavedLists.Remove(SavedLists.Single(p => p.Name == SelectedShopList.Name));
+					var name = SelectedShopList.Name;
+					SavedLists.Remove(SavedLists.Single(p => p.Name == name));
+
+					try
+					{
+						File.Delete(Path.Combine(Resource1.UserData, Resource1.ShopList, name));
+					}
+					catch(Exception e)
+					{}
 				}));
 			}
 		}
@@ -416,6 +522,28 @@ namespace PriceMonitor.UI.UiViewModels
 		{
 			public string Name { get; set; }
 			public List<GameObject> Objects { get; set; }
+		}
+
+		public class TimeFilter
+		{
+			public TimeFilter(TimeFilterEnum value)
+			{
+				Value = value;
+				Name = Value.ToString();
+			}
+
+			public string Name { get; set; }
+			public TimeFilterEnum Value { get; set; }
+
+			public enum TimeFilterEnum
+			{
+				Day = 2,
+				Week = 7,
+				Month = 30,
+				Quarter = 120,
+				Year = 365,
+				AllTime = 0
+			}
 		}
 	}
 }
