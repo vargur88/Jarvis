@@ -104,7 +104,6 @@
     </Compile>
     <Compile Include="UI\BaseViewModel.cs" />
     <Compile Include="UI\UiViewModels\Planetary\ItemTinyTradeHistoryViewModel.cs" />
-    <Compile Include="UI\UiViewModels\ItemTradeHistoryViewModel.cs" />
     <Compile Include="UI\UiViewModels\Planetary\PIGroupViewModel.cs" />
     <Compile Include="UI\UiViewModels\ReportsViewModel .cs" />
     <Compile Include="UI\UiViewModels\Planetary\PlanetaryViewModel.cs" />
@@ -115,9 +114,6 @@
     <Compile Include="UI\UiViewModels\ChartViewModel.cs" />
     <Compile Include="UI\UiViews\Planetary\ItemTinyTradeHistoryView.xaml.cs">
       <DependentUpon>ItemTinyTradeHistoryView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\UiViews\ItemTradeHistoryView.xaml.cs">
-      <DependentUpon>ItemTradeHistoryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\UiViews\Planetary\PIGroupView.xaml.cs">
       <DependentUpon>PIGroupView.xaml</DependentUpon>
@@ -157,10 +153,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="UI\UiViews\Planetary\ItemTinyTradeHistoryView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\UiViews\ItemTradeHistoryView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

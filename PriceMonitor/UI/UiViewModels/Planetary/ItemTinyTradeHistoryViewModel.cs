@@ -220,7 +220,7 @@ namespace PriceMonitor.UI.UiViewModels
 				var historyResponse = await Services.Instance.HistoryAsync(GameObject.TypeId, Hub.RegionId);
 
 				var dataPoints = historyResponse.Items
-					.Where(t => DateTime.Now - t.Date <= TimeSpan.FromDays((int) TimeFilter.TimeFilterEnum.Month))
+					.Where(t => DateTime.Now - t.Date <= TimeSpan.FromDays((int) ShopListViewModel.TimeFilter.TimeFilterEnum.Month))
 					.Select(t => new DataPoint(DateTimeAxis.ToDouble(t.Date), t.AvgPrice))
 					.ToList();
 
@@ -241,7 +241,7 @@ namespace PriceMonitor.UI.UiViewModels
 					var stepDigitCount = (int) Math.Floor(Math.Log10(rawPriceStep) + 1);
 
 					Model.Axes.First().MajorStep = (rawPriceStep).RoundOff(stepDigitCount - 1);
-					UpdateTimeAxis((int) TimeFilter.TimeFilterEnum.Month);
+					UpdateTimeAxis((int) ShopListViewModel.TimeFilter.TimeFilterEnum.Month);
 				});
 			});
 		}
