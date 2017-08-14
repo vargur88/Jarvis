@@ -15,6 +15,7 @@ using EveCentralProvider.Types;
 using Newtonsoft.Json;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace PriceMonitor.UI.UiViewModels
 {
@@ -91,6 +92,44 @@ namespace PriceMonitor.UI.UiViewModels
 			new TimeFilter(TimeFilter.TimeFilterEnum.Year),
 			new TimeFilter(TimeFilter.TimeFilterEnum.AllTime),
 		});
+
+		private void RequestHistory(string name)
+		{
+			if (string.IsNullOrEmpty(name))
+			{
+				return;
+			}
+
+			// chache for history here
+
+			Model.Series.Clear();
+			var item = ShopList.Single(t => t.Name == name);
+
+			Task.Run(async () =>
+			{
+				foreach (var station in _stationList)
+				{
+					var historyResponse = await Services.Instance.HistoryAsync(item.TypeId, station.RegionId);
+
+					var dataPoints =
+						historyResponse.Items.Select(t => new DataPoint(DateTimeAxis.ToDouble(t.Date), t.AvgPrice)).ToList();
+
+					var hubChart = new LineSeries
+					{
+						Title = station.ShortName(),
+						Color = OxyColors.Automatic
+					};
+					hubChart.Points.AddRange(dataPoints);
+
+					Application.Current.Dispatcher.Invoke(() =>
+					{
+						Model.Series.Add(hubChart);
+						UpdateTimeAxis((int) SelectedTimeFilter.Value);
+					});
+				}
+			})
+			.ConfigureAwait(false);
+		}
 
 		private TimeFilter _selectedTimeFilter = new TimeFilter(TimeFilter.TimeFilterEnum.Month);
 		public TimeFilter SelectedTimeFilter
@@ -366,6 +405,7 @@ namespace PriceMonitor.UI.UiViewModels
 				NotifyPropertyChanged();
 
 				RequestOrdersForItemAsync(SelectedItem[0] as string);
+				RequestHistory(SelectedItem[0] as string);
 			}
 		}
 
