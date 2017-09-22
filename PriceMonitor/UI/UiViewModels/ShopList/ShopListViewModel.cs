@@ -423,30 +423,31 @@ namespace PriceMonitor.UI.UiViewModels
 
 			SelectedItemOrders.Clear();
 
-			await Task.Run(() =>
+			await Task.Run(async () =>
 			{
-				OrderInfo ItemConvert(Order order)
+				OrderInfo ItemConvert(OrderCrest order)
 				{
 					return new OrderInfo()
 					{
-						ItemPrice = (float)Math.Round(order.Price / 1000000, 4),
-						ItemsCount = (int)order.VolumeRemaining
+						ItemPrice = (float)Math.Round(order.price / 1000000, 4),
+						ItemsCount = (int)order.volume
 					};
 				}
 
 				var jita = Station.GetJita();
 				var item = ShopList.Single(t => t.Name == itemName);
-				var result = Services.Instance.QuickLook(item.TypeId, new List<int>() {jita.RegionId}, 1, jita.SystemId);
+				var resultSell = await Services.Instance.ViewOrdersAsync(item.TypeId, jita.RegionId, sell : true);
+				var resultBuy = await Services.Instance.ViewOrdersAsync(item.TypeId, jita.RegionId, sell : false);
 
-				var ordersInfo = new OrderItemInfo() {Object = item, StationName = jita.SystemName};
+				var ordersInfo = new OrderItemInfo() { Object = item, StationName = jita.SystemName };
 
-				if (result.SellOrders != null && result.SellOrders.Any())
+				if (resultSell?.items != null && resultSell.items.Count > 0)
 				{
-					ordersInfo.SellList = result.SellOrders.OrderBy(k => k.Price).Select(ItemConvert).ToList();
+					ordersInfo.SellList = resultSell.items.OrderBy(k => k.price).Select(ItemConvert).ToList();
 				}
-				if (result.BuyOrders != null && result.BuyOrders.Any())
+				if (resultBuy?.items != null && resultBuy.items.Count > 0)
 				{
-					ordersInfo.BuyList = result.BuyOrders.OrderByDescending(k => k.Price).Select(ItemConvert).ToList();
+					ordersInfo.BuyList = resultBuy.items.OrderByDescending(k => k.price).Select(ItemConvert).ToList();
 				}
 
 				lock (_cacheOrdersInfoList)

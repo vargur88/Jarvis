@@ -17,7 +17,9 @@ namespace EveCentralProvider
 	public sealed class Services : IServices
 	{
 		private readonly string ApiFormat = "http://api.eve-central.com/api/{0}?{1}";
-		private readonly string CrestApiFormat = "https://crest-tq.eveonline.com/market/{0}/history/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
+		private readonly string CrestHistoryApiFormat = "https://crest-tq.eveonline.com/market/{0}/history/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
+		private readonly string CrestOrderSellApiFormat = "https://crest-tq.eveonline.com/market/{0}/orders/sell/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
+		private readonly string CrestOrderBuyApiFormat = "https://crest-tq.eveonline.com/market/{0}/orders/buy/?type=https://crest-tq.eveonline.com/inventory/types/{1}/";
 		private readonly string AggregateFormat = "https://market.fuzzwork.co.uk/aggregates/?region={0}&types={1}";
 
 		private readonly string UserAgent = $".NET Eve Central Provider v{FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion}";
@@ -194,7 +196,7 @@ namespace EveCentralProvider
 			if (sethours != 360)
 				args.Add("sethours", sethours.ToString());
 
-			Uri apiUrl = new Uri(String.Format(ApiFormat, apiRelativeUrl, args.ToString()));
+			Uri apiUrl = new Uri(String.Format(ApiFormat, apiRelativeUrl, args));
 			return apiUrl;
 		}
 
@@ -210,8 +212,30 @@ namespace EveCentralProvider
 
 		private Uri BuildHistoryUrl(int typeid, int regionId)
 		{
-			Uri apiUrl = new Uri(String.Format(CrestApiFormat, regionId.ToString(), typeid.ToString()));
+			Uri apiUrl = new Uri(String.Format(CrestHistoryApiFormat, regionId, typeid));
 			return apiUrl;
+		}
+
+		public OrderCrestList ViewOrders(int typeid, int regionId, bool sell = true)
+		{
+			Uri apiUrl = new Uri(String.Format(sell ? CrestOrderSellApiFormat : CrestOrderBuyApiFormat, regionId, typeid));
+
+			var stream = Get(apiUrl);
+			StreamReader reader = new StreamReader(stream);
+			string json = reader.ReadToEnd();
+
+			return Deserialize<OrderCrestList>(json);
+		}
+
+		public async Task<OrderCrestList> ViewOrdersAsync(int typeid, int regionId, bool sell = true)
+		{
+			Uri apiUrl = new Uri(String.Format(sell ? CrestOrderSellApiFormat : CrestOrderBuyApiFormat, regionId, typeid));
+
+			var stream = await GetAsync(apiUrl);
+			StreamReader reader = new StreamReader(stream);
+			string json = reader.ReadToEnd();
+
+			return await DeserializeAsync<OrderCrestList>(json);
 		}
 
 		public async Task<TypeCrestHistory> HistoryAsync(int typeid, int regionId)
@@ -222,7 +246,7 @@ namespace EveCentralProvider
 			StreamReader reader = new StreamReader(stream);
 			string json = reader.ReadToEnd();
 
-			return await Deserialize<TypeCrestHistory>(json);
+			return await DeserializeAsync<TypeCrestHistory>(json);
 		}
 
 		public async Task<AggregateInfoList> AggregateInfoAsync(int typeid, int regionId)
@@ -250,7 +274,7 @@ namespace EveCentralProvider
 				json = json.Replace(uglystr1, uglystr2).Replace("}},\"", "}},");
 			}
 
-			return await Deserialize<AggregateInfoList>(json);
+			return await DeserializeAsync<AggregateInfoList>(json);
 		}
 
 		private Uri BuildAggregateUrl(List<int> typeid, int region)
@@ -482,9 +506,14 @@ namespace EveCentralProvider
 			return ms;
 		}
 
-		private static Task<T> Deserialize<T>(string content)
+		private static Task<T> DeserializeAsync<T>(string content)
 		{
 			return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(content, _jsonSerializerSettings));
+		}
+
+		private static T Deserialize<T>(string content)
+		{
+			return JsonConvert.DeserializeObject<T>(content, _jsonSerializerSettings);
 		}
 	}
 }

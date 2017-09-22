@@ -184,7 +184,7 @@ namespace PriceMonitor.UI.UiViewModels
 			}
 		}
 
-		private void CreateBasicsReportList(ObjectsNode obj, List<Action<Action<BasicReportData>>> tasks)
+		private void CreateBasicsReportList(ObjectsNode obj, List<Func<BasicReportData>> tasks)
 		{
 			if (obj.SubObjects == null)
 			{
@@ -210,9 +210,9 @@ namespace PriceMonitor.UI.UiViewModels
 		 * to prevent ban multiple objects info must be aggregate to single request for station/system
 		 * as it recommended by API developers
 		 */
-		private Action<Action<BasicReportData>> CreateBasicReport(ObjectsNode obj)
+		private Func<BasicReportData> CreateBasicReport(ObjectsNode obj)
 		{
-			return ((callback) =>
+			return () =>
 			{
 				var report = new BasicReportData()
 				{
@@ -233,57 +233,58 @@ namespace PriceMonitor.UI.UiViewModels
 					}
 				};
 
-				Order PriceConvert(Order order)
+				OrderCrest PriceConvert(OrderCrest order)
 				{
-					order.Price = Math.Round(order.Price / 1000000, 4);
+					order.price = Math.Round(order.price / 1000000, 4);
 					return order;
 				}
 
-				// TODO merge sell/buy from one station to single structure. Maybe only prices
-				var result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { (int)BuyTarget.FirstSelection.Id }, 1, (int)BuyTarget.SecondSelection.Id);
-				if (result.SellOrders != null && result.SellOrders.Any())
-				{
-					report.BuyStationSellOrders = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
-				}
-				if (result.BuyOrders != null && result.BuyOrders.Any())
-				{
-					report.BuyStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
-				}
+				var resultSell = Services.Instance.ViewOrders(obj.Object.TypeId, (int)BuyTarget.FirstSelection.Id, sell: true);
+				var resultBuy = Services.Instance.ViewOrders(obj.Object.TypeId, (int)BuyTarget.FirstSelection.Id, sell: false);
 
-				//var aggregatePrice = Services.Instance.AggregateInfoAsync(obj.Object.TypeId, (int)BuyTarget.FirstSelection.Id).Result;
-
-				result = Services.Instance.QuickLook(obj.Object.TypeId, new List<int>() { (int)SellTarget.FirstSelection.Id }, 1, (int)SellTarget.SecondSelection.Id);
-				if (result.SellOrders != null && result.SellOrders.Any())
+				if (resultSell?.items != null && resultSell.items.Count > 0)
 				{
-					report.SellStationSellOrders = result.SellOrders.OrderBy(k => k.Price).Take(5).Select(PriceConvert).ToList();
+					report.BuyStationSellOrders = resultSell.items.OrderBy(k => k.price).Take(5).Select(PriceConvert).ToList();
 				}
-				if (result.BuyOrders != null && result.BuyOrders.Any())
+				if (resultBuy?.items != null && resultBuy.items.Count > 0)
 				{
-					report.SellStationBuyOrders = result.BuyOrders.OrderByDescending(k => k.Price).Take(5).Select(PriceConvert).ToList();
+					report.BuyStationBuyOrders = resultBuy.items.OrderByDescending(k => k.price).Take(5).Select(PriceConvert).ToList();
 				}
 
-				var diffSell = report.SellStationSellOrders.First().Price == 0
-					? report.BuyStationSellOrders.First().Price
-					: (report.SellStationSellOrders.First().Price - report.BuyStationSellOrders.First().Price);
+				resultSell = Services.Instance.ViewOrders(obj.Object.TypeId, (int)SellTarget.FirstSelection.Id, sell: true);
+				resultBuy = Services.Instance.ViewOrders(obj.Object.TypeId, (int)SellTarget.FirstSelection.Id, sell: false);
 
-				var diffBuy = report.SellStationSellOrders.First().Price == 0
-					? report.BuyStationBuyOrders.First().Price
-					: (report.SellStationSellOrders.First().Price - report.BuyStationBuyOrders.First().Price);
+				if (resultSell?.items != null && resultSell.items.Count > 0)
+				{
+					report.SellStationSellOrders = resultSell.items.OrderBy(k => k.price).Take(5).Select(PriceConvert).ToList();
+				}
+				if (resultBuy?.items != null && resultBuy.items.Count > 0)
+				{
+					report.SellStationBuyOrders = resultBuy.items.OrderByDescending(k => k.price).Take(5).Select(PriceConvert).ToList();
+				}
 
-				var instantProffit = report.SellStationSellOrders.First().Price == 0
+				var diffSell = report.SellStationSellOrders.First().price == 0
+					? report.BuyStationSellOrders.First().price
+					: (report.SellStationSellOrders.First().price - report.BuyStationSellOrders.First().price);
+
+				var diffBuy = report.SellStationSellOrders.First().price == 0
+					? report.BuyStationBuyOrders.First().price
+					: (report.SellStationSellOrders.First().price - report.BuyStationBuyOrders.First().price);
+
+				var instantProffit = report.SellStationSellOrders.First().price == 0
 					? 0xFFFFFF
-					: report.SellStationBuyOrders.First().Price - report.BuyStationSellOrders.First().Price;
+					: report.SellStationBuyOrders.First().price - report.BuyStationSellOrders.First().price;
 
 				var instStr = (instantProffit == 0xFFFFFF) ? "up to you" : Math.Round(instantProffit, 4).ToString();
 				report.Proffit = $"{Math.Round(diffSell, 4)}/{Math.Round(diffBuy, 4)}/{instStr}";
 
-				callback(report);
-			});
+				return report;
+			};
 		}
 
 		private void GenerateReport()
 		{
-			var tasks = new List<Action<Action<BasicReportData>>>();
+			var tasks = new List<Func<BasicReportData>>();
 			CreateBasicsReportList(SelectedNode, tasks);
 
 			var bag = new ConcurrentBag<Action<BasicReportData>>();
@@ -298,13 +299,13 @@ namespace PriceMonitor.UI.UiViewModels
 
 			Task.Factory.StartNew(() =>
 			{
-				Parallel.ForEach(tasks, t =>
+				Parallel.ForEach(tasks, task =>
 				{
 					Action<BasicReportData> nextItem;
 
 					while (!bag.TryTake(out nextItem)) { }
 
-					t.Invoke(nextItem);
+					nextItem.Invoke(task.Invoke());
 				});
 			});
 		}
@@ -317,10 +318,10 @@ namespace PriceMonitor.UI.UiViewModels
 		public Station SellStation { get; set; }
 		public string Proffit { get; set; }
 
-		public List<Order> BuyStationSellOrders { get; set; } = new List<Order>() {new Order()};
-		public List<Order> BuyStationBuyOrders { get; set; } = new List<Order>() {new Order()};
-		public List<Order> SellStationSellOrders { get; set; } = new List<Order>() {new Order()};
-		public List<Order> SellStationBuyOrders { get; set; } = new List<Order>() {new Order()};
+		public List<OrderCrest> BuyStationSellOrders { get; set; } = new List<OrderCrest>() {new OrderCrest()};
+		public List<OrderCrest> BuyStationBuyOrders { get; set; } = new List<OrderCrest>() {new OrderCrest()};
+		public List<OrderCrest> SellStationSellOrders { get; set; } = new List<OrderCrest>() {new OrderCrest()};
+		public List<OrderCrest> SellStationBuyOrders { get; set; } = new List<OrderCrest>() {new OrderCrest()};
 	}
 
 	[FlagsAttribute]

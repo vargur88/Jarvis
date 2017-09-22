@@ -51,8 +51,8 @@
 				<ListView Grid.Column="0" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
 					<ListView.View>
 						<GridView>
-							<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
-							<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+                            <GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding volume}" />
+							<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding price}" />
 						</GridView>
 					</ListView.View>
 				</ListView>
@@ -60,8 +60,8 @@
 				<ListView Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Path=Report.BuyStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
 					<ListView.View>
 						<GridView>
-							<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
-							<GridViewColumn Header="Buy" Width="70" DisplayMemberBinding="{Binding Price}" />
+                            <GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding volume}" />
+							<GridViewColumn Header="Buy" Width="70" DisplayMemberBinding="{Binding price}" />
 						</GridView>
 					</ListView.View>
 				</ListView>
@@ -71,8 +71,8 @@
 				<ListView Grid.Column="0" Grid.Row="4" ItemsSource="{Binding Path=Report.SellStationSellOrders, UpdateSourceTrigger=PropertyChanged}">
 					<ListView.View>
 						<GridView>
-							<GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding VolumeRemaining}" />
-							<GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding Price}" />
+                            <GridViewColumn Header="Count" Width="70"  DisplayMemberBinding="{Binding volume}" />
+                            <GridViewColumn Header="Sell" Width="70" DisplayMemberBinding="{Binding price}" />
 						</GridView>
 					</ListView.View>
 				</ListView>
@@ -80,8 +80,8 @@
 				<ListView Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Path=Report.SellStationBuyOrders, UpdateSourceTrigger=PropertyChanged}">
 					<ListView.View>
 						<GridView>
-							<GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding VolumeRemaining}" />
-							<GridViewColumn Header="Buy" Width="70" DisplayMemberBinding="{Binding Price}" />
+                            <GridViewColumn Header="Count" Width="70" DisplayMemberBinding="{Binding volume}" />
+                            <GridViewColumn Header="Buy" Width="70" DisplayMemberBinding="{Binding price}" />
 						</GridView>
 					</ListView.View>
 				</ListView>
